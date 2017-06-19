@@ -6,10 +6,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class ExampleTest {
-    ExampleClass exampleClass;
+    private ExampleClass exampleClass;
 
     @Before
-    public void setup() {
+    public void setUp() {
         exampleClass = new ExampleClass();
     }
 
