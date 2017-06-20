@@ -19,4 +19,4 @@ Tools that are used in this project.
 - Project management: [ZenHub](https://www.zenhub.com/)
 - CI: [TravisCI](https://travis-ci.org/nfode/stupro_toscana_vorprojekt)
 - Code analysis: [Codacy](https://www.codacy.com/app/nfode/stupro_toscana_vorprojekt/dashboard)
-- Code coverage: [Codecov]([https://codecov.io/gh/nfode/stupro_toscana_vorprojekt), [Get browser extension](https://github.com/codecov/browser-extension)
+- Code coverage: [Codecov](https://codecov.io/gh/nfode/stupro_toscana_vorprojekt), [Get browser extension](https://github.com/codecov/browser-extension)
