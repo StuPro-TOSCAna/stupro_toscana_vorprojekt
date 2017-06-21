@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <diagram program="umlet" version="14.2">
-  <zoom_level>10</zoom_level>
+  <zoom_level>8</zoom_level>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>290</x>
-      <y>50</y>
-      <w>270</w>
-      <h>100</h>
+      <x>392</x>
+      <y>152</y>
+      <w>216</w>
+      <h>80</h>
     </coordinates>
     <panel_attributes>&lt;&lt;abstract&gt;&gt;
 Node
@@ -22,34 +22,35 @@ Node
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>130</x>
-      <y>240</y>
-      <w>390</w>
-      <h>100</h>
+      <x>264</x>
+      <y>304</y>
+      <w>312</w>
+      <h>104</h>
     </coordinates>
     <panel_attributes>ServiceNode
 --
-#deploymentArtifacts: List&lt;String&gt;
-#implementationArtifacts: Map&lt;ArtifactType, String&gt;
-#parent: Node
-#connections: List&lt;ConnectsToRelationship&gt;
+-deploymentArtifacts: List&lt;String&gt;
+-implementationArtifacts: Map&lt;ArtifactType, String&gt;
+-parent: Node
+-targetConnections: List&lt;ConnectsToRelationship&gt;
+-sourceConnections: List&lt;ConnectsToRelationship&gt;
 --
-</panel_attributes>
++hasImplementationArtifact(i: ArtifactType): Boolean</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>560</x>
-      <y>240</y>
-      <w>270</w>
-      <h>90</h>
+      <x>608</x>
+      <y>304</y>
+      <w>216</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>MachineNode
 --
-#host: String
-#username: String
-#password: String
+-host: String
+-username: String
+-password: String
 --
 </panel_attributes>
     <additional_attributes/>
@@ -57,10 +58,10 @@ Node
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>260</x>
-      <y>140</y>
-      <w>190</w>
-      <h>120</h>
+      <x>368</x>
+      <y>224</y>
+      <w>152</w>
+      <h>96</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>170.0;10.0;170.0;60.0;10.0;60.0;10.0;100.0</additional_attributes>
@@ -68,10 +69,10 @@ Node
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>420</x>
-      <y>140</y>
-      <w>290</w>
-      <h>120</h>
+      <x>496</x>
+      <y>224</y>
+      <w>232</w>
+      <h>96</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;60.0;270.0;60.0;270.0;100.0</additional_attributes>
@@ -79,10 +80,10 @@ Node
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>600</x>
-      <y>50</y>
-      <w>270</w>
-      <h>110</h>
+      <x>640</x>
+      <y>152</y>
+      <w>216</w>
+      <h>88</h>
     </coordinates>
     <panel_attributes>&lt;&lt;Enum&gt;&gt;
 ArtifactType
@@ -97,10 +98,10 @@ ArtifactType
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>410</x>
-      <y>630</y>
-      <w>270</w>
-      <h>80</h>
+      <x>488</x>
+      <y>616</y>
+      <w>216</w>
+      <h>64</h>
     </coordinates>
     <panel_attributes>&lt;&lt;abstract&gt;&gt;
 Relationship
@@ -114,10 +115,10 @@ Relationship
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>130</x>
-      <y>410</y>
-      <w>390</w>
-      <h>70</h>
+      <x>264</x>
+      <y>440</y>
+      <w>312</w>
+      <h>56</h>
     </coordinates>
     <panel_attributes>ConnectsToRelationship
 --
@@ -129,14 +130,13 @@ Relationship
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>580</x>
-      <y>430</y>
-      <w>270</w>
-      <h>50</h>
+      <x>624</x>
+      <y>456</y>
+      <w>216</w>
+      <h>40</h>
     </coordinates>
     <panel_attributes>HostedOnRelationship
 --
-
 --
 </panel_attributes>
     <additional_attributes/>
@@ -144,10 +144,10 @@ Relationship
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>530</x>
-      <y>470</y>
-      <w>220</w>
-      <h>180</h>
+      <x>584</x>
+      <y>488</y>
+      <w>176</w>
+      <h>144</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;160.0;10.0;90.0;200.0;90.0;200.0;10.0</additional_attributes>
@@ -155,12 +155,29 @@ Relationship
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>300</x>
-      <y>470</y>
-      <w>260</w>
-      <h>180</h>
+      <x>400</x>
+      <y>488</y>
+      <w>208</w>
+      <h>144</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>240.0;160.0;240.0;90.0;10.0;90.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>144</x>
+      <y>152</y>
+      <w>216</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>TOSCAliteModel
+--
+-nodes: List&lt;Node&gt;
+-relationships: List&lt;Relationship&gt;
+-machine: List&lt;MachineNode&gt;
+--
+</panel_attributes>
+    <additional_attributes/>
   </element>
 </diagram>
