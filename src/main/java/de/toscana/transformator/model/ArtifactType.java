@@ -30,4 +30,13 @@ public enum ArtifactType {
     public boolean isOptional() {
         return optional;
     }
+
+    public static ArtifactType getByNodeName(String name) {
+        for (ArtifactType type : values()) {
+            if(type.elementName.equals(name)) {
+                return type;
+            }
+        }
+        throw new IllegalArgumentException();
+    }
 }

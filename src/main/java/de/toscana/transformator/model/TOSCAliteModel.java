@@ -57,10 +57,12 @@ public class TOSCAliteModel {
             throw new ParsingException("Parser could not initialize properly", e);
         }
         System.out.println("Parsing");
-        if(!root.getNodeName().equals("Model")) {
+        if (!root.getNodeName().equals("Model")) {
             throw new ParsingException("Invalid document. Root element has to be called \"Model\"");
         }
-        for(int i = 0; i < root.getChildNodes().getLength(); i++) {
+        //Read the Root nodes chilren and decide to parse either nodes or Relationships
+        //TODO The nodes need to be parsed first maybe implement different iteration mechaninism
+        for (int i = 0; i < root.getChildNodes().getLength(); i++) {
             org.w3c.dom.Node e = root.getChildNodes().item(i);
             switch (e.getNodeName()) {
                 case NODES_ELEMENT_NAME:
@@ -74,18 +76,14 @@ public class TOSCAliteModel {
 
     }
 
-    private void parseNodes(org.w3c.dom.Node e) throws ParsingException{
+    private void parseNodes(org.w3c.dom.Node e) throws ParsingException {
         System.out.println("Parsing nodes");
-        for(int i = 0; i < e.getChildNodes().getLength(); i++) {
+        for (int i = 0; i < e.getChildNodes().getLength(); i++) {
             org.w3c.dom.Node n = e.getChildNodes().item(i);
-            if(n.getNodeName().equals("Node")) {
+            if (n.getNodeName().equals("Node")) {
                 String type = determineNodeType(n);
-                switch (type) {
-                    case "machine":
-                        break;
-                    case "sevice":
-                        break;
-                }
+                System.out.println(type);
+                    parseNode(n, type);
             } else {
                 throw new ParsingException("Invalid document." +
                         " Only \"Node\" elements are allowes in the \"Nodes\" block.");
@@ -93,16 +91,35 @@ public class TOSCAliteModel {
         }
     }
 
-    private String determineNodeType(org.w3c.dom.Node n) {
-        String type = null;
-        for(int j = 0; j < n.getChildNodes().getLength(); j++) {
-            org.w3c.dom.Node inner = n.getChildNodes().item(j);
-            if(inner.getNodeName().equals("Type")) {
-                type = inner.getTextContent();
+    private void parseNode(org.w3c.dom.Node n, String type) throws ParsingException {
+        if (type == null) {
+            throw new ParsingException("Invalid document." +
+                    " Node type not found!");
+        }
+        Node node = null;
+        switch (type) {
+            case "machine":
+                node = new MachineNode(n);
                 break;
+            case "service":
+                node = new ServiceNode(n);
+                break;
+        }
+        if (node == null) {
+            throw new ParsingException("Invalid document." +
+                    " The node type " + type + " is not allowed!");
+        }
+
+    }
+
+    private String determineNodeType(org.w3c.dom.Node n) {
+        for (int j = 0; j < n.getChildNodes().getLength(); j++) {
+            org.w3c.dom.Node inner = n.getChildNodes().item(j);
+            if (inner.getNodeName().equals("Type")) {
+                return inner.getTextContent();
             }
         }
-        return type;
+        return null;
     }
 
     private void parseRelationships(org.w3c.dom.Node e) {

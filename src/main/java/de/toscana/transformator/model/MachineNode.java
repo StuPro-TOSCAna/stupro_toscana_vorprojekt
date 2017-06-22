@@ -2,6 +2,8 @@ package de.toscana.transformator.model;
 
 import org.w3c.dom.Element;
 
+import static de.toscana.transformator.util.CheckUtils.checkNull;
+
 /**
  * This type of node represents a instance of Ubuntu. It is the Lowest part in a topology stack.
  */
@@ -39,12 +41,18 @@ public class MachineNode extends Node {
 
     @Override
     protected void parseSpecificData(org.w3c.dom.Node element) throws ParsingException {
-
+        ipAdress = properties.get(IP_ADRESS_KEY);
+        username = properties.get(USERNAME_KEY);
+        password = properties.get(PASSWORD_KEY);
+        if (!checkNull(ipAdress, username, password)) {
+            throw new ParsingException("Invalid document." +
+                    " Cannot find all required properties in Machine node " + name);
+        }
     }
 
     @Override
     protected boolean isParsable(org.w3c.dom.Node element) {
-        return false;
+        return true;
     }
 
     public String getIpAdress() {

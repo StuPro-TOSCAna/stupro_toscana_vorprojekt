@@ -21,11 +21,11 @@
         <Node>
             <Type>service</Type>
             <Name>apache-php</Name>
-            <ImplentationArtifacts>
+            <ImplementationArtifacts>
                 <Create>apache-php/install.sh</Create>
                 <Start>apache-php/start.sh</Start>
                 <Stop>apache-php/stop.sh</Stop>
-            </ImplentationArtifacts>
+            </ImplementationArtifacts>
             <DeploymentArtifacts>
                 <DeploymentArtifact>apache-php/configurations.zip</DeploymentArtifact>
             </DeploymentArtifacts>
@@ -36,9 +36,9 @@
         <Node>
             <Type>service</Type>
             <Name>wordpress</Name>
-            <ImplentationArtifacts>
+            <ImplementationArtifacts>
                 <Create>wordpress/install.sh</Create>
-            </ImplentationArtifacts>
+            </ImplementationArtifacts>
             <DeploymentArtifacts>
                 <DeploymentArtifact>wordpress/wp.zip</DeploymentArtifact>
             </DeploymentArtifacts>
@@ -50,11 +50,12 @@
         </Node>
         <Node>
             <Name>mysql</Name>
-            <ImplentationArtifacts>
+            <Type>service</Type>
+            <ImplementationArtifacts>
                 <Create>mysql/install.sh</Create>
                 <Start>mysql/start.sh</Start>
                 <Stop>mysql/stop.sh</Stop>
-            </ImplentationArtifacts>
+            </ImplementationArtifacts>
             <DeploymentArtifact>wordpress/wp.sql</DeploymentArtifact>
             <Properties>
                 <Port>3306</Port>

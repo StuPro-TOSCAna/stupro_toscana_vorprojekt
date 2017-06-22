@@ -2,6 +2,8 @@ package de.toscana.transformator.model;
 
 import org.w3c.dom.Element;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,24 +19,74 @@ public abstract class Node {
      * Stores all key-value properties described in the read model.xml file.
      * This map is always created. If a node has no properties, the map will be empty.
      */
-    protected Map<String, String> properties;
+    protected Map<String, String> properties = new HashMap<>();
     /**
      * Stores the children of this node (HostedOn Relationship). if a node has no children this is a empty list
      */
-    protected List<Node> children;
+    protected List<Node> children = new ArrayList<>();
 
     public Node(org.w3c.dom.Node nodeElement) throws ParsingException {
-        if(!isValidElement(nodeElement)) {
+        if (!isValidElement(nodeElement)) {
             throw new ParsingException("The given Element is not a valid Node!");
         }
         //TODO: Implement Parsing Operations for a Node
-
+        parseCommonData(nodeElement);
         parseSpecificData(nodeElement);
     }
 
+    private void parseCommonData(org.w3c.dom.Node nodeElement) throws ParsingException {
+        for (int i = 0; i < nodeElement.getChildNodes().getLength(); i++) {
+            org.w3c.dom.Node child = nodeElement.getChildNodes().item(i);
+            switch (child.getNodeName()) {
+                case "Name":
+                    if (isValidNodeName(child.getTextContent())) {
+                        name = child.getTextContent();
+                    } else {
+                        throw new ParsingException("Invalid document." +
+                                " The node name " + child.getTextContent() + " is invalid!");
+                    }
+                    break;
+                case "Properties":
+                    parseProperties(child);
+                    break;
+            }
+        }
+    }
+
+    protected void parseProperties(org.w3c.dom.Node nodeElement) throws ParsingException {
+        for (int i = 0; i < nodeElement.getChildNodes().getLength(); i++) {
+            org.w3c.dom.Node child = nodeElement.getChildNodes().item(i);
+            properties.put(child.getNodeName(), child.getTextContent());
+        }
+    }
+
+    private boolean isValidNodeName(String textContent) {
+        char[] validChars = "abcdefghijklmnopqrstuvwxyz-_1234567890".toCharArray();
+        int validCharCount = 0;
+        for (char c : textContent.toCharArray()) {
+            for (char validChar : validChars) {
+                if (c == validChar) {
+                    validCharCount++;
+                }
+            }
+        }
+        return validCharCount == textContent.length();
+    }
+
     private boolean isValidElement(org.w3c.dom.Node nodeElement) {
-        //TODO implement check to find out if a given node is valid to be parsed.
-        return isParsable(nodeElement);
+        int paramCount = 0;
+        for (int i = 0; i < nodeElement.getChildNodes().getLength(); i++) {
+            org.w3c.dom.Node child = nodeElement.getChildNodes().item(i);
+            switch (child.getNodeName()) {
+                case "Name":
+                    paramCount++;
+                    break;
+                case "Properties":
+                    paramCount++;
+                    break;
+            }
+        }
+        return paramCount == 2 && isParsable(nodeElement);
     }
 
     /**
