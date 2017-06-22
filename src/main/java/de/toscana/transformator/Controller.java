@@ -11,36 +11,30 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import static de.toscana.transformator.util.ConsoleColors.ANSI_GREEN;
+
 /**
  * Created by nick on 22.06.17.
  */
 public class Controller {
-    public interface ControllerListener{
-        void  action(String s);
+    private final List<String> actionsForEngine;
+    private ControllerListener listener;
+    private ConsoleReader reader;
+
+    public Controller() {
+        this.actionsForEngine = Arrays.asList("start", "stop");
     }
-    private List<String> actionsForEngine;
-    ControllerListener listener;
-    public Controller(){
-        this.actionsForEngine = Arrays.asList("start","stop");
-    }
-    public void setListener(ControllerListener listener){
-        this.listener = listener;
-    }
+
     private static void printHelp() {
         System.out.println("start");
         System.out.println("stop");
     }
-    private ConsoleReader reader;
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_BLACK = "\u001B[30m";
-    public static final String ANSI_RED = "\u001B[31m";
-    public static final String ANSI_GREEN = "\u001B[32m";
-    public static final String ANSI_YELLOW = "\u001B[33m";
-    public static final String ANSI_BLUE = "\u001B[34m";
-    public static final String ANSI_PURPLE = "\u001B[35m";
-    public static final String ANSI_CYAN = "\u001B[36m";
-    public static final String ANSI_WHITE = "\u001B[37m";
-    public void createReader(){
+
+    public void setListener(ControllerListener listener) {
+        this.listener = listener;
+    }
+
+    public void createReader() {
         try {
             reader = new ConsoleReader();
             reader.setPrompt(ANSI_GREEN + "tosca2vsphere\u001B[0m> ");
@@ -50,10 +44,10 @@ public class Controller {
             PrintWriter out = new PrintWriter(reader.getOutput());
 
             while ((line = reader.readLine()) != null) {
-                if ("help".equals(line)){
+                if ("help".equals(line)) {
                     printHelp();
                     break;
-                } else if(actionsForEngine.contains(line)){
+                } else if (actionsForEngine.contains(line)) {
                     listener.action(line);
                 }
                 out.flush();
@@ -67,13 +61,12 @@ public class Controller {
                 }
             }
 
-        }
-        catch (Throwable t) {
+        } catch (Throwable t) {
             t.printStackTrace();
         }
     }
 
-    public void stopReader(){
+    public void stopReader() {
         try {
             reader.delete();
         } catch (IOException e) {
@@ -84,9 +77,13 @@ public class Controller {
 
     private void setUpCompletors(ConsoleReader reader) {
         List<Completer> completors = new LinkedList<Completer>();
-        completors.add(new StringsCompleter("create","start","stop","exit","help"));
+        completors.add(new StringsCompleter("create", "start", "stop", "exit", "help"));
         for (Completer c : completors) {
             reader.addCompleter(c);
         }
+    }
+
+    public interface ControllerListener {
+        void action(String s);
     }
 }

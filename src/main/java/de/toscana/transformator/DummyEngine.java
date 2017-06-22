@@ -1,10 +1,13 @@
 package de.toscana.transformator;
 
+import java.io.File;
+
 /**
  * Created by nick on 22.06.17.
  */
 public class DummyEngine extends Thread {
-    public DummyEngine() {
+
+    public void startEngine(){
         start();
     }
 
@@ -21,7 +24,7 @@ public class DummyEngine extends Thread {
     }
 
     public void run() {
-        System.out.println("My thread is in running state.");
+        System.out.println("Engine is ready!");
         //keeps the thread alive
         while (!Thread.currentThread().isInterrupted()) {
         }
