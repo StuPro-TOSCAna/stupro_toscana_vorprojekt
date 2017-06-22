@@ -9,6 +9,7 @@
 .idea/**/tasks.xml
 .idea/dictionaries
 
+
 # Sensitive or high-churn files:
 .idea/**/dataSources/
 .idea/**/dataSources.ids
@@ -21,6 +22,9 @@
 # Gradle:
 .idea/**/gradle.xml
 .idea/**/libraries
+
+# JaCoCo
+target/
 
 # CMake
 cmake-build-debug/
