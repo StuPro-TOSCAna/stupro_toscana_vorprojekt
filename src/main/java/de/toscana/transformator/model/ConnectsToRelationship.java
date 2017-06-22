@@ -3,7 +3,7 @@ package de.toscana.transformator.model;
 import org.w3c.dom.Element;
 
 /**
- * Created by chris on 22.06.17.
+ * This class reperesents the ConnectsTo relationship in a model.xml
  */
 public class ConnectsToRelationship extends Relationship {
 

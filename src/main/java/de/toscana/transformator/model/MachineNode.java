@@ -7,12 +7,30 @@ import org.w3c.dom.Element;
  */
 public class MachineNode extends Node{
 
+    /**
+     * Key constant to store the key for the IP address
+     */
     private static final String IP_ADRESS_KEY = "IP";
+    /**
+     * Key constant to store the key for the SSH username
+     */
     private static final String USERNAME_KEY = "Username";
+    /**
+     * Key constant to store the key for the SSH password
+     */
     private static final String PASSWORD_KEY = "Password";
 
+    /**
+     * Attribute for storing the IP/hostname
+     */
     private String ipAdress;
+    /**
+     * Attribute for storing the username
+     */
     private String username;
+    /**
+     * Attribute for storing the password
+     */
     private String password;
 
     public MachineNode(Element nodeElement) throws ParsingException {
