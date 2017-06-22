@@ -9,12 +9,12 @@ public class ConnectsToRelationship extends Relationship {
 
     private String implementationArtifact;
 
-    public ConnectsToRelationship(Element relElement, TOSCAliteModel model) throws ParsingException {
+    public ConnectsToRelationship(org.w3c.dom.Node relElement, TOSCAliteModel model) throws ParsingException {
         super(relElement, model);
     }
 
     @Override
-    protected void parseSpecific(Element element) throws ParsingException {
+    protected void parseSpecific(org.w3c.dom.Node element) throws ParsingException {
         //TODO Implement parsing of the implementation artifact
     }
 

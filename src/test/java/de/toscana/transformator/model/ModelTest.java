@@ -23,7 +23,7 @@ public class ModelTest {
         InputStream in = getClass().getClassLoader().getResourceAsStream("example.xml");
         Scanner scn = new Scanner( in);
         while (scn.hasNextLine()) {
-            contents += scn.nextLine()+ "\n";
+            contents += scn.nextLine().replace(" ","");
         }
         in.close();
         scn.close();
@@ -31,6 +31,11 @@ public class ModelTest {
 
     @Test
     public void parsingTest() throws Exception {
+        TOSCAliteModel model = new TOSCAliteModel(contents);
+    }
 
+    @Test(expected = ParsingException.class)
+    public void parsingFailureInvalidRoot() throws Exception {
+        TOSCAliteModel model = new TOSCAliteModel("<Test></Test>");
     }
 }

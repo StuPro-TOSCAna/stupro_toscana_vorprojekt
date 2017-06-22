@@ -1,5 +1,15 @@
 package de.toscana.transformator.model;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
+
+import javax.swing.plaf.synth.SynthOptionPaneUI;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +19,10 @@ import java.util.Map;
  * This class represents a complete, parsed topology.
  */
 public class TOSCAliteModel {
+
+    private static final String NODES_ELEMENT_NAME = "Nodes";
+    private static final String RELATIONSHIPS_ELEMENT_NAME = "Relationships";
+
     /**
      * Stores all nodes in the Topology. Maps name to the node instance
      */
@@ -24,13 +38,81 @@ public class TOSCAliteModel {
 
     /**
      * Given the contents of a model.xml this constructor parses a Object representation of the model.xml
+     *
      * @param xmlContent Text content of a model.xml file
      */
-    public TOSCAliteModel(String xmlContent) throws ParsingException{
+    public TOSCAliteModel(String xmlContent) throws ParsingException {
+        initilaizeAttributes();
+        //TODO Implement Parsing
+        //initialze document builder and document
+        System.out.println("Initializing parser");
+        Document document = null;
+        Element root = null;
+        try {
+            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            document = builder.parse(new ByteArrayInputStream(xmlContent.getBytes())); //TODO Rethink reading of the XML document
+            root = document.getDocumentElement();
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            e.printStackTrace();
+            throw new ParsingException("Parser could not initialize properly", e);
+        }
+        System.out.println("Parsing");
+        if(!root.getNodeName().equals("Model")) {
+            throw new ParsingException("Invalid document. Root element has to be called \"Model\"");
+        }
+        for(int i = 0; i < root.getChildNodes().getLength(); i++) {
+            org.w3c.dom.Node e = root.getChildNodes().item(i);
+            switch (e.getNodeName()) {
+                case NODES_ELEMENT_NAME:
+                    parseNodes(e);
+                    break;
+                case RELATIONSHIPS_ELEMENT_NAME:
+                    parseRelationships(e);
+                    break;
+            }
+        }
+
+    }
+
+    private void parseNodes(org.w3c.dom.Node e) throws ParsingException{
+        System.out.println("Parsing nodes");
+        for(int i = 0; i < e.getChildNodes().getLength(); i++) {
+            org.w3c.dom.Node n = e.getChildNodes().item(i);
+            if(n.getNodeName().equals("Node")) {
+                String type = determineNodeType(n);
+                switch (type) {
+                    case "machine":
+                        break;
+                    case "sevice":
+                        break;
+                }
+            } else {
+                throw new ParsingException("Invalid document." +
+                        " Only \"Node\" elements are allowes in the \"Nodes\" block.");
+            }
+        }
+    }
+
+    private String determineNodeType(org.w3c.dom.Node n) {
+        String type = null;
+        for(int j = 0; j < n.getChildNodes().getLength(); j++) {
+            org.w3c.dom.Node inner = n.getChildNodes().item(j);
+            if(inner.getNodeName().equals("Type")) {
+                type = inner.getTextContent();
+                break;
+            }
+        }
+        return type;
+    }
+
+    private void parseRelationships(org.w3c.dom.Node e) {
+        System.out.println("Parsing relationships");
+    }
+
+    private void initilaizeAttributes() {
         nodes = new HashMap<>();
         relationships = new ArrayList<>();
         machines = new ArrayList<>();
-        //TODO Implement Parsing
     }
 
     /**

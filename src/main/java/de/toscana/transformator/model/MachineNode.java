@@ -5,7 +5,7 @@ import org.w3c.dom.Element;
 /**
  * This type of node represents a instance of Ubuntu. It is the Lowest part in a topology stack.
  */
-public class MachineNode extends Node{
+public class MachineNode extends Node {
 
     /**
      * Key constant to store the key for the IP address
@@ -33,17 +33,17 @@ public class MachineNode extends Node{
      */
     private String password;
 
-    public MachineNode(Element nodeElement) throws ParsingException {
+    public MachineNode(org.w3c.dom.Node nodeElement) throws ParsingException {
         super(nodeElement);
     }
 
     @Override
-    protected void parseSpecificData(Element element) throws ParsingException {
+    protected void parseSpecificData(org.w3c.dom.Node element) throws ParsingException {
 
     }
 
     @Override
-    protected boolean isParsable(Element element) {
+    protected boolean isParsable(org.w3c.dom.Node element) {
         return false;
     }
 

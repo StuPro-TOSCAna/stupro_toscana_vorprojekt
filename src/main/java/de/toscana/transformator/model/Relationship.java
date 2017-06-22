@@ -24,7 +24,7 @@ public abstract class Relationship {
      * @throws ParsingException gets thrown if the element cannot get parsed into a java object.
      *                          For example: the element is no Relationship
      */
-    public Relationship(Element relElement, TOSCAliteModel model) throws ParsingException {
+    public Relationship(org.w3c.dom.Node relElement, TOSCAliteModel model) throws ParsingException {
         //TODO Implement relationship parsing
         parseSpecific(relElement);
     }
@@ -36,7 +36,7 @@ public abstract class Relationship {
      * @param element The element to Parse from
      * @throws ParsingException see Constructor
      */
-    protected void parseSpecific(Element element) throws ParsingException {
+    protected void parseSpecific(org.w3c.dom.Node element) throws ParsingException {
 
     }
 

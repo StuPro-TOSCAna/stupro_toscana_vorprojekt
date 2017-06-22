@@ -17,17 +17,17 @@ public class ServiceNode extends Node{
     private List<ConnectsToRelationship> targetConnections;
 
 
-    public ServiceNode(Element nodeElement) throws ParsingException {
+    public ServiceNode(org.w3c.dom.Node nodeElement) throws ParsingException {
         super(nodeElement);
     }
 
     @Override
-    protected void parseSpecificData(Element element) throws ParsingException {
+    protected void parseSpecificData(org.w3c.dom.Node element) throws ParsingException {
 
     }
 
     @Override
-    protected boolean isParsable(Element element) {
+    protected boolean isParsable(org.w3c.dom.Node element) {
         return false;
     }
 

@@ -23,7 +23,7 @@ public abstract class Node {
      */
     protected List<Node> children;
 
-    public Node(Element nodeElement) throws ParsingException {
+    public Node(org.w3c.dom.Node nodeElement) throws ParsingException {
         if(!isValidElement(nodeElement)) {
             throw new ParsingException("The given Element is not a valid Node!");
         }
@@ -32,7 +32,7 @@ public abstract class Node {
         parseSpecificData(nodeElement);
     }
 
-    private boolean isValidElement(Element nodeElement) {
+    private boolean isValidElement(org.w3c.dom.Node nodeElement) {
         //TODO implement check to find out if a given node is valid to be parsed.
         return isParsable(nodeElement);
     }
@@ -42,7 +42,7 @@ public abstract class Node {
      *
      * @param element The DOM element to parse From
      */
-    protected abstract void parseSpecificData(Element element) throws ParsingException;
+    protected abstract void parseSpecificData(org.w3c.dom.Node element) throws ParsingException;
 
     /**
      * This method has to check if a node is valid to be parsed.
@@ -51,7 +51,7 @@ public abstract class Node {
      * @param element The element to check on
      * @return True if the Element is parsable, false otherwise.
      */
-    protected abstract boolean isParsable(Element element);
+    protected abstract boolean isParsable(org.w3c.dom.Node element);
 
     /**
      * @return the name attribute (see name attribute)
