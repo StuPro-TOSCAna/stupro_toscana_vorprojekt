@@ -1,6 +1,6 @@
 package de.toscana.transformator.model;
 
-import org.w3c.dom.Element;
+import static de.toscana.transformator.util.CheckUtils.checkNull;
 
 /**
  * This class is the base class representing the common properties of a relationship
@@ -25,8 +25,34 @@ public abstract class Relationship {
      *                          For example: the element is no Relationship
      */
     public Relationship(org.w3c.dom.Node relElement, TOSCAliteModel model) throws ParsingException {
-        //TODO Implement relationship parsing
+        String sourceName = null;
+        String targetName = null;
+        for (int i = 0; i < relElement.getChildNodes().getLength(); i++) {
+            org.w3c.dom.Node n = relElement.getChildNodes().item(i);
+            switch (n.getNodeName()) {
+                case "Source":
+                    sourceName = n.getTextContent();
+                    break;
+                case "Target":
+                    targetName = n.getTextContent();
+                    break;
+                default:
+                    break;
+            }
+        }
+        try {
+            source = model.getNodeByName(sourceName);
+            target = model.getNodeByName(targetName);
+            if (!checkNull(source, target)) {
+                throw new NullPointerException("Cannot find Source or Target!");
+            }
+        } catch (RuntimeException e) {
+            throw new ParsingException("Invalid document." +
+                    " Could not parse relationship from "
+                    + sourceName + " to " + targetName);
+        }
         parseSpecific(relElement);
+        updateNodes(source, target);
     }
 
     /**
@@ -39,6 +65,8 @@ public abstract class Relationship {
     protected void parseSpecific(org.w3c.dom.Node element) throws ParsingException {
 
     }
+
+    protected abstract void updateNodes(Node source, Node target) throws ParsingException;
 
     public Node getSource() {
         return source;

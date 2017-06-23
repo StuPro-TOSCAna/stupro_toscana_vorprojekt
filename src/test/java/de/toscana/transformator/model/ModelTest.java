@@ -8,8 +8,6 @@ import org.junit.runners.JUnit4;
 import java.io.InputStream;
 import java.util.Scanner;
 
-import static org.junit.Assert.assertTrue;
-
 /**
  * This class is used to test the functionality of the Model-classes while implementing
  */

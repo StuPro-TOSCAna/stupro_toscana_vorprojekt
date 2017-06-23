@@ -64,26 +64,26 @@
         </Node>
     </Nodes>
     <Relationships>
-        <Relation>
+        <Relationship>
             <Type>hostedOn</Type>
             <Source>apache-php</Source>
             <Target>webserver</Target>
-        </Relation>
-        <Relation>
+        </Relationship>
+        <Relationship>
             <Type>hostedOn</Type>
             <Source>wordpress</Source>
             <Target>apache-php</Target>
-        </Relation>
-        <Relation>
+        </Relationship>
+        <Relationship>
             <Type>hostedOn</Type>
             <Source>mysql</Source>
-            <Target>databse</Target>
-        </Relation>
-        <Relation>
+            <Target>database</Target>
+        </Relationship>
+        <Relationship>
             <Type>connectsTo</Type>
             <Source>wordpress</Source>
             <Target>mysql</Target>
             <ImplementationArtifact>wordpress/connection-init.sh</ImplementationArtifact>
-        </Relation>
+        </Relationship>
     </Relationships>
 </Model>

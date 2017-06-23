@@ -4,7 +4,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-import javax.swing.plaf.synth.SynthOptionPaneUI;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -42,7 +41,7 @@ public class TOSCAliteModel {
      * @param xmlContent Text content of a model.xml file
      */
     public TOSCAliteModel(String xmlContent) throws ParsingException {
-        initilaizeAttributes();
+        initializeAttributes();
         //TODO Implement Parsing
         //initialze document builder and document
         System.out.println("Initializing parser");
@@ -60,21 +59,20 @@ public class TOSCAliteModel {
         if (!root.getNodeName().equals("Model")) {
             throw new ParsingException("Invalid document. Root element has to be called \"Model\"");
         }
-        //Read the Root nodes chilren and decide to parse either nodes or Relationships
+        //Read the Root nodes chilren and parse the nodes. after the nodes
+        //the relationships will be parsed, because they need the nodes created in order to link them.
         for (int i = 0; i < root.getChildNodes().getLength(); i++) {
             org.w3c.dom.Node e = root.getChildNodes().item(i);
-            switch (e.getNodeName()) {
-                case NODES_ELEMENT_NAME:
-                    parseNodes(e);
-                    break;
+            if (e.getNodeName().equals(NODES_ELEMENT_NAME)) {
+                parseNodes(e);
+                break;
             }
         }
         for (int i = 0; i < root.getChildNodes().getLength(); i++) {
             org.w3c.dom.Node e = root.getChildNodes().item(i);
-            switch (e.getNodeName()) {
-                case RELATIONSHIPS_ELEMENT_NAME:
-                    parseRelationships(e);
-                    break;
+            if (e.getNodeName().equals(RELATIONSHIPS_ELEMENT_NAME)) {
+                parseRelationships(e);
+                break;
             }
         }
     }
@@ -84,11 +82,12 @@ public class TOSCAliteModel {
         for (int i = 0; i < e.getChildNodes().getLength(); i++) {
             org.w3c.dom.Node n = e.getChildNodes().item(i);
             if (n.getNodeName().equals("Node")) {
-                String type = determineNodeType(n);
+                String type = determineElementType(n);
                 parseNode(n, type);
             } else {
                 throw new ParsingException("Invalid document." +
-                        " Only \"Node\" elements are allowes in the \"Nodes\" block.");
+                        " Only \"Node\" elements are allowed" +
+                        " in the \"Nodes\" block.");
             }
         }
     }
@@ -102,9 +101,12 @@ public class TOSCAliteModel {
         switch (type) {
             case "machine":
                 node = new MachineNode(n);
+                machines.add((MachineNode) node);
                 break;
             case "service":
                 node = new ServiceNode(n);
+                break;
+            default:
                 break;
         }
         if (node == null) {
@@ -115,7 +117,7 @@ public class TOSCAliteModel {
         System.out.println("Added " + node.getName() + " " + type);
     }
 
-    private String determineNodeType(org.w3c.dom.Node n) {
+    private String determineElementType(org.w3c.dom.Node n) {
         for (int j = 0; j < n.getChildNodes().getLength(); j++) {
             org.w3c.dom.Node inner = n.getChildNodes().item(j);
             if (inner.getNodeName().equals("Type")) {
@@ -125,11 +127,48 @@ public class TOSCAliteModel {
         return null;
     }
 
-    private void parseRelationships(org.w3c.dom.Node e) {
+    private void parseRelationships(org.w3c.dom.Node e) throws ParsingException {
         System.out.println("Parsing relationships");
+        for (int i = 0; i < e.getChildNodes().getLength(); i++) {
+            org.w3c.dom.Node n = e.getChildNodes().item(i);
+            if (n.getNodeName().equals("Relationship")) {
+                String type = determineElementType(n);
+                parseRelationship(n, type);
+            } else {
+                throw new ParsingException("Invalid document." +
+                        " Only \"Relationship\" elements are " +
+                        "allowed in the \"Relationships\" block.");
+            }
+        }
     }
 
-    private void initilaizeAttributes() {
+    private void parseRelationship(org.w3c.dom.Node node, String type) throws ParsingException {
+        if (type == null) {
+            throw new ParsingException("Invalid document." +
+                    " Relationship type not found!");
+        }
+        Relationship relationship = null;
+        switch (type) {
+            case "hostedOn":
+                relationship = new HostedOnRelationship(node, this);
+                break;
+            case "connectsTo":
+                relationship = new ConnectsToRelationship(node, this);
+                break;
+            default:
+                break;
+        }
+        if (relationship == null) {
+            throw new ParsingException("Invalid document." +
+                    " The relationship type " + type + " is not allowed!");
+        }
+        relationships.add(relationship);
+        System.out.println("Parsed " + type + " relationship from "
+                + relationship.source.getName() + " to "
+                + relationship.target.getName());
+    }
+
+    private void initializeAttributes() {
         nodes = new HashMap<>();
         relationships = new ArrayList<>();
         machines = new ArrayList<>();

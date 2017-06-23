@@ -1,7 +1,5 @@
 package de.toscana.transformator.model;
 
-import org.w3c.dom.Element;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -117,6 +115,10 @@ public class ServiceNode extends Node {
 
     public Node getParent() {
         return parent;
+    }
+
+    protected void setParent(Node parent) {
+        this.parent = parent;
     }
 
     public List<ConnectsToRelationship> getSourceConnections() {

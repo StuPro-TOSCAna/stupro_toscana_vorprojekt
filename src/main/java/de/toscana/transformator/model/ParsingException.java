@@ -3,7 +3,7 @@ package de.toscana.transformator.model;
 /**
  * This exception gets thrown to illustrate a failure while parsing a XML model of a TOSCAlite archive.
  */
-public class ParsingException extends Exception{
+public class ParsingException extends Exception {
     public ParsingException() {
     }
 

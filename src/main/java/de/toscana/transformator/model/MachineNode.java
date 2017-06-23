@@ -1,7 +1,5 @@
 package de.toscana.transformator.model;
 
-import org.w3c.dom.Element;
-
 import static de.toscana.transformator.util.CheckUtils.checkNull;
 
 /**

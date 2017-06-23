@@ -1,7 +1,5 @@
 package de.toscana.transformator.model;
 
-import org.w3c.dom.Element;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -104,6 +102,10 @@ public abstract class Node {
      * @return True if the Element is parsable, false otherwise.
      */
     protected abstract boolean isParsable(org.w3c.dom.Node element);
+
+    protected void addChild(Node child) {
+        children.add(child);
+    }
 
     /**
      * @return the name attribute (see name attribute)
