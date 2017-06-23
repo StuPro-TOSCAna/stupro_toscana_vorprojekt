@@ -82,6 +82,8 @@ public abstract class Node {
                 case "Properties":
                     paramCount++;
                     break;
+                default:
+                    break;
             }
         }
         return paramCount == 2 && isParsable(nodeElement);

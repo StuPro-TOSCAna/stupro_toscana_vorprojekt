@@ -44,7 +44,7 @@ public abstract class Relationship {
             source = model.getNodeByName(sourceName);
             target = model.getNodeByName(targetName);
             if (!checkNull(source, target)) {
-                throw new NullPointerException("Cannot find Source or Target!");
+                throw new IllegalArgumentException("Cannot find Source or Target!");
             }
         } catch (RuntimeException e) {
             throw new ParsingException("Invalid document." +
@@ -63,7 +63,7 @@ public abstract class Relationship {
      * @throws ParsingException see Constructor
      */
     protected void parseSpecific(org.w3c.dom.Node element) throws ParsingException {
-
+        //Not implemented here, the implementation of this method is Optional!
     }
 
     protected abstract void updateNodes(Node source, Node target) throws ParsingException;

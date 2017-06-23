@@ -29,11 +29,11 @@ public class ModelTest {
 
     @Test
     public void parsingTest() throws Exception {
-        TOSCAliteModel model = new TOSCAliteModel(contents);
+        new TOSCAliteModel(contents);
     }
 
     @Test(expected = ParsingException.class)
     public void parsingFailureInvalidRoot() throws Exception {
-        TOSCAliteModel model = new TOSCAliteModel("<Test></Test>");
+        new TOSCAliteModel("<Test></Test>");
     }
 }
