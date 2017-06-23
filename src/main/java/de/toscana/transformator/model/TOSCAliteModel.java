@@ -61,19 +61,22 @@ public class TOSCAliteModel {
             throw new ParsingException("Invalid document. Root element has to be called \"Model\"");
         }
         //Read the Root nodes chilren and decide to parse either nodes or Relationships
-        //TODO The nodes need to be parsed first maybe implement different iteration mechaninism
         for (int i = 0; i < root.getChildNodes().getLength(); i++) {
             org.w3c.dom.Node e = root.getChildNodes().item(i);
             switch (e.getNodeName()) {
                 case NODES_ELEMENT_NAME:
                     parseNodes(e);
                     break;
+            }
+        }
+        for (int i = 0; i < root.getChildNodes().getLength(); i++) {
+            org.w3c.dom.Node e = root.getChildNodes().item(i);
+            switch (e.getNodeName()) {
                 case RELATIONSHIPS_ELEMENT_NAME:
                     parseRelationships(e);
                     break;
             }
         }
-
     }
 
     private void parseNodes(org.w3c.dom.Node e) throws ParsingException {
@@ -82,8 +85,7 @@ public class TOSCAliteModel {
             org.w3c.dom.Node n = e.getChildNodes().item(i);
             if (n.getNodeName().equals("Node")) {
                 String type = determineNodeType(n);
-                System.out.println(type);
-                    parseNode(n, type);
+                parseNode(n, type);
             } else {
                 throw new ParsingException("Invalid document." +
                         " Only \"Node\" elements are allowes in the \"Nodes\" block.");
@@ -109,7 +111,8 @@ public class TOSCAliteModel {
             throw new ParsingException("Invalid document." +
                     " The node type " + type + " is not allowed!");
         }
-
+        nodes.put(node.getName(), node);
+        System.out.println("Added " + node.getName() + " " + type);
     }
 
     private String determineNodeType(org.w3c.dom.Node n) {
