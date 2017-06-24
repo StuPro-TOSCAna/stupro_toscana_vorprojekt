@@ -1,3 +1,7 @@
+# Example `model.xml`
+
+The following XML code represents a complete example of a Topology.
+It models a WordPress application running on Apache with PHP on one machine and the Database (MySQL) running on anotherone.
 ```XML
 <Model>
     <Nodes>
@@ -22,11 +26,11 @@
         <Node>
             <Type>service</Type>
             <Name>apache-php</Name>
-            <ImplentationArtifacts>
+            <ImplementationArtifacts>
                 <Create>apache-php/install.sh</Create>
                 <Start>apache-php/start.sh</Start>
                 <Stop>apache-php/stop.sh</Stop>
-            </ImplentationArtifacts>
+            </ImplementationArtifacts>
             <DeploymentArtifacts>
                 <DeploymentArtifact>apache-php/configurations.zip</DeploymentArtifact>
             </DeploymentArtifacts>
@@ -37,9 +41,9 @@
         <Node>
             <Type>service</Type>
             <Name>wordpress</Name>
-            <ImplentationArtifacts>
+            <ImplementationArtifacts>
                 <Create>wordpress/install.sh</Create>
-            </ImplentationArtifacts>
+            </ImplementationArtifacts>
             <DeploymentArtifacts>
                 <DeploymentArtifact>wordpress/wp.zip</DeploymentArtifact>
             </DeploymentArtifacts>
@@ -51,11 +55,12 @@
         </Node>
         <Node>
             <Name>mysql</Name>
-            <ImplentationArtifacts>
+            <Type>service</Type>
+            <ImplementationArtifacts>
                 <Create>mysql/install.sh</Create>
                 <Start>mysql/start.sh</Start>
                 <Stop>mysql/stop.sh</Stop>
-            </ImplentationArtifacts>
+            </ImplementationArtifacts>
             <DeploymentArtifact>wordpress/wp.sql</DeploymentArtifact>
             <Properties>
                 <Port>3306</Port>
@@ -64,27 +69,27 @@
         </Node>
     </Nodes>
     <Relationships>
-        <Relation>
+        <Relationship>
             <Type>hostedOn</Type>
             <Source>apache-php</Source>
             <Target>webserver</Target>
-        </Relation>
-        <Relation>
+        </Relationship>
+        <Relationship>
             <Type>hostedOn</Type>
             <Source>wordpress</Source>
             <Target>apache-php</Target>
-        </Relation>
-        <Relation>
+        </Relationship>
+        <Relationship>
             <Type>hostedOn</Type>
             <Source>mysql</Source>
-            <Target>databse</Target>
-        </Relation>
-        <Relation>
+            <Target>database</Target>
+        </Relationship>
+        <Relationship>
             <Type>connectsTo</Type>
             <Source>wordpress</Source>
             <Target>mysql</Target>
             <ImplementationArtifact>wordpress/connection-init.sh</ImplementationArtifact>
-        </Relation>
+        </Relationship>
     </Relationships>
 </Model>
 ```
