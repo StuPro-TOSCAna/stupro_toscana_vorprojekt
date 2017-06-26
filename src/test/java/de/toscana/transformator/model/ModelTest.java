@@ -8,6 +8,8 @@ import org.junit.runners.JUnit4;
 import java.io.InputStream;
 import java.util.Scanner;
 
+import static org.junit.Assert.assertTrue;
+
 /**
  * This class is used to test the functionality of the Model-classes while implementing
  */
@@ -21,7 +23,7 @@ public class ModelTest {
         InputStream in = getClass().getClassLoader().getResourceAsStream("example.xml");
         Scanner scn = new Scanner( in);
         while (scn.hasNextLine()) {
-            contents += scn.nextLine().replace(" ","");
+            contents += scn.nextLine().trim();
         }
         in.close();
         scn.close();
@@ -29,7 +31,8 @@ public class ModelTest {
 
     @Test
     public void parsingTest() throws Exception {
-        new TOSCAliteModel(contents);
+        TOSCAliteModel model = new TOSCAliteModel(contents);
+        assertTrue(model.getMachines().size() == 2);
     }
 
     @Test(expected = ParsingException.class)
