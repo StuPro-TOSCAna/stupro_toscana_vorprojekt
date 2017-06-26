@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import static de.toscana.transformator.util.ConsoleColors.ANSI_CYAN;
 import static de.toscana.transformator.util.ConsoleColors.ANSI_GREEN;
 
 /**
@@ -22,10 +23,12 @@ public class Controller {
     private ConsoleReader reader;
 
     public Controller() {
-        this.actionsForEngine = Arrays.asList("start", "stop");
+        this.actionsForEngine = Arrays.asList("create","start", "stop");
     }
 
     private static void printHelp() {
+        // TODO: 22.06.17 better description
+        System.out.println("create");
         System.out.println("start");
         System.out.println("stop");
     }
@@ -37,7 +40,7 @@ public class Controller {
     public void createReader() {
         try {
             reader = new ConsoleReader();
-            reader.setPrompt(ANSI_GREEN + "tosca2vsphere\u001B[0m> ");
+            reader.setPrompt(ANSI_CYAN + "tosca2vsphere\u001B[0m> ");
             setUpCompletors(reader);
 
             String line;
