@@ -24,4 +24,4 @@ Steps to build and run **TOSCA2vSphere**:
         ```
         stop
         ```
-    It is mandatory that create has to be called before start and start has to be called before stop. Else there will be an error.
+    It is mandatory that `create` has to be called before `start` and `start` has to be called before `stop`. If not, there will be an error.
