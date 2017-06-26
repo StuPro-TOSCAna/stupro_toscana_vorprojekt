@@ -14,6 +14,7 @@ public class Main {
         } else {
             File file = handleInputFile(args[0]);
             if (file != null) parseFile(file);
+            else return;
         }
         printInfo();
         startEngine();
