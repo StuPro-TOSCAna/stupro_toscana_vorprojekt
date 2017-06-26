@@ -3,7 +3,7 @@
 This is a simple task app to test the transformator.
 
 ## Requirements
-- the app needs the ```mysql-credentials.php``` - file, because it stores the credentials
+1. the app needs the ```mysql-credentials.php``` - file, because it stores the credentials
 
    Example:
     ```
@@ -14,7 +14,8 @@ This is a simple task app to test the transformator.
     $database = "taskdb";
     ?>
     ```
-- MySQL-DB generated with ```createdb.sql```.
+2. MySQL-DB generated with the ```createdb.sql``` file.
 
    You can simply run:
+
    ```mysql -u username --password="password" < createdb.sql ```
