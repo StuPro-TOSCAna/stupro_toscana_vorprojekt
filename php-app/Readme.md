@@ -6,9 +6,10 @@ This is a simple task app to test the transformator.
 1. the app needs the ```mysql-credentials.php``` - file, because it stores the credentials
 
    Example:
-    ```
+    ```php
     <?php
-    $servername = "localhost";
+    $host = "localhost";
+    $port = 3306; // standard port
     $username = "nick";
     $password = "test";
     $database = "taskdb";

@@ -28,12 +28,11 @@ function readFromDb()
         echo "0 results";
     }
     $conn->close();
-    $conn->close();
 }
 function newDbConnection()
 {
     extract($GLOBALS);
-    $conn = new mysqli($servername, $username, $password, $database);
+   $conn = new mysqli($host, $username, $password, $database, $port);
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
