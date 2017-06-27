@@ -63,7 +63,7 @@ public class SSHConnection implements Executor{
      * @param command
      * @return
      */
-    public boolean sendCommand(String command) {
+    public String sendCommand(String command) {
         StringBuilder out = new StringBuilder();
         try {
             Channel channel = sesConnection.openChannel("exec");
@@ -84,11 +84,11 @@ public class SSHConnection implements Executor{
                 IOException ioExp) {
             ioExp.printStackTrace();
         }
-        return true;
+        return out.toString();
     }
 
     /**
-     * Uploading a file to the maschine using sftp
+     * Uploading a Zip File to the machine using sftp
      * OVERWRITES already existing files with the same name
      *
      * @param filename
@@ -117,5 +117,25 @@ public class SSHConnection implements Executor{
      */
     public void close() {
         sesConnection.disconnect();
+    }
+
+    /**
+     * Tests if Unzip is installed, if it is installed unzip the File on the Machine
+     * otherwise install Unzip and then unzip the File
+     */
+    public String unzipFile(String zipname) {
+        String zip="";
+        if(sendCommand("apt -qq list unzip").contains("installed")) {
+            zip = sendCommand("unzip " + zipname);
+        } else {
+            sendCommand("apt-get install unzip");
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            zip = sendCommand("unzip " + zipname);
+        }
+        return zip;
     }
 }

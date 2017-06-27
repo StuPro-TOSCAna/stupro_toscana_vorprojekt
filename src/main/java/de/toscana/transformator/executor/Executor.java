@@ -5,6 +5,6 @@ package de.toscana.transformator.executor;
  */
 public interface Executor {
 
-    boolean sendCommand(String command);
+    String sendCommand(String command);
     boolean uploadFile(String filename, String targetDirectory);
 }

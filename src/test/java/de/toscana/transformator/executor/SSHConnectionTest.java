@@ -21,9 +21,9 @@ public class SSHConnectionTest {
     @Before
     public void getSSHConnectionInstance() {
         //using data of my raspberry
-        String username = "dummyuser";
-        String password = "abcd1234";
-        String connectionIp = "192.168.178.20";
+        String username = "user";
+        String password = "pw";
+        String connectionIp = "ip";
         this.instance = new SSHConnection(username, password, connectionIp);
     }
 
@@ -34,7 +34,7 @@ public class SSHConnectionTest {
     public void testSendCommand() {
         String command = "ls";
         instance.connect();
-        assertTrue(instance.sendCommand(command));
+        assertTrue(instance.sendCommand(command).contains("empty.zip"));
         instance.close();
     }
 
@@ -43,11 +43,11 @@ public class SSHConnectionTest {
      */
     @Test
     public void testUploadFile() {
-        String directory = "files/";
-        String filename = "empty.txt";
+        String directory = "C:/";
+        String filename = "empty.zip";
         instance.connect();
         instance.uploadFile(directory + filename, ".");
-        assertTrue(instance.sendCommand("ls"));
+        assertTrue(instance.sendCommand("ls").contains("empty.zip"));
         instance.close();
     }
 
@@ -65,6 +65,17 @@ public class SSHConnectionTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        instance.close();
+    }
+
+    /**
+     * starts the connection and tests the unzip procedure
+    */
+    @Test
+    public void testUnzip() {
+        instance.connect();
+        //time to check netstat on device
+        assertTrue(instance.unzipFile("empty").contains("empty.txt"));
         instance.close();
     }
 }
