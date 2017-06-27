@@ -1,34 +1,48 @@
 <?php
+
+// include the credentials to connect to the db
 include_once "mysql-credentials.php";
 
+// get task from post after task was entered in form
 $post = $_POST['task'];
 if ($post != "") {
     saveToDb($post);
 }
 
+/**
+* saved task to db
+*/
 function saveToDb($task)
 {
     $conn = newDbConnection();
+    $task = htmlspecialchars($task);
     if (!$conn->query("INSERT INTO tasks(task) VALUES('".$task."')")) {
         echo("Creating task failed");
     }
     $conn->close();
 }
+/**
+* reads from db and prints it in html
+*/
 function readFromDb()
 {
     $sql = "select * from tasks";
     $conn = newDbConnection();
     $result = $conn->query($sql);
-    if ($result->num_rows > 0) {
-        // output data of each row
-    while ($row = $result->fetch_assoc()) {
-        echo "id: " . $row["id"]. " - Task: " . $row["task"]."<br>";
-    }
-    } else {
-        echo "0 results";
-    }
     $conn->close();
+    if ($result->num_rows > 0) {
+    // output data for each row
+    while ($row = $result->fetch_assoc()) {
+        echo htmlspecialchars("id: " . $row['id']. " - Task: " . $row['task'])."<br>";
+    }
+    return;
+    }
+    echo "0 results";
 }
+
+/**
+* generates new DB connection with given credentials
+*/
 function newDbConnection()
 {
     extract($GLOBALS);
@@ -52,11 +66,13 @@ function newDbConnection()
    </head>
    <body>
       <h1>SimpleTaskApp</h1>
+      <!-- form to enter tasks -->
       <form class="insertTask" action="index.php" method="post">
          <input type="text" name="task" />
          <button type="submit" name="button">submit</button>
       </form>
       <?php
+      //print tasks out of the db
       readFromDb();
        ?>
    </body>
