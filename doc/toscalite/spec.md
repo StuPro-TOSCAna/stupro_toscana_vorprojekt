@@ -98,7 +98,16 @@ TODO!
 
 #### Artifact Paths
 
-#### Environment-Variable Mapping of Properties
+The path defined in either implementation artifacts or deployment artifacts is relative by default. 
+
+For service nodes the relative path in the archive is converted to `/<Nodename>/<Path>` by default. For example the path `install.sh` of the node `apache` gets converted to `/apache/install.sh` in the archive. 
+
+In order to define absolute paths within the archive a `/` has to be added in front.
+
+### Environment-Variable Mapping of Properties
+
+The value of properties gets mapped to environment variables in the following naming scheme: `<Nodename>_<PropertyKey>`.
+The key and the node name get converted to Upper case letters. Before the execution of the scripts starts all envirionment variables get created. It is possible to access all Properties event the ones from another node as long as both nodes belong to the same machine.
 
 ## Relationships
 
