@@ -1,21 +1,19 @@
 <Model>
-    <Nodes>
-        <Node>
             <Name>webmachine</Name>
             <Type>machine</Type>
             <Properties>
-                <IP>192.168.178.1</IP>
-                <Username>root</Username>
-                <Password>pass</Password>
+                <Property key="ip">192.168.178.1</Property>
+                <Property key="username">root</Property>
+                <Property key="password">password1</Property>
             </Properties>
         </Node>
         <Node>
             <Name>dbmachine</Name>
             <Type>machine</Type>
             <Properties>
-                <IP>192.168.178.2</IP>
-                <Username>root</Username>
-                <Password>pass</Password>
+                <Property key="ip">192.168.178.2</Property>
+                <Property key="username">root2</Property>
+                <Property key="password">passsword2</Property>
             </Properties>
         </Node>
         <Node>
@@ -24,6 +22,7 @@
             <ImplementationArtifacts>
                 <Create>create</Create>
             </ImplementationArtifacts>
+        </Node>
         <Node>
             <Name>php-app</Name>
             <Type>service</Type>
@@ -54,8 +53,8 @@
                 <Stop>stop</Stop>
             </ImplementationArtifacts>
             <Properties>
-                <Port>3306</Port>
-                <RootPassword>123456</RootPassword>
+                <Property key="port">Port>3306</Property>
+                <Property key="rootpassword">godpass</Property>
             </Properties>
         </Node>
         <Node>
@@ -66,9 +65,9 @@
             </ImplementationArtifacts>
             <DeploymentArtifact>createdb.sql</DeploymentArtifact>
             <Properties>
-                <User>simpleuser</User>
-                <Password>pass</Password>
-                <DatabaseName>awesomedatabase</DatabaseName>
+                <Property key="user">simpleuser</Property>
+                <Property key="password">pass</Property>
+                <Property key="databasename">awesomedatabase</Property>
             </Properties>
         </Node>
     </Nodes>
