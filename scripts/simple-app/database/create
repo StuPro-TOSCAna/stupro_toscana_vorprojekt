@@ -1,0 +1,14 @@
+#!/bin/bash  
+# requires: $MYSQL_ROOTPASSWORD - password for mysql root 
+# requires: $DATABASE_USER - username for database access (read, write, modify table)
+# requires: $DATABASE_PASSWORD - password for user
+# requires: $DATABASE_DATABASENAME - name of new database
+toscalite-checkenv "$MYSQL_ROOTPASSWORD" "$DATABASE_USER" "$DATABASE_PASSWORD" "$DATABASE_DATABASENAME"
+[ $? -eq 0 ] || exit 1
+
+# create our database
+# inject the database name property
+toscalite-setstub createdb.sql "DATABASE_DATABASENAME" $DATABASE_DATABASENAME
+mysql -u root --password="$MYSQL_ROOTPASSWORD" < createdb.sql
+# create user with db permissions
+mysql -u root --password="$MYSQL_ROOTPASSWORD" -e "CREATE USER '$DATABASE_USER'@'%' IDENTIFIED BY '$DATABASE_PASSWORD'; GRANT ALL PRIVILEGES ON $DATABASE_DATABASENAME . * TO '$DATABASE_USER'@'%';"

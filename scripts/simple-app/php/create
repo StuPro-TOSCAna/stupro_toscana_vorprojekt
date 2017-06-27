@@ -1,0 +1,6 @@
+#!/bin/bash  
+toscalite-checkenv
+[ $? -eq 0 ] || exit 1
+
+apt -y install php libapache2-mod-php php-mcrypt php-mysql
+systemctl restart apache2

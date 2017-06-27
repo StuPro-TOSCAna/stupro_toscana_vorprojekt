@@ -1,0 +1,17 @@
+#!/bin/bash  
+# requires: DBMACHINE_IP - ip of target db machine
+# requires: MYSQL_PORT - port of mysqld service
+# requires: DATABASE_USER - username of mysql user
+# requires: DATABASE_PASSWORD - password of ysql user
+# requires: DATABASE_DATABASENAME - name of target database
+toscalite-checkenv "$DBMACHINE_IP" "$MYSQL_PORT" "$DATABASE_USER" "$DATABASE_PASSWORD" "$DATABASE_DATABASENAME"
+[ $? -eq 0 ] || exit 1
+
+# credentials file
+CREDENTIALS="/var/www/html/mysql-credentials.php"
+
+toscalite-setstub $CREDENTIALS DBMACHINE_IP $DBMACHINE_IP
+toscalite-setstub $CREDENTIALS MYSQL_PORT $MYSQL_PORT
+toscalite-setstub $CREDENTIALS DATABASE_USER $DATABASE_USER
+toscalite-setstub $CREDENTIALS DATABASE_PASSWORD $DATABASE_PASSWORD
+toscalite-setstub $CREDENTIALS DATABASE_DATABASENAME $DATABASE_DATABASENAME
