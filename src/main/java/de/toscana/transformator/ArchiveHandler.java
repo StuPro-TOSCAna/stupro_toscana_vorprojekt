@@ -12,9 +12,6 @@ import java.util.zip.ZipFile;
  */
 public class ArchiveHandler {
     public class ArchiveException extends Exception {
-        public ArchiveException(){
-
-        }
         public ArchiveException(String message){
             super(message);
         }
@@ -26,16 +23,12 @@ public class ArchiveHandler {
         if(!file.exists()) throw new ArchiveException("There is no file with the name "+file.getName()+".");
 
         String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
-        if (validateExtension(extension)) throw new ArchiveException(fileName+" is not a valid archive file.");
+        if (!validateExtension(extension)) throw new ArchiveException(fileName+" is not a valid archive file.");
     }
 
 
     private static boolean validateExtension(String extension) {
-        if (!"zip".equalsIgnoreCase(extension)) {
-            System.err.println(ConsoleColors.getColorizedString(ConsoleColors.ANSI_RED, "Wrong file extension!"));
-            return true;
-        }
-        return false;
+        return "zip".equalsIgnoreCase(extension);
     }
 
 
