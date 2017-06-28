@@ -32,7 +32,7 @@
                 <Stop>stop</Stop>
             </ImplementationArtifacts>
             <DeploymentArtifacts>
-                <DeploymentArtifact key="app">php-app.zip</DeploymentArtifact>
+                <DeploymentArtifact key="app">php-app.tlite</DeploymentArtifact>
             </DeploymentArtifacts>
         </Node>
         <Node>

@@ -9,7 +9,7 @@ toscalite-checkenv "$MYSQL_ROOTPASSWORD" "$DATABASE_USER" "$DATABASE_PASSWORD" "
 
 # create our database
 # inject the database name property
-toscalite-setstub $DATABASE_DATABASESCHEMA" "DATABASE_DATABASENAME" $DATABASE_DATABASENAME
-mysql -u root --password="$MYSQL_ROOTPASSWORD" < createdb.sql
+toscalite-setstub $DATABASE_DATABASESCHEMA "DATABASE_DATABASENAME" $DATABASE_DATABASENAME
+mysql -u root --password="$MYSQL_ROOTPASSWORD" < "$DATABASE_DATABASESCHEMA"
 # create user with db permissions
 mysql -u root --password="$MYSQL_ROOTPASSWORD" -e "CREATE USER '$DATABASE_USER'@'%' IDENTIFIED BY '$DATABASE_PASSWORD'; GRANT ALL PRIVILEGES ON $DATABASE_DATABASENAME . * TO '$DATABASE_USER'@'%';"
