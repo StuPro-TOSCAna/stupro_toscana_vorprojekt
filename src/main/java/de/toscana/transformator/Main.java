@@ -1,8 +1,13 @@
 package de.toscana.transformator;
 
 import de.toscana.transformator.util.ConsoleColors;
+import org.apache.commons.io.IOUtils;
 
-import java.io.File;
+import java.io.*;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
 
 public class Main {
     private static DummyEngine engine;
@@ -12,9 +17,8 @@ public class Main {
             System.out.println(ConsoleColors.getColorizedString(ConsoleColors.ANSI_RED, "File-argument missing."));
             return;
         } else {
-            File file = handleInputFile(args[0]);
-            if (file != null) parseFile(file);
-            else return;
+            String model = getModelXmlAsString(args[0]);
+            if (model == null) return;
         }
         printInfo();
         startEngine();
@@ -36,35 +40,22 @@ public class Main {
         controller.createReader();
     }
 
-    private static void parseFile(File file) {
-        System.out.println("Parsing file!");
-    }
-
-    private static File handleInputFile(String arg) {
+    private static String getModelXmlAsString(String arg) {
         System.out.println("Inputfile: " + arg);
+        String string;
         File inputFile = new File(arg);
-        String fileName = inputFile.getName();
-        String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
-        if (validateFileExistence(inputFile)) return null;
-        if (validateExtension(extension)) return null;
-        return inputFile;
+        ArchiveHandler archiveHandler;
+        try {
+            archiveHandler = new ArchiveHandler(inputFile);
+            string = archiveHandler.parseModelXml();
+        } catch (ArchiveHandler.ArchiveException e) {
+            System.err.println(ConsoleColors.getColorizedString(ConsoleColors.ANSI_RED, e.getMessage()));
+            return null;
+        }
+
+        return string;
     }
 
-    private static boolean validateFileExistence(File inputFile) {
-        if (!inputFile.exists()) {
-            System.err.println(ConsoleColors.getColorizedString(ConsoleColors.ANSI_RED, "This file does not exist!"));
-            return true;
-        }
-        return false;
-    }
-
-    private static boolean validateExtension(String extension) {
-        if (!"zip".equalsIgnoreCase(extension)) {
-            System.err.println(ConsoleColors.getColorizedString(ConsoleColors.ANSI_RED, "Wrong file extension!"));
-            return true;
-        }
-        return false;
-    }
 
     private static void startEngine() {
         engine = new DummyEngine();
