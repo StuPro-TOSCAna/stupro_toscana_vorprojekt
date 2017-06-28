@@ -1,7 +1,11 @@
-package de.toscana.transformator;
+package de.toscana.transformator.engine;
+
+import de.toscana.transformator.model.Node;
+import de.toscana.transformator.model.TOSCAliteModel;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Queue;
 
 /**
@@ -13,17 +17,17 @@ import java.util.Queue;
  */
 public class Creator {
 
-    private Topology topology;
-    private ArrayList<Node> allNodes;
+    private TOSCAliteModel topology;
+    private Map<String,Node> allNodes;
     private Queue<Node> sortedNodes = new LinkedList<Node>();
-    private ArrayList<String> test = new ArrayList<String>();
+
 
     /**
      * constructor of class Creator
      *
      * @param topology
      */
-    public Creator(Topology topology) {
+    public Creator(TOSCAliteModel topology) {
         this.topology = topology;
         allNodes = topology.getNodes();
     }
@@ -32,9 +36,9 @@ public class Creator {
      * for each node the recursive method sortNodes will be done
      */
     private void sortNodes() {
-        for (Node n : allNodes) {
-            if (!sortedNodes.contains(n)) {
-                sortNodes(n);
+        for (Map.Entry<String, Node> entry : allNodes.entrySet()) {
+            if (!sortedNodes.contains(entry.getValue())) {
+                sortNodes(entry.getValue());
             }
         }
     }
@@ -45,7 +49,7 @@ public class Creator {
      * @param children
      */
     private void sortNodes(Node children) {
-        while (!children.getChildren().isEmpty) {
+        while (!children.getChildren().isEmpty()) {
             for (Node n : children.getChildren()) {
                 sortNodes(n);
             }

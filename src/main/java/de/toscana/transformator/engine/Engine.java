@@ -1,19 +1,25 @@
-package de.toscana.transformator;
+package de.toscana.transformator.engine;
 
+import de.toscana.transformator.model.ArtifactType;
+import de.toscana.transformator.model.Node;
+import de.toscana.transformator.model.TOSCAliteModel;
+
+import java.util.Map;
 import java.util.Queue;
 
 /**
  * TODO: Description of Engine class
  *
- * @author Marvin Munoz Baron
+ * @author Marvin Munoz Baron, Jens Mueller
+ *
  */
 public class Engine {
-    private final ApplicationState applicationState;
-    private final Topology topology;
+    //private final ApplicationState applicationState;
+    private final TOSCAliteModel topology;
 
-    Engine(Topology topology, ApplicationState applicationState) {
+    Engine(TOSCAliteModel topology) {
         this.topology = topology;
-        this.applicationState = applicationState;
+        //this.applicationState = applicationState;
     }
 
     /**
@@ -24,12 +30,14 @@ public class Engine {
     public boolean create() {
         Creator creator = new Creator(topology);
         Queue<Node> nodesForCreation = creator.getSortedNodes();
+        Map<String, String> properties=null;
 
         while (!nodesForCreation.isEmpty()) {
             Node nodeToInstall = nodesForCreation.poll();
-            //TODO: get the right information of the node and send it to the VM
+            properties = nodeToInstall.getProperties();
+            String createProperty = properties.get(ArtifactType.CREATE.getElementName());
+            //TODO: send createProperty to the VM
         }
-
         return true;
     }
 
