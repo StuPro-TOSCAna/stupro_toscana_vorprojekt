@@ -10,8 +10,8 @@ import java.util.Map;
  */
 public class ServiceNode extends Node {
 
-    private List<String> deploymentArtifacts;
-    private Map<ArtifactType, String> implementationArtifacts;
+    private List<ArtifactPath> deploymentArtifacts;
+    private Map<ArtifactType, ArtifactPath> implementationArtifacts;
     private Node parent;
     private List<ConnectsToRelationship> sourceConnections = new ArrayList<>();
     private List<ConnectsToRelationship> targetConnections = new ArrayList<>();
@@ -41,7 +41,7 @@ public class ServiceNode extends Node {
                     org.w3c.dom.Node innerChild = child.getChildNodes().item(j);
                     try {
                         ArtifactType type = ArtifactType.getByNodeName(innerChild.getNodeName());
-                        implementationArtifacts.put(type, innerChild.getTextContent());
+                        implementationArtifacts.put(type, new ArtifactPath(innerChild.getTextContent(), this));
                     } catch (IllegalArgumentException e) {
                         throw new ParsingException("Invalid document." +
                                 " The Implementation Artifact type " + innerChild.getNodeName()
@@ -61,7 +61,7 @@ public class ServiceNode extends Node {
                 for (int j = 0; j < child.getChildNodes().getLength(); j++) {
                     org.w3c.dom.Node innerChild = child.getChildNodes().item(j);
                     if (innerChild.getNodeName().equals("DeploymentArtifact")) {
-                        deploymentArtifacts.add(innerChild.getTextContent());
+                        deploymentArtifacts.add(new ArtifactPath(innerChild.getTextContent(), this));
                     } else {
                         throw new ParsingException("Invalid document." +
                                 " Elements in the deployment artifacts " +
@@ -102,14 +102,14 @@ public class ServiceNode extends Node {
         return implementationArtifacts.containsKey(type);
     }
 
-    public String getImplementationArtifact(ArtifactType type) {
+    public ArtifactPath getImplementationArtifact(ArtifactType type) {
         if (hasImplementationArtifact(type)) {
             return implementationArtifacts.get(type);
         }
         return null;
     }
 
-    public List<String> getDeploymentArtifacts() {
+    public List<ArtifactPath> getDeploymentArtifacts() {
         return deploymentArtifacts;
     }
 

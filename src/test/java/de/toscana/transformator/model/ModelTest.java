@@ -20,7 +20,7 @@ public class ModelTest {
 
     @Before
     public void setUp() throws Exception {
-        InputStream in = getClass().getClassLoader().getResourceAsStream("example.xml");
+        InputStream in = getClass().getClassLoader().getResourceAsStream("example2.xml");
         Scanner scn = new Scanner( in);
         while (scn.hasNextLine()) {
             contents += scn.nextLine().trim();
@@ -31,7 +31,6 @@ public class ModelTest {
 
     @Test
     public void parsingTest() throws Exception {
-        System.out.println(contents);
         TOSCAliteModel model = new TOSCAliteModel(contents);
         assertTrue(model.getMachines().size() == 2);
     }

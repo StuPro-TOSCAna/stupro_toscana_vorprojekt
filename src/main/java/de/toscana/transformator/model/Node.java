@@ -100,14 +100,11 @@ public abstract class Node {
                 case "Name":
                     paramCount++;
                     break;
-                case "Properties":
-                    paramCount++;
-                    break;
                 default:
                     break;
             }
         }
-        return paramCount == 2 && isParsable(nodeElement);
+        return paramCount == 1 && isParsable(nodeElement);
     }
 
     /**
