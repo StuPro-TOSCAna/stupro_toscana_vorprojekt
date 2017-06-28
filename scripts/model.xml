@@ -1,4 +1,6 @@
 <Model>
+    <Nodes>
+        <Node>
             <Name>webmachine</Name>
             <Type>machine</Type>
             <Properties>
@@ -24,7 +26,7 @@
             </ImplementationArtifacts>
         </Node>
         <Node>
-            <Name>phpapp</Name>
+            <Name>php-app</Name>
             <Type>service</Type>
             <ImplementationArtifacts>
                 <Create>create</Create>
