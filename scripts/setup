@@ -4,7 +4,7 @@ IP=$1
 TARGET="ubuntu@$IP"
 
 # copy files
-ssh $TARGET "sudo apt update && sudo apt -y upgrade"
+ssh $TARGET "sudo apt update"
 ssh $TARGET "rm -rf simple-app test"
 scp -r simple-app $TARGET:.
 scp -r util $TARGET:.
@@ -14,4 +14,4 @@ ssh $TARGET 'sudo mv $HOME/util/* /usr/local/bin'
 # fixing environment
 ssh $TARGET 'echo set -o vi >> $HOME/.bashrc'  # some bash luxury
 
-ssh $TARGET 'sudo $HOME/test/create'
+ssh $TARGET 'sudo $HOME/test/install'

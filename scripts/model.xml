@@ -24,7 +24,7 @@
             </ImplementationArtifacts>
         </Node>
         <Node>
-            <Name>php-app</Name>
+            <Name>phpapp</Name>
             <Type>service</Type>
             <ImplementationArtifacts>
                 <Create>create</Create>
@@ -32,7 +32,7 @@
                 <Stop>stop</Stop>
             </ImplementationArtifacts>
             <DeploymentArtifacts>
-                <DeploymentArtifact>php-app.zip</DeploymentArtifact>
+                <DeploymentArtifact key="app">php-app.zip</DeploymentArtifact>
             </DeploymentArtifacts>
         </Node>
         <Node>
@@ -63,7 +63,7 @@
             <ImplementationArtifacts>
                 <Create>install</Create>
             </ImplementationArtifacts>
-            <DeploymentArtifact>createdb.sql</DeploymentArtifact>
+            <DeploymentArtifact key="databaseschema">createdb.sql</DeploymentArtifact>
             <Properties>
                 <Property key="user">simpleuser</Property>
                 <Property key="password">pass</Property>

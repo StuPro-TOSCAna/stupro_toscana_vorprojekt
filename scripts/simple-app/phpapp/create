@@ -1,0 +1,11 @@
+#!/bin/bash  
+# requires: $PHPAPP_APP - the app to be deployed, zipped (depl. artifact)
+
+toscalite-checkenv "$PHPAPP_APP"
+[ $? -eq 0 ] || exit 1
+
+rm /var/www/html/index.html
+apt -y install unzip
+unzip $PHPAPP_APP -d /var/www/html/
+
+
