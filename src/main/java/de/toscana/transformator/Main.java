@@ -1,12 +1,8 @@
 package de.toscana.transformator;
 
 import de.toscana.transformator.util.ConsoleColors;
-import org.apache.commons.io.IOUtils;
 
 import java.io.*;
-import java.util.Enumeration;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 
 public class Main {
