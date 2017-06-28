@@ -54,8 +54,29 @@ public abstract class Node {
     protected void parseProperties(org.w3c.dom.Node nodeElement) throws ParsingException {
         for (int i = 0; i < nodeElement.getChildNodes().getLength(); i++) {
             org.w3c.dom.Node child = nodeElement.getChildNodes().item(i);
-            properties.put(child.getNodeName(), child.getTextContent());
+            if(child.getNodeName().equals("Property")) {
+                parseProperty( child);
+            }
         }
+        System.out.println("Parsed properties for node "+name);
+    }
+
+    private void parseProperty(org.w3c.dom.Node child) throws ParsingException {
+        String key = null;
+        for (int j = 0; j < child.getAttributes().getLength(); j++) {
+            org.w3c.dom.Node node = child.getAttributes().item(j);
+            if (node == null || node.getNodeName() == null) {
+                continue;
+            }
+            if (node.getNodeName().equalsIgnoreCase("key")) {
+                key = node.getNodeValue();
+            }
+        }
+        if (key == null) {
+            throw new ParsingException("Invalid document." +
+                    " Every property needs a key. Error occured in node: " + name);
+        }
+        properties.put(key, child.getTextContent());
     }
 
     private boolean isValidNodeName(String textContent) {

@@ -31,6 +31,7 @@ public class ModelTest {
 
     @Test
     public void parsingTest() throws Exception {
+        System.out.println(contents);
         TOSCAliteModel model = new TOSCAliteModel(contents);
         assertTrue(model.getMachines().size() == 2);
     }
