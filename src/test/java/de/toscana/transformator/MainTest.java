@@ -8,14 +8,13 @@ import org.junit.rules.ExpectedException;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
  * Created by nick on 28.06.17.
  */
 public class MainTest {
-    private String testResFolder ="src/test/resources/";
+    private final String testResFolder ="src/test/resources/";
     @Rule
     public final ExpectedException exception = ExpectedException.none();
 
@@ -35,12 +34,11 @@ public class MainTest {
     private String getOutPutString() {
         String result = outputStream.toString();
         System.setOut(stdout);
-        System.setErr(stdout);
         return result;
     }
     private String getErrOutPutString() {
         String result = outputStream.toString();
-        System.setErr(stdout);
+        System.setErr(stderr);
         return result;
     }
 

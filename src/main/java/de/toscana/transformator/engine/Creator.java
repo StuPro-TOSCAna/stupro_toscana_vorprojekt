@@ -3,7 +3,6 @@ package de.toscana.transformator.engine;
 import de.toscana.transformator.model.Node;
 import de.toscana.transformator.model.TOSCAliteModel;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
@@ -19,7 +18,7 @@ public class Creator {
 
     private TOSCAliteModel topology;
     private Map<String,Node> allNodes;
-    private Queue<Node> sortedNodes = new LinkedList<Node>();
+    private Queue<Node> sortedNodes = new LinkedList<>();
 
 
     /**

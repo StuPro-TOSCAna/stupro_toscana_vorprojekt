@@ -12,12 +12,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static de.toscana.transformator.util.ConsoleColors.ANSI_CYAN;
-import static de.toscana.transformator.util.ConsoleColors.ANSI_GREEN;
 
 /**
  * Created by nick on 22.06.17.
  */
-public class Controller {
+class Controller {
     private final List<String> actionsForEngine;
     private ControllerListener listener;
     private ConsoleReader reader;
@@ -79,7 +78,7 @@ public class Controller {
     }
 
     private void setUpCompletors(ConsoleReader reader) {
-        List<Completer> completors = new LinkedList<Completer>();
+        List<Completer> completors = new LinkedList<>();
         completors.add(new StringsCompleter("create", "start", "stop", "exit", "help"));
         for (Completer c : completors) {
             reader.addCompleter(c);

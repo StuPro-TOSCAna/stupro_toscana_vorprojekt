@@ -8,18 +8,18 @@ import de.toscana.transformator.util.ConsoleColors;
 import java.io.*;
 
 
-public class Main {
+class Main {
     private static Engine engine;
-    private static TOSCAliteModel toscaLiteModel;
 
     public static void main(String[] args) {
         printInfo();
         if (args.length == 0) {
-            System.out.println(ConsoleColors.getColorizedString(ConsoleColors.ANSI_RED, "File-argument missing."));
+            System.out.println(ConsoleColors.getErrorString("File-argument missing."));
             return;
         } else {
             String model = getModelXmlFileAsString(args[0]);
             if (model == null) return;
+            TOSCAliteModel toscaLiteModel;
             try {
                 toscaLiteModel = new TOSCAliteModel(model);
             } catch (ParsingException e) {
@@ -39,7 +39,8 @@ public class Main {
                 if ("start".equals(s)) engine.start();
                 else if ("stop".equals(s)) engine.stop();
             } else {
-                System.out.println(ConsoleColors.getColorizedString(ConsoleColors.ANSI_RED, "Something went wrong!"));
+                System.out.println(ConsoleColors.getErrorString("Something went wrong!"));
+                //noinspection UnnecessaryReturnStatement
                 return;
             }
         });
@@ -55,7 +56,7 @@ public class Main {
             archiveHandler = new ArchiveHandler(inputFile);
             string = archiveHandler.getModelXml();
         } catch (ArchiveHandler.ArchiveException e) {
-            System.err.println(ConsoleColors.getColorizedString(ConsoleColors.ANSI_RED, e.getMessage()));
+            System.err.println(ConsoleColors.getErrorString(e.getMessage()));
             return null;
         }
         return string;

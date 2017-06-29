@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
  */
 
 public  class ArchiveHandlerTest {
-    String testResFolder ="src/test/resources/";
+    private final String testResFolder ="src/test/resources/";
     @Rule
     public final ExpectedException exception = ExpectedException.none();
 

@@ -14,7 +14,7 @@ public class ConsoleColors {
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_WHITE = "\u001B[37m";
 
-    public static String getColorizedString(String colour, String text) {
-        return colour + text + ANSI_RESET;
+    public static String getErrorString(String text) {
+        return ConsoleColors.ANSI_RED + text + ANSI_RESET;
     }
 }

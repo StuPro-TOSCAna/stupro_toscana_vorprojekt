@@ -1,7 +1,5 @@
 package de.toscana.transformator;
 
-import de.toscana.transformator.util.ConsoleColors;
-
 import java.io.*;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
@@ -16,7 +14,7 @@ public class ArchiveHandler {
             super(message);
         }
     }
-    File archive;
+    final File archive;
     public ArchiveHandler(File file) throws ArchiveException {
         archive = file;
         String fileName = file.getName();
@@ -49,7 +47,7 @@ public class ArchiveHandler {
         } catch(Exception e) {
             e.printStackTrace();
         }
-        if(model == null || zipfile == null){
+        if(model == null){
             throw new ArchiveException("Parsing the archive went wrong. Check if a model.xml is existent.");
         }
 
