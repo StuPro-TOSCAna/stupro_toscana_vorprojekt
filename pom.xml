@@ -19,6 +19,7 @@
 			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
+<<<<<<< HEAD
         <dependency>
             <groupId>jline</groupId>
             <artifactId>jline</artifactId>
@@ -27,6 +28,9 @@
         </dependency>
     </dependencies>
 
+=======
+	</dependencies>
+>>>>>>> origin/parser
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<plugins>
@@ -54,6 +58,7 @@
 					</execution>
 				</executions>
 			</plugin>
+<<<<<<< HEAD
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
@@ -95,5 +100,8 @@
 				</executions>
 			</plugin>
         </plugins>
+=======
+		</plugins>
+>>>>>>> origin/parser
 	</build>
 </project>

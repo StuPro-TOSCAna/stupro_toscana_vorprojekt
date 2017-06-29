@@ -25,16 +25,6 @@ public class MainTest {
         assertEquals(expected,result);
     }
 
-//    @Test
-//    public void argument(){
-//        PrintStream stdout = System.out;
-//        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-//        System.setOut(new PrintStream(outputStream));
-//        Main.main(new String[]{testResFolder+"zipwithmodel.zip"});
-//        String result = outputStream.toString();
-//        String expected = ConsoleColors.ANSI_RED+"File-argument missing."+ ConsoleColors.ANSI_RESET+"\n";
-//        System.setOut(stdout);
-//        assertEquals(expected,result);
-//    }
+
 
 }
