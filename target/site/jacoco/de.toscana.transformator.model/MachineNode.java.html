@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MachineNode.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TOSCAna</a> &gt; <a href="index.source.html" class="el_package">de.toscana.transformator.model</a> &gt; <span class="el_source">MachineNode.java</span></div><h1>MachineNode.java</h1><pre class="source lang-java linenums">package de.toscana.transformator.model;
+
+import static de.toscana.transformator.engine.CheckUtils.checkNull;
+
+/**
+ * This type of node represents a instance of Ubuntu. It is the Lowest part in a topology stack.
+ */
+public class MachineNode extends Node {
+
+    /**
+     * Key constant to store the key for the IP address
+     */
+    private static final String IP_ADRESS_KEY = &quot;ip&quot;;
+    /**
+     * Key constant to store the key for the SSH username
+     */
+    private static final String USERNAME_KEY = &quot;username&quot;;
+    /**
+     * Key constant to store the key for the SSH password
+     */
+    private static final String PASSWORD_KEY = &quot;password&quot;;
+
+    /**
+     * Attribute for storing the IP/hostname
+     */
+    private String ipAdress;
+    /**
+     * Attribute for storing the username
+     */
+    private String username;
+    /**
+     * Attribute for storing the password
+     */
+    private String password;
+
+    public MachineNode(org.w3c.dom.Node nodeElement) throws ParsingException {
+<span class="fc" id="L37">        super(nodeElement);</span>
+<span class="fc" id="L38">    }</span>
+
+    @Override
+    protected void parseSpecificData(org.w3c.dom.Node element) throws ParsingException {
+<span class="fc" id="L42">        ipAdress = properties.get(IP_ADRESS_KEY);</span>
+<span class="fc" id="L43">        username = properties.get(USERNAME_KEY);</span>
+<span class="fc" id="L44">        password = properties.get(PASSWORD_KEY);</span>
+<span class="pc bpc" id="L45" title="1 of 2 branches missed.">        if (!checkNull(ipAdress, username, password)) {</span>
+<span class="nc" id="L46">            throw new ParsingException(&quot;Invalid document.&quot; +</span>
+                    &quot; Cannot find all required properties in Machine node &quot; + name);
+        }
+<span class="fc" id="L49">    }</span>
+
+    @Override
+    protected boolean isParsable(org.w3c.dom.Node element) {
+<span class="fc" id="L53">        return true;</span>
+    }
+
+    public String getIpAdress() {
+<span class="nc" id="L57">        return ipAdress;</span>
+    }
+
+    public String getUsername() {
+<span class="nc" id="L61">        return username;</span>
+    }
+
+    public String getPassword() {
+<span class="nc" id="L65">        return password;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

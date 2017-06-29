@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TOSCAliteModel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TOSCAna</a> &gt; <a href="index.source.html" class="el_package">de.toscana.transformator.model</a> &gt; <span class="el_source">TOSCAliteModel.java</span></div><h1>TOSCAliteModel.java</h1><pre class="source lang-java linenums">package de.toscana.transformator.model;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * This class represents a complete, parsed topology.
+ */
+public class TOSCAliteModel {
+
+    private static final String MODEL_ELEMENT_NAME = &quot;Model&quot;;
+    private static final String NODES_ELEMENT_NAME = &quot;Nodes&quot;;
+    private static final String RELATIONSHIPS_ELEMENT_NAME = &quot;Relationships&quot;;
+    private static final String NODE_ELEMENT_NAME = &quot;Node&quot;;
+    private static final String NODE_TYPE_MACHINE_NAME = &quot;machine&quot;;
+    private static final String NODE_TYPE_SERVICE_NAME = &quot;service&quot;;
+    private static final String RELATIONSHIP_ELEMENT_KEY = &quot;Relationship&quot;;
+    private static final String HOSTED_ON_RELATIONSHIP_TYPE = &quot;hostedOn&quot;;
+    private static final String CONNECTS_TO_RELATIONSHIP_TYPE = &quot;connectsTo&quot;;
+    private static final String TYPE_ELEMENT_NAME = &quot;Type&quot;;
+
+    /**
+     * Stores all nodes in the Topology. Maps name to the node instance
+     */
+    private Map&lt;String, Node&gt; nodes;
+    /**
+     * Stores all Relationship instances
+     */
+    private List&lt;Relationship&gt; relationships;
+    /**
+     * This list stores all machine nodes in the parsed topology
+     */
+    private List&lt;MachineNode&gt; machines;
+
+    /**
+     * Given the contents of a model.xml this constructor parses a Object representation of the model.xml
+     *
+     * @param xmlContent Text content of a model.xml file
+     */
+<span class="fc" id="L51">    public TOSCAliteModel(String xmlContent) throws ParsingException {</span>
+<span class="fc" id="L52">        initializeAttributes();</span>
+        //TODO Implement Parsing
+        //initialze document builder and document
+<span class="fc" id="L55">        System.out.println(&quot;Initializing parser&quot;);</span>
+<span class="fc" id="L56">        Document document = null;</span>
+<span class="fc" id="L57">        Element root = null;</span>
+        try {
+<span class="fc" id="L59">            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();</span>
+<span class="fc" id="L60">            document = builder.parse(new ByteArrayInputStream(xmlContent.getBytes())); //TODO Rethink reading of the XML document</span>
+<span class="fc" id="L61">            root = document.getDocumentElement();</span>
+<span class="fc" id="L62">        } catch (ParserConfigurationException | SAXException |  IOException e) {</span>
+<span class="fc" id="L63">            e.printStackTrace();</span>
+<span class="fc" id="L64">            throw new ParsingException(&quot;Parser could not initialize properly. The model might be invalid.&quot;,e);</span>
+<span class="fc" id="L65">        }</span>
+<span class="fc" id="L66">        System.out.println(&quot;Parsing&quot;);</span>
+<span class="fc bfc" id="L67" title="All 2 branches covered.">        if (!root.getNodeName().equals(MODEL_ELEMENT_NAME)) {</span>
+<span class="fc" id="L68">            throw new ParsingException(&quot;Invalid document. Root element has to be called \&quot;Model\&quot;&quot;);</span>
+        }
+        //Read the Root nodes chilren and parse the nodes. after the nodes
+        //the relationships will be parsed, because they need the nodes created in order to link them.
+<span class="pc bpc" id="L72" title="1 of 2 branches missed.">        for (int i = 0; i &lt; root.getChildNodes().getLength(); i++) {</span>
+<span class="fc" id="L73">            org.w3c.dom.Node e = root.getChildNodes().item(i);</span>
+<span class="pc bpc" id="L74" title="1 of 2 branches missed.">            if (e.getNodeName().equals(NODES_ELEMENT_NAME)) {</span>
+<span class="fc" id="L75">                parseNodes(e);</span>
+<span class="fc" id="L76">                break;</span>
+            }
+        }
+<span class="pc bpc" id="L79" title="1 of 2 branches missed.">        for (int i = 0; i &lt; root.getChildNodes().getLength(); i++) {</span>
+<span class="fc" id="L80">            org.w3c.dom.Node e = root.getChildNodes().item(i);</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">            if (e.getNodeName().equals(RELATIONSHIPS_ELEMENT_NAME)) {</span>
+<span class="fc" id="L82">                parseRelationships(e);</span>
+<span class="fc" id="L83">                break;</span>
+            }
+        }
+<span class="fc" id="L86">    }</span>
+
+    private void parseNodes(org.w3c.dom.Node e) throws ParsingException {
+<span class="fc" id="L89">        System.out.println(&quot;Parsing nodes&quot;);</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">        for (int i = 0; i &lt; e.getChildNodes().getLength(); i++) {</span>
+<span class="fc" id="L91">            org.w3c.dom.Node n = e.getChildNodes().item(i);</span>
+<span class="pc bpc" id="L92" title="1 of 2 branches missed.">            if (n.getNodeName().equals(NODE_ELEMENT_NAME)) {</span>
+<span class="fc" id="L93">                String type = determineElementType(n);</span>
+<span class="fc" id="L94">                parseNode(n, type);</span>
+<span class="fc" id="L95">            } else {</span>
+<span class="nc" id="L96">                throw new ParsingException(&quot;Invalid document.&quot; +</span>
+                        &quot; Only \&quot;Node\&quot; elements are allowed&quot; +
+                        &quot; in the \&quot;Nodes\&quot; block.&quot;);
+            }
+        }
+<span class="fc" id="L101">    }</span>
+
+    private void parseNode(org.w3c.dom.Node n, String type) throws ParsingException {
+<span class="pc bpc" id="L104" title="1 of 2 branches missed.">        if (type == null) {</span>
+<span class="nc" id="L105">            throw new ParsingException(&quot;Invalid document.&quot; +</span>
+                    &quot; Node type not found!&quot;);
+        }
+<span class="fc" id="L108">        Node node = null;</span>
+<span class="pc bpc" id="L109" title="4 of 10 branches missed.">        switch (type) {</span>
+            case NODE_TYPE_MACHINE_NAME:
+<span class="fc" id="L111">                node = new MachineNode(n);</span>
+<span class="fc" id="L112">                machines.add((MachineNode) node);</span>
+<span class="fc" id="L113">                break;</span>
+            case NODE_TYPE_SERVICE_NAME:
+<span class="fc" id="L115">                node = new ServiceNode(n);</span>
+<span class="fc" id="L116">                break;</span>
+            default:
+                break;
+        }
+<span class="pc bpc" id="L120" title="1 of 2 branches missed.">        if (node == null) {</span>
+<span class="nc" id="L121">            throw new ParsingException(&quot;Invalid document.&quot; +</span>
+                    &quot; The node type &quot; + type + &quot; is not allowed!&quot;);
+        }
+<span class="fc" id="L124">        nodes.put(node.getName(), node);</span>
+<span class="fc" id="L125">        System.out.println(&quot;Added &quot; + node.getName() + &quot; &quot; + type);</span>
+<span class="fc" id="L126">    }</span>
+
+    private String determineElementType(org.w3c.dom.Node n) {
+<span class="pc bpc" id="L129" title="1 of 2 branches missed.">        for (int j = 0; j &lt; n.getChildNodes().getLength(); j++) {</span>
+<span class="fc" id="L130">            org.w3c.dom.Node inner = n.getChildNodes().item(j);</span>
+<span class="fc bfc" id="L131" title="All 2 branches covered.">            if (inner.getNodeName().equals(TYPE_ELEMENT_NAME)) {</span>
+<span class="fc" id="L132">                return inner.getTextContent();</span>
+            }
+        }
+<span class="nc" id="L135">        return null;</span>
+    }
+
+    private void parseRelationships(org.w3c.dom.Node e) throws ParsingException {
+<span class="fc" id="L139">        System.out.println(&quot;Parsing relationships&quot;);</span>
+<span class="fc bfc" id="L140" title="All 2 branches covered.">        for (int i = 0; i &lt; e.getChildNodes().getLength(); i++) {</span>
+<span class="fc" id="L141">            org.w3c.dom.Node n = e.getChildNodes().item(i);</span>
+<span class="pc bpc" id="L142" title="1 of 2 branches missed.">            if (n.getNodeName().equals(RELATIONSHIP_ELEMENT_KEY)) {</span>
+<span class="fc" id="L143">                String type = determineElementType(n);</span>
+<span class="fc" id="L144">                parseRelationship(n, type);</span>
+<span class="fc" id="L145">            } else {</span>
+<span class="nc" id="L146">                throw new ParsingException(&quot;Invalid document.&quot; +</span>
+                        &quot; Only \&quot;Relationship\&quot; elements are &quot; +
+                        &quot;allowed in the \&quot;Relationships\&quot; block.&quot;);
+            }
+        }
+<span class="fc" id="L151">    }</span>
+
+    private void parseRelationship(org.w3c.dom.Node node, String type) throws ParsingException {
+<span class="pc bpc" id="L154" title="1 of 2 branches missed.">        if (type == null) {</span>
+<span class="nc" id="L155">            throw new ParsingException(&quot;Invalid document.&quot; +</span>
+                    &quot; Relationship type not found!&quot;);
+        }
+<span class="fc" id="L158">        Relationship relationship = null;</span>
+<span class="pc bpc" id="L159" title="4 of 10 branches missed.">        switch (type) {</span>
+            case HOSTED_ON_RELATIONSHIP_TYPE:
+<span class="fc" id="L161">                relationship = new HostedOnRelationship(node, this);</span>
+<span class="fc" id="L162">                break;</span>
+            case CONNECTS_TO_RELATIONSHIP_TYPE:
+<span class="fc" id="L164">                relationship = new ConnectsToRelationship(node, this);</span>
+<span class="fc" id="L165">                break;</span>
+            default:
+                break;
+        }
+<span class="pc bpc" id="L169" title="1 of 2 branches missed.">        if (relationship == null) {</span>
+<span class="nc" id="L170">            throw new ParsingException(&quot;Invalid document.&quot; +</span>
+                    &quot; The relationship type &quot; + type + &quot; is not allowed!&quot;);
+        }
+<span class="fc" id="L173">        relationships.add(relationship);</span>
+<span class="fc" id="L174">        System.out.println(&quot;Parsed &quot; + type + &quot; relationship from &quot;</span>
+<span class="fc" id="L175">                + relationship.source.getName() + &quot; to &quot;</span>
+<span class="fc" id="L176">                + relationship.target.getName());</span>
+<span class="fc" id="L177">    }</span>
+
+    private void initializeAttributes() {
+<span class="fc" id="L180">        nodes = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L181">        relationships = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L182">        machines = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L183">    }</span>
+
+    /**
+     * Returns the Node instance for a given name.
+     * If a node does not exist with the given name null gets returned
+     */
+    public Node getNodeByName(String name) {
+<span class="fc" id="L190">        return nodes.get(name);</span>
+    }
+
+    public Map&lt;String, Node&gt; getNodes() {
+<span class="nc" id="L194">        return nodes;</span>
+    }
+
+    public List&lt;Relationship&gt; getRelationships() {
+<span class="nc" id="L198">        return relationships;</span>
+    }
+
+    public List&lt;MachineNode&gt; getMachines() {
+<span class="fc" id="L202">        return machines;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

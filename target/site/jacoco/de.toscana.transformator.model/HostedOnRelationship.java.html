@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HostedOnRelationship.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TOSCAna</a> &gt; <a href="index.source.html" class="el_package">de.toscana.transformator.model</a> &gt; <span class="el_source">HostedOnRelationship.java</span></div><h1>HostedOnRelationship.java</h1><pre class="source lang-java linenums">package de.toscana.transformator.model;
+
+/**
+ * This class represents a Hosted on Relationship.
+ */
+public class HostedOnRelationship extends Relationship {
+    public HostedOnRelationship(org.w3c.dom.Node relElement, TOSCAliteModel model) throws ParsingException {
+<span class="fc" id="L8">        super(relElement, model);</span>
+<span class="fc" id="L9">    }</span>
+
+    @Override
+    protected void updateNodes(Node source, Node target) throws ParsingException {
+<span class="pc bpc" id="L13" title="1 of 2 branches missed.">        if (source instanceof ServiceNode) {</span>
+<span class="fc" id="L14">            ((ServiceNode) source).setParent(target);</span>
+<span class="fc" id="L15">            target.addChild(source);</span>
+        } else {
+<span class="nc" id="L17">            throw new ParsingException(&quot;Invalid document.&quot; +</span>
+                    &quot;The source of a hostedOn relationship &quot; +
+                    &quot;has to be a service node. (Source: &quot; + source.name + &quot;, &quot; +
+                    &quot;Target: &quot; + target.name + &quot;)&quot;);
+        }
+<span class="fc" id="L22">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

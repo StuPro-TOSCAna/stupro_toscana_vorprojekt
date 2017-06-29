@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ServiceNode.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TOSCAna</a> &gt; <a href="index.source.html" class="el_package">de.toscana.transformator.model</a> &gt; <span class="el_source">ServiceNode.java</span></div><h1>ServiceNode.java</h1><pre class="source lang-java linenums">package de.toscana.transformator.model;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * This class represents a service node.
+ */
+public class ServiceNode extends Node {
+
+    private static final String IMPLEMENTATION_ARTIFACTS_ELEMENT_NAME = &quot;ImplementationArtifacts&quot;;
+    private static final String DEPLOYMENT_ARTIFACTS_ELEMENT_NAME = &quot;DeploymentArtifacts&quot;;
+    private static final String DEPLOYMENT_ARTIFACT_ELEMENT_NAME = &quot;DeploymentArtifact&quot;;
+
+    private List&lt;ArtifactPath&gt; deploymentArtifacts;
+    private Map&lt;ArtifactType, ArtifactPath&gt; implementationArtifacts;
+    private Node parent;
+<span class="fc" id="L20">    private List&lt;ConnectsToRelationship&gt; sourceConnections = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L21">    private List&lt;ConnectsToRelationship&gt; targetConnections = new ArrayList&lt;&gt;();</span>
+
+
+    public ServiceNode(org.w3c.dom.Node nodeElement) throws ParsingException {
+<span class="fc" id="L25">        super(nodeElement);</span>
+<span class="fc" id="L26">    }</span>
+
+    @Override
+    protected void parseSpecificData(org.w3c.dom.Node element) throws ParsingException {
+        //Initialize storage collections. This has to be done here instead of the declaration
+        //because this gets executed by the parent constructor
+<span class="fc" id="L32">        implementationArtifacts = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L33">        deploymentArtifacts = new ArrayList&lt;&gt;();</span>
+        //Parse specific data
+<span class="fc" id="L35">        parseImplementationArtifacts(element);</span>
+<span class="fc" id="L36">        parseDeploymentArtifacts(element);</span>
+<span class="fc" id="L37">    }</span>
+
+    private void parseImplementationArtifacts(org.w3c.dom.Node element) throws ParsingException {
+<span class="fc" id="L40">        System.out.print(&quot;Parsing implementation artifacts for &quot; + name + &quot;... &quot;);</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">        for (int i = 0; i &lt; element.getChildNodes().getLength(); i++) {</span>
+<span class="fc" id="L42">            org.w3c.dom.Node child = element.getChildNodes().item(i);</span>
+<span class="fc bfc" id="L43" title="All 2 branches covered.">            if (child.getNodeName().equals(IMPLEMENTATION_ARTIFACTS_ELEMENT_NAME)) {</span>
+<span class="fc bfc" id="L44" title="All 2 branches covered.">                for (int j = 0; j &lt; child.getChildNodes().getLength(); j++) {</span>
+<span class="fc" id="L45">                    org.w3c.dom.Node innerChild = child.getChildNodes().item(j);</span>
+                    try {
+<span class="fc" id="L47">                        ArtifactType type = ArtifactType.getByNodeName(innerChild.getNodeName());</span>
+<span class="fc" id="L48">                        implementationArtifacts.put(type, new ArtifactPath(innerChild.getTextContent(), this));</span>
+<span class="nc" id="L49">                    } catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L50">                        throw new ParsingException(&quot;Invalid document.&quot; +</span>
+<span class="nc" id="L51">                                &quot; The Implementation Artifact type &quot; + innerChild.getNodeName()</span>
+                                + &quot; is invalid!&quot;);
+<span class="fc" id="L53">                    }</span>
+                }
+            }
+        }
+<span class="fc" id="L57">        System.out.println(&quot;Parsed &quot; + implementationArtifacts.size() + &quot; artifacts.&quot;);</span>
+<span class="fc" id="L58">    }</span>
+
+    private void parseDeploymentArtifacts(org.w3c.dom.Node element) throws ParsingException {
+<span class="fc" id="L61">        System.out.print(&quot;Parsing deployment artifacts for &quot; + name + &quot;... &quot;);</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        for (int i = 0; i &lt; element.getChildNodes().getLength(); i++) {</span>
+<span class="fc" id="L63">            org.w3c.dom.Node child = element.getChildNodes().item(i);</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">            if (child.getNodeName().equals(DEPLOYMENT_ARTIFACTS_ELEMENT_NAME)) {</span>
+<span class="fc bfc" id="L65" title="All 2 branches covered.">                for (int j = 0; j &lt; child.getChildNodes().getLength(); j++) {</span>
+<span class="fc" id="L66">                    org.w3c.dom.Node innerChild = child.getChildNodes().item(j);</span>
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">                    if (innerChild.getNodeName().equals(DEPLOYMENT_ARTIFACT_ELEMENT_NAME)) {</span>
+<span class="fc" id="L68">                        deploymentArtifacts.add(new ArtifactPath(innerChild.getTextContent(), this));</span>
+                    } else {
+<span class="nc" id="L70">                        throw new ParsingException(&quot;Invalid document.&quot; +</span>
+                                &quot; Elements in the deployment artifacts &quot; +
+                                &quot;list have to be called DeploymentArtifact.&quot; +
+                                &quot; The error occured on node &quot; + name);
+                    }
+                }
+            }
+        }
+<span class="fc" id="L78">        System.out.println(&quot;Parsed &quot; + deploymentArtifacts.size() + &quot; artifacts.&quot;);</span>
+<span class="fc" id="L79">    }</span>
+
+
+    @Override
+    protected boolean isParsable(org.w3c.dom.Node element) {
+        //Check if a Create implementation artifact exists
+<span class="fc" id="L85">        boolean createFound = false;</span>
+<span class="pc bpc" id="L86" title="1 of 2 branches missed.">        for (int i = 0; i &lt; element.getChildNodes().getLength(); i++) {</span>
+<span class="fc" id="L87">            org.w3c.dom.Node child = element.getChildNodes().item(i);</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">            if (child.getNodeName().equals(IMPLEMENTATION_ARTIFACTS_ELEMENT_NAME)) {</span>
+<span class="pc bpc" id="L89" title="1 of 2 branches missed.">                for (int j = 0; j &lt; child.getChildNodes().getLength(); j++) {</span>
+<span class="fc" id="L90">                    org.w3c.dom.Node innerChild = child.getChildNodes().item(j);</span>
+<span class="pc bpc" id="L91" title="1 of 2 branches missed.">                    if (innerChild.getNodeName().equals(ArtifactType.CREATE.getElementName())) {</span>
+<span class="fc" id="L92">                        createFound = true;</span>
+<span class="fc" id="L93">                        break;</span>
+                    }
+                }
+<span class="pc bpc" id="L96" title="1 of 2 branches missed.">                if (createFound) {</span>
+<span class="fc" id="L97">                    break;</span>
+                }
+            }
+        }
+
+<span class="fc" id="L102">        return createFound;</span>
+    }
+
+    public boolean hasImplementationArtifact(ArtifactType type) {
+<span class="nc" id="L106">        return implementationArtifacts.containsKey(type);</span>
+    }
+
+    public ArtifactPath getImplementationArtifact(ArtifactType type) {
+<span class="nc bnc" id="L110" title="All 2 branches missed.">        if (hasImplementationArtifact(type)) {</span>
+<span class="nc" id="L111">            return implementationArtifacts.get(type);</span>
+        }
+<span class="nc" id="L113">        return null;</span>
+    }
+
+    public List&lt;ArtifactPath&gt; getDeploymentArtifacts() {
+<span class="nc" id="L117">        return deploymentArtifacts;</span>
+    }
+
+    public Node getParent() {
+<span class="nc" id="L121">        return parent;</span>
+    }
+
+    protected void setParent(Node parent) {
+<span class="fc" id="L125">        this.parent = parent;</span>
+<span class="fc" id="L126">    }</span>
+
+    public List&lt;ConnectsToRelationship&gt; getSourceConnections() {
+<span class="fc" id="L129">        return sourceConnections;</span>
+    }
+
+    public List&lt;ConnectsToRelationship&gt; getTargetConnections() {
+<span class="fc" id="L133">        return targetConnections;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

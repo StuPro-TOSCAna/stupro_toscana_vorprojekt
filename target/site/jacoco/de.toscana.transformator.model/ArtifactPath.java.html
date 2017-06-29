@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ArtifactPath.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TOSCAna</a> &gt; <a href="index.source.html" class="el_package">de.toscana.transformator.model</a> &gt; <span class="el_source">ArtifactPath.java</span></div><h1>ArtifactPath.java</h1><pre class="source lang-java linenums">package de.toscana.transformator.model;
+
+/**
+ * This class represents the path of a artifact in the TOSCAlite archive
+ */
+public class ArtifactPath {
+    private static final String PATH_SEPERATOR = &quot;/&quot;;
+    private String absoultePath;
+
+<span class="fc" id="L10">    public ArtifactPath(String path, Node node) {</span>
+<span class="pc bpc" id="L11" title="1 of 2 branches missed.">        if (node == null) {</span>
+<span class="nc" id="L12">            throw new IllegalArgumentException(&quot;A node has to be supplied,&quot; +</span>
+                    &quot; when creating a ArtifactPath&quot;);
+        }
+<span class="fc bfc" id="L15" title="All 2 branches covered.">        if (path.startsWith(PATH_SEPERATOR)) {</span>
+<span class="fc" id="L16">            this.absoultePath = path;</span>
+<span class="fc" id="L17">            return;</span>
+        }
+<span class="fc" id="L19">        absoultePath = PATH_SEPERATOR + node.name + PATH_SEPERATOR + path;</span>
+<span class="fc" id="L20">    }</span>
+
+<span class="fc" id="L22">    public ArtifactPath(String path, Relationship relationship) {</span>
+<span class="pc bpc" id="L23" title="1 of 2 branches missed.">        if (relationship == null) {</span>
+<span class="nc" id="L24">            throw new IllegalArgumentException(&quot;A relationship has to be supplied,&quot; +</span>
+                    &quot; when creating a ArtifactPath&quot;);
+        }
+<span class="pc bpc" id="L27" title="1 of 2 branches missed.">        if (path.startsWith(PATH_SEPERATOR)) {</span>
+<span class="nc" id="L28">            this.absoultePath = path;</span>
+<span class="nc" id="L29">            return;</span>
+        }
+<span class="fc" id="L31">        absoultePath = PATH_SEPERATOR + &quot;relationships&quot; + PATH_SEPERATOR + path;</span>
+<span class="fc" id="L32">    }</span>
+
+    public String getAbsoultePath() {
+<span class="nc" id="L35">        return absoultePath;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L40">        return absoultePath;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
