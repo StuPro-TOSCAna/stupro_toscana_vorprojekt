@@ -65,10 +65,6 @@ The following operations are supported:
 #### Deployment Artifacts
 Deployment artifacts are files, such as executables, that get loaded with the implementation artifact when creating the service node. A service can have multiple deployment artifacts. There is no limitation for file types. The ability to process the deployment artifacts has to be implemented in the shell script.
 
-#### Folder Structure on target machine
-
-TODO!
-
 #### Definition in XML
 
 ```XML
@@ -122,12 +118,52 @@ In order to model a topology it is necessary to model the edges (Relationships) 
 ```
 
 **Explanation**:
-* `Type` - Just like with nodes, this represents the type of the relationship and is either `hostedOn` or `connectsTo`
+* `Type` - Just like with nodes, this represents the type of the relationship and is either `hostedOn` for a HostedOn relationship or `connectsTo` for a ConnectsTo relationship.
+* `Source` - The name of the source node of the relationship
+* `Target` - The name of the target node of the relationship
+
+All of the elements described above are neccessary for describing a relationship.
 
 ### HostedOn
+If two nodes are in a hosted on relationship, they will be deployed on the same machine. The target node is always the parent node of the source node. When deploying an application, this means that the Target will be Created and started before the souce, when stopping the implementation artifacts of the service nodes will be executed in the opposite directon.
+
+The hosted on relationship does not allow self connections and it does not allow machine nodes as sources only as targets.
 
 ### ConnectsTo
 
+The connects to relationship describes a network connection between two nodes. Just like the hosted on relationship, this is a directional relationship. In order to allow the source node to connect to the target node it needs to know the connection information (e.g. IP-Adress). This information gets programmed into the application using a implementation artifact (Shell script) that gets executed after the service node was created.
+
+A example definition for a connects to relationship:
+
+```XML
+<Relationship>
+    <Type>connectsTo</Type>
+    <Source>wordpress</Source>
+    <Target>mysql</Target>
+    <ImplementationArtifact>connect-to-database.sh</ImplementationArtifact>
+</Relationship>
+```
+
+If the path in the implementation artifact is relative the TOSCAlite deployment system assumes the file is located in a folder called `relationships` within the zip archive.
+
+The connects to relationship does not allow self connections and connections with (or between) machine nodes.
+
 ## Packaging
 
+A application modeled in TOSCAlite gets packaged as a `.zip`-Archive this archive contains all the artifacts and the `model.xml` which describes the topology graph. The folder structure of the archive should contain one folder for every service node defined in the `model.xml` this folder contains all artifacts associated with this node (if no absolute path gets defined). The Implementation artifacts for connects to relationships will be stored in a folder called `relationships`  
+
 ### model.xml
+
+The ``model.xl`` describes the topology graph. Nodes and Relationships get described in seperate blocks. 
+
+A empty model.xml file looks as follows:
+```XML
+<Model>
+    <Nodes>
+        <!-- Insert nodes here -->
+    </Nodes>
+    <Relationships>
+        <!-- Insert relationships here -->
+    </Relationships>
+</Model>
+```
