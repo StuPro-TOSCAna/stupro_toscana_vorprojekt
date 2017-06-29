@@ -9,6 +9,8 @@ import java.util.Map;
  * Root class to represent a topology node.
  */
 public abstract class Node {
+
+    //Externalized Strings
     private static final String NAME_VALID_CHARACTERS = "abcdefghijklmnopqrstuvwxyz-_1234567890";
     private static final String PROPERTY_KEY_VALID_CHARACTERS = "abcdefghijklmnopqrstuvwxyz" +
             "abcdefghijklmnopqrstuvwxyz".toUpperCase();
@@ -31,6 +33,13 @@ public abstract class Node {
      */
     protected List<Node> children = new ArrayList<>();
 
+    /**
+     * Parses a new node from a given XML node
+     *
+     * @param nodeElement the XML node to parse from
+     * @throws ParsingException gets thrown if the given nodeElement does not match
+     *                          the requirements defined in the spec
+     */
     public Node(org.w3c.dom.Node nodeElement) throws ParsingException {
         if (!isValidElement(nodeElement)) {
             throw new ParsingException("The given Element is not a valid Node!");
@@ -39,6 +48,12 @@ public abstract class Node {
         parseSpecificData(nodeElement);
     }
 
+    /**
+     * This method parses the common data of every node i.e. Name and properties
+     *
+     * @param nodeElement the node element to parse from
+     * @throws ParsingException gets thrown if the given node is not parsable
+     */
     private void parseCommonData(org.w3c.dom.Node nodeElement) throws ParsingException {
         for (int i = 0; i < nodeElement.getChildNodes().getLength(); i++) {
             org.w3c.dom.Node child = nodeElement.getChildNodes().item(i);
@@ -58,6 +73,12 @@ public abstract class Node {
         }
     }
 
+    /**
+     * Parses all properties of a Properties node
+     *
+     * @param nodeElement the properties node to parse from
+     * @throws ParsingException gets thrown if something went wrong while parsing (Usualy invalid input data)
+     */
     protected void parseProperties(org.w3c.dom.Node nodeElement) throws ParsingException {
         for (int i = 0; i < nodeElement.getChildNodes().getLength(); i++) {
             org.w3c.dom.Node child = nodeElement.getChildNodes().item(i);
@@ -68,6 +89,13 @@ public abstract class Node {
         System.out.println("Parsed properties for node " + name);
     }
 
+    /**
+     * This method parses a single property node and adds its key/value into the property map
+     * it throws a ParsingException if the Key of the property is invalid
+     *
+     * @param child the node to analyze and add from
+     * @throws ParsingException see description
+     */
     private void parseProperty(org.w3c.dom.Node child) throws ParsingException {
         String key = null;
         for (int j = 0; j < child.getAttributes().getLength(); j++) {
@@ -86,12 +114,25 @@ public abstract class Node {
         properties.put(key, child.getTextContent());
     }
 
+    /**
+     * Checks a given key for the valid charset
+     *
+     * @param key the key to check
+     * @return true if all characters in the key are in the valid charset.
+     */
     private boolean isKeyValid(String key) {
         char[] keys = PROPERTY_KEY_VALID_CHARACTERS.toCharArray();
         int cnt = getValidCharCount(key, keys);
         return cnt == key.length();
     }
 
+    /**
+     * Checks if a node name matches the requirements: Charset and against a list of invalid names
+     *
+     * @param textContent the string to check
+     * @return true if the string ist not on the list of forbidden names and all chars
+     * are in the allowed charset
+     */
     private boolean isValidNodeName(String textContent) {
         char[] validChars = NAME_VALID_CHARACTERS.toCharArray();
         int validCharCount = getValidCharCount(textContent, validChars);
@@ -102,6 +143,10 @@ public abstract class Node {
         return validCharCount == textContent.length() && !forbiddenName;
     }
 
+    /**
+     * This method returns the count of characters in the string textContent
+     * that are contained in the valid chars array
+     */
     private int getValidCharCount(String textContent, char[] validChars) {
         int validCharCount = 0;
         for (char c : textContent.toCharArray()) {
@@ -114,6 +159,12 @@ public abstract class Node {
         return validCharCount;
     }
 
+    /**
+     * This method checks the given element for validiy (i.e. it meets the minimal requirements to get parsed)
+     *
+     * @param nodeElement the element to check
+     * @return true if the element can be parsed false otherwise
+     */
     private boolean isValidElement(org.w3c.dom.Node nodeElement) {
         int paramCount = 0;
         for (int i = 0; i < nodeElement.getChildNodes().getLength(); i++) {
@@ -145,6 +196,12 @@ public abstract class Node {
      */
     protected abstract boolean isParsable(org.w3c.dom.Node element);
 
+    /**
+     * Adds a hostedOn child to this node.
+     * The added node gets hosted on the current node
+     *
+     * @param child the child node to add (Usualy this is a ServiceNode)
+     */
     protected void addChild(Node child) {
         children.add(child);
     }
