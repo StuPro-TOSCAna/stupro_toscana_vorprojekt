@@ -1,4 +1,4 @@
-package de.toscana.transformator;
+package de.toscana.transformator.engine;
 
 public class ExampleClass {
     public boolean testClass(String string) {

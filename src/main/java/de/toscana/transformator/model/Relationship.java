@@ -1,6 +1,6 @@
 package de.toscana.transformator.model;
 
-import static de.toscana.transformator.util.CheckUtils.checkNull;
+import static de.toscana.transformator.engine.CheckUtils.checkNull;
 
 /**
  * This class is the base class representing the common properties of a relationship

@@ -25,6 +25,4 @@ public class MainTest {
         assertEquals(expected,result);
     }
 
-
-
 }

@@ -1,5 +1,7 @@
 package de.toscana.transformator;
 
+import de.toscana.transformator.model.ParsingException;
+import de.toscana.transformator.model.TOSCAliteModel;
 import de.toscana.transformator.util.ConsoleColors;
 
 import java.io.*;
@@ -15,6 +17,11 @@ public class Main {
         } else {
             String model = getModelXmlAsString(args[0]);
             if (model == null) return;
+            try {
+                TOSCAliteModel toscAliteModel = new TOSCAliteModel(model);
+            } catch (ParsingException e) {
+                e.printStackTrace();
+            }
         }
         printInfo();
         startEngine();

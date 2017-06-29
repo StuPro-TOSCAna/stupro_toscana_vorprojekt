@@ -1,4 +1,4 @@
-package de.toscana.transformator.util;
+package de.toscana.transformator.engine;
 
 /**
  * Misc. utility methods for checking multiple variables at once
