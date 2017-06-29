@@ -7,12 +7,18 @@ import de.toscana.transformator.util.ConsoleColors;
 
 import java.io.*;
 
-
+/**
+ * Main entry point for the program
+ */
 class Main {
     private static Engine engine;
 
+    /**
+     *
+     * @param args the archive file path
+     */
     public static void main(String[] args) {
-        printInfo();
+        printTitle();
         if (args.length == 0) {
             System.out.println(ConsoleColors.getErrorString("File-argument missing."));
             return;
@@ -32,21 +38,28 @@ class Main {
         setUpController();
     }
 
+
     private static void setUpController() {
         Controller controller = new Controller();
+
+        // set listener to react on cli input
         controller.setListener(s -> {
             if (engine != null) {
                 if ("start".equals(s)) engine.start();
                 else if ("stop".equals(s)) engine.stop();
             } else {
                 System.out.println(ConsoleColors.getErrorString("Something went wrong!"));
-                //noinspection UnnecessaryReturnStatement
                 return;
             }
         });
         controller.createReader();
     }
 
+    /**
+     * parses the model.xml out of the archive file
+     * @param arg the archive file path
+     * @return the model.xml as one line string
+     */
     private static String getModelXmlFileAsString(String arg) {
         System.out.println("Inputfile: " + arg);
         String string;
@@ -54,7 +67,7 @@ class Main {
         ArchiveHandler archiveHandler;
         try {
             archiveHandler = new ArchiveHandler(inputFile);
-            string = archiveHandler.getModelXml();
+            string = archiveHandler.getModelXmlFromZip();
         } catch (ArchiveHandler.ArchiveException e) {
             System.err.println(ConsoleColors.getErrorString(e.getMessage()));
             return null;
@@ -62,8 +75,10 @@ class Main {
         return string;
     }
 
-
-    private static void printInfo() {
+    /**
+     * super fancy method
+     */
+    private static void printTitle() {
         System.out.println("████████╗ ██████╗ ███████╗ ██████╗ █████╗ ██████╗ ██╗   ██╗███████╗██████╗ ██╗  ██╗███████╗██████╗ ███████╗");
         System.out.println("╚══██╔══╝██╔═══██╗██╔════╝██╔════╝██╔══██╗╚════██╗██║   ██║██╔════╝██╔══██╗██║  ██║██╔════╝██╔══██╗██╔════╝");
         System.out.println("   ██║   ██║   ██║███████╗██║     ███████║ █████╔╝██║   ██║███████╗██████╔╝███████║█████╗  ██████╔╝█████╗");

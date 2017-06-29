@@ -25,47 +25,63 @@ class Controller {
         this.actionsForEngine = Arrays.asList("create","start", "stop");
     }
 
+    /**
+     * prints the help text
+     */
     private static void printHelp() {
         // TODO: 22.06.17 better description
-        System.out.println("create");
-        System.out.println("start");
-        System.out.println("stop");
+        System.out.println("create - create the model");
+        System.out.println("start - start the model");
+        System.out.println("stop - stop the model");
     }
 
     public void setListener(ControllerListener listener) {
         this.listener = listener;
     }
 
+    /**
+     * creates the cli and listens for input
+     */
     public void createReader() {
         try {
             reader = new ConsoleReader();
             reader.setPrompt(ANSI_CYAN + "tosca2vsphere\u001B[0m> ");
             setUpCompletors(reader);
-
             String line;
-            PrintWriter out = new PrintWriter(reader.getOutput());
-
             while ((line = reader.readLine()) != null) {
-                if ("help".equals(line)) {
-                    printHelp();
-                    break;
-                } else if (actionsForEngine.contains(line)) {
-                    listener.action(line);
-                }
-                out.flush();
-
-                if (line.equalsIgnoreCase("quit") || line.equalsIgnoreCase("exit")) {
-                    listener.action("exit");
-                    break;
-                }
-                if (line.equalsIgnoreCase("cls")) {
-                    reader.clearScreen();
-                }
+                if (handleInput(line)) break;
             }
-
         } catch (Throwable t) {
             t.printStackTrace();
         }
+    }
+
+    /**
+     * handles what the user enters into the cli
+     * @param line the text the user enters
+     *
+     * @return false if the user wants to exit
+     * @throws IOException
+     */
+    private boolean handleInput(String line) throws IOException {
+        if ("help".equals(line)) {
+            printHelp();
+        }
+        // checks if input is one of the valid commands for the engine
+        if (actionsForEngine.contains(line)) {
+            listener.action(line);
+        }
+
+        if (line.equalsIgnoreCase("quit") || line.equalsIgnoreCase("exit")) {
+            listener.action("exit");
+            return true;
+        }
+
+        //clears the screen for the current reader
+        if (line.equalsIgnoreCase("cls")) {
+            reader.clearScreen();
+        }
+        return false;
     }
 
     public void stopReader() {
@@ -77,6 +93,10 @@ class Controller {
         reader = null;
     }
 
+    /**
+     * sets up the completors that a user can use with tab
+     * @param reader  the current reader
+     */
     private void setUpCompletors(ConsoleReader reader) {
         List<Completer> completors = new LinkedList<>();
         completors.add(new StringsCompleter("create", "start", "stop", "exit", "help"));

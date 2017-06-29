@@ -34,12 +34,12 @@ public  class ArchiveHandlerTest {
         exception.expect(ArchiveHandler.ArchiveException.class);
         exception.expectMessage("Parsing the archive went wrong. Check if a model.xml is existent.");
         ArchiveHandler archiveHandler = new ArchiveHandler(new File(testResFolder+"zipwithoutmodel.zip"));
-        archiveHandler.getModelXml();
+        archiveHandler.getModelXmlFromZip();
     }
     @Test
     public void zipWithModel() throws ArchiveHandler.ArchiveException {
         ArchiveHandler archiveHandler = new ArchiveHandler(new File(testResFolder+ "zipwithinvalidmodel.zip"));
-        String result = archiveHandler.getModelXml();
+        String result = archiveHandler.getModelXmlFromZip();
         String expected = "ThisisaverylongString.";
         assertEquals(expected,result);
 

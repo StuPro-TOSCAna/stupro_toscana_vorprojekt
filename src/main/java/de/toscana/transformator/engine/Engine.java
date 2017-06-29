@@ -36,7 +36,7 @@ public class Engine {
             Node nodeToInstall = nodesForCreation.poll();
             properties = nodeToInstall.getProperties();
             String createProperty = properties.get(ArtifactType.CREATE.getElementName());
-            System.out.println("stoped");
+            System.out.println("created");
             //TODO: send createProperty to the VM
         }
         return true;
@@ -55,6 +55,6 @@ public class Engine {
      */
     public void stop() {
         // TODO: Implementation of stop() method
-        System.out.println("created");
+        System.out.println("stopped");
     }
 }
