@@ -4,6 +4,7 @@ package de.toscana.transformator.executor;
  * Created by Manuel on 15.06.2017.
  */
 
+
 import com.jcraft.jsch.*;
 
 import java.io.*;
@@ -122,11 +123,13 @@ public class SSHConnection implements Executor{
     /**
      * Tests if Unzip is installed, if it is installed unzip the File on the Machine
      * otherwise install Unzip and then unzip the File
+     * Overwrites all existing files
      */
-    public String unzipFile(String zipname) {
+    private String unzipFile(String zipname) {
         String zip="";
+        //depends on the language the server is using
         if(sendCommand("apt -qq list unzip").contains("installed")) {
-            zip = sendCommand("unzip " + zipname);
+            zip = sendCommand("unzip -o " + zipname);
         } else {
             sendCommand("apt-get install unzip");
             try {
@@ -134,8 +137,18 @@ public class SSHConnection implements Executor{
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            zip = sendCommand("unzip " + zipname);
+            zip = sendCommand("unzip -o " + zipname);
         }
         return zip;
+    }
+
+    /**
+     * Uploads a zip file and unzips it. Overwrites already existing files
+     */
+    public String uploadAndUnzipZip(String zipFilename, String localDir) {
+        //can be changed maybe?
+        String targetDirectory = "./";
+        uploadFile(localDir + zipFilename, targetDirectory);
+        return unzipFile(targetDirectory + zipFilename);
     }
 }

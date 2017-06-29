@@ -3,7 +3,6 @@ package de.toscana.transformator.executor;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.sun.xml.internal.ws.dump.LoggingDumpTube.Position.Before;
 import static org.junit.Assert.*;
 
 /**
@@ -43,28 +42,11 @@ public class SSHConnectionTest {
      */
     @Test
     public void testUploadFile() {
-        String directory = "C:/";
-        String filename = "empty.zip";
+        String directory = "D:/";
+        String filename = "test.txt";
         instance.connect();
         instance.uploadFile(directory + filename, ".");
-        assertTrue(instance.sendCommand("ls").contains("empty.zip"));
-        instance.close();
-    }
-
-    /**
-     * starts the connection and waits 5 seconds before terminating the session
-     * this time is used to check on the raspberry with netstat for a new connection
-     */
-    @Test
-    public void testConnect() {
-        instance.connect();
-        //time to check netstat on device
-
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        assertTrue(instance.sendCommand("ls").contains("test.txt"));
         instance.close();
     }
 
@@ -74,8 +56,10 @@ public class SSHConnectionTest {
     @Test
     public void testUnzip() {
         instance.connect();
-        //time to check netstat on device
-        assertTrue(instance.unzipFile("empty").contains("empty.txt"));
+        String directory = "D:/";
+        String filename = "empty.zip";
+        String result = instance.uploadAndUnzipZip(filename,directory);
+        assertTrue(result.contains("empty.txt"));
         instance.close();
     }
 }
