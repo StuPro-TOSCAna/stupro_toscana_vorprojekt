@@ -3,6 +3,8 @@ package de.toscana.transformator;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.io.File;
 
@@ -11,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by nick on 28.06.17.
  */
-
+@RunWith(JUnit4.class)
 public  class ArchiveHandlerTest {
     private final String testResFolder ="src/test/resources/";
     @Rule

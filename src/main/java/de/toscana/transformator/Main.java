@@ -45,14 +45,26 @@ class Main {
         // set listener to react on cli input
         controller.setListener(s -> {
             if (engine != null) {
-                if ("start".equals(s)) engine.start();
-                else if ("stop".equals(s)) engine.stop();
+                controlEngine(s);
             } else {
                 System.out.println(ConsoleColors.getErrorString("Something went wrong!"));
                 return;
             }
         });
         controller.createReader();
+    }
+
+    private static void controlEngine(String s) {
+        switch (s) {
+            case "create":
+                engine.create();
+                break;
+            case "start":
+                engine.start();
+                break;
+            case "stop":
+                engine.stop();
+        }
     }
 
     /**

@@ -6,7 +6,6 @@ import jline.console.completer.StringsCompleter;
 
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;

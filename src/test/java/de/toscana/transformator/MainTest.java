@@ -4,6 +4,8 @@ import de.toscana.transformator.util.ConsoleColors;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -13,6 +15,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by nick on 28.06.17.
  */
+@RunWith(JUnit4.class)
 public class MainTest {
     private final String testResFolder ="src/test/resources/";
     @Rule

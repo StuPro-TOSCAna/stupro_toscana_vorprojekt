@@ -28,6 +28,7 @@ public class Engine {
      * TODO: send files and commands to VM
      */
     public boolean create() {
+        System.out.println("created");
         Creator creator = new Creator(topology);
         Queue<Node> nodesForCreation = creator.getSortedNodes();
         Map<String, String> properties=null;
@@ -36,7 +37,7 @@ public class Engine {
             Node nodeToInstall = nodesForCreation.poll();
             properties = nodeToInstall.getProperties();
             String createProperty = properties.get(ArtifactType.CREATE.getElementName());
-            System.out.println("created");
+
             //TODO: send createProperty to the VM
         }
         return true;
