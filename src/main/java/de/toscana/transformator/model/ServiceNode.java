@@ -68,8 +68,8 @@ public class ServiceNode extends Node {
                         deploymentArtifacts.add(new ArtifactPath(innerChild.getTextContent(), this));
                     } else {
                         throw new ParsingException("Invalid document." +
-                                " Elements in the deployment artifacts " +
-                                "list have to be called DeploymentArtifact." +
+                                " Elements in the deployment artifacts" +
+                                " list have to be called DeploymentArtifact." +
                                 " The error occured on node " + name);
                     }
                 }
