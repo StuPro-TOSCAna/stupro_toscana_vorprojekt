@@ -32,7 +32,7 @@ public class ArchiveHandler {
     }
 
 
-    public String parseModelXml() throws ArchiveException {
+    public String getModelXml() throws ArchiveException {
         ZipEntry model = null;
         ZipFile zipfile = null;
         try {

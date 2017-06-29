@@ -17,7 +17,7 @@ public class Engine {
     //private final ApplicationState applicationState;
     private final TOSCAliteModel topology;
 
-    Engine(TOSCAliteModel topology) {
+    public Engine(TOSCAliteModel topology) {
         this.topology = topology;
         //this.applicationState = applicationState;
     }
@@ -36,6 +36,7 @@ public class Engine {
             Node nodeToInstall = nodesForCreation.poll();
             properties = nodeToInstall.getProperties();
             String createProperty = properties.get(ArtifactType.CREATE.getElementName());
+            System.out.println("stoped");
             //TODO: send createProperty to the VM
         }
         return true;
@@ -46,6 +47,7 @@ public class Engine {
      */
     public void start() {
         // TODO: Implementation of start() method
+        System.out.println("started");
     }
 
     /**
@@ -53,5 +55,6 @@ public class Engine {
      */
     public void stop() {
         // TODO: Implementation of stop() method
+        System.out.println("created");
     }
 }
