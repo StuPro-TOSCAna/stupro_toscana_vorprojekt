@@ -20,7 +20,7 @@ public class ModelTest {
 
     @Before
     public void setUp() throws Exception {
-        InputStream in = getClass().getClassLoader().getResourceAsStream("example2.xml");
+        InputStream in = getClass().getClassLoader().getResourceAsStream("example.xml");
         Scanner scn = new Scanner( in);
         while (scn.hasNextLine()) {
             contents += scn.nextLine().trim();

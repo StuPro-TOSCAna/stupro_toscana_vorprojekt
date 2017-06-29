@@ -10,6 +10,9 @@ import java.util.Map;
  */
 public abstract class Node {
     private static final String NAME_VALID_CHARACTERS = "abcdefghijklmnopqrstuvwxyz-_1234567890";
+    private static final String PROPERTY_KEY_VALID_CHARACTERS = "abcdefghijklmnopqrstuvwxyz" +
+            "abcdefghijklmnopqrstuvwxyz".toUpperCase();
+    private static final String[] INVALID_NODE_NAMES = {"relationships"};
     private static final String PROPERTY_ELEMENT_NAME = "Property";
     private static final String PROPERTY_KEY_ATTRIBUTE_NAME = "key";
     private static final String PROPERTIES_ELEMENT_NAME = "Properties";
@@ -76,15 +79,30 @@ public abstract class Node {
                 key = node.getNodeValue();
             }
         }
-        if (key == null) {
+        if (key == null || !isKeyValid(key)) {
             throw new ParsingException("Invalid document." +
-                    " Every property needs a key. Error occured in node: " + name);
+                    " A Error occured in node: " + name + " while parsing the property key " + key);
         }
         properties.put(key, child.getTextContent());
     }
 
+    private boolean isKeyValid(String key) {
+        char[] keys = PROPERTY_KEY_VALID_CHARACTERS.toCharArray();
+        int cnt = getValidCharCount(key, keys);
+        return cnt == key.length();
+    }
+
     private boolean isValidNodeName(String textContent) {
         char[] validChars = NAME_VALID_CHARACTERS.toCharArray();
+        int validCharCount = getValidCharCount(textContent, validChars);
+        boolean forbiddenName = false;
+        for (String invalidNodeName : INVALID_NODE_NAMES) {
+            forbiddenName = forbiddenName || invalidNodeName.equals(textContent);
+        }
+        return validCharCount == textContent.length() && !forbiddenName;
+    }
+
+    private int getValidCharCount(String textContent, char[] validChars) {
         int validCharCount = 0;
         for (char c : textContent.toCharArray()) {
             for (char validChar : validChars) {
@@ -93,7 +111,7 @@ public abstract class Node {
                 }
             }
         }
-        return validCharCount == textContent.length();
+        return validCharCount;
     }
 
     private boolean isValidElement(org.w3c.dom.Node nodeElement) {
