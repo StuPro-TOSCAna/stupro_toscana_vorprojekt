@@ -76,9 +76,9 @@ TODO!
     <Type>service</Type>
     <Name>apache-php</Name>
     <ImplementationArtifacts>
-        <Create>apache-php/install.sh</Create>
-        <Start>apache-php/start.sh</Start>
-        <Stop>apache-php/stop.sh</Stop>
+        <Create>install.sh</Create>
+        <Start>start.sh</Start>
+        <Stop>stop.sh</Stop>
     </ImplementationArtifacts>
     <DeploymentArtifacts>
         <DeploymentArtifact>apache-php/configurations.zip</DeploymentArtifact>
@@ -110,6 +110,19 @@ The value of properties gets mapped to environment variables in the following na
 The key and the node name get converted to Upper case letters. Before the execution of the scripts starts all envirionment variables get created. It is possible to access all Properties event the ones from another node as long as both nodes belong to the same machine.
 
 ## Relationships
+
+In order to model a topology it is necessary to model the edges (Relationships) of a topology graph. Relationships get defined in a seperate block than nodes themselves (See Packaging/model.xml). Every node in XML gets defined as follows.
+
+```XML
+<Relationship>
+    <Type>type</Type>
+    <Source>source-name</Source>
+    <Target>target-name</Target>
+</Relationship>
+```
+
+**Explanation**:
+* `Type` - Just like with nodes, this represents the type of the relationship and is either `hostedOn` or `connectsTo`
 
 ### HostedOn
 
