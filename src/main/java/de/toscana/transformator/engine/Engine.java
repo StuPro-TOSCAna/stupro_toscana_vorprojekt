@@ -1,8 +1,6 @@
 package de.toscana.transformator.engine;
 
-import de.toscana.transformator.model.ArtifactType;
-import de.toscana.transformator.model.Node;
-import de.toscana.transformator.model.TOSCAliteModel;
+import de.toscana.transformator.model.*;
 
 import java.util.Map;
 import java.util.Queue;
@@ -30,14 +28,28 @@ public class Engine {
     public boolean create() {
         Creator creator = new Creator(topology);
         Queue<Node> nodesForCreation = creator.getSortedNodes();
-        Map<String, String> properties=null;
 
         while (!nodesForCreation.isEmpty()) {
             Node nodeToInstall = nodesForCreation.poll();
-            properties = nodeToInstall.getProperties();
-            String createProperty = properties.get(ArtifactType.CREATE.getElementName());
-            //TODO: send createProperty to the VM
+            String path="";
+            //instance of ssh Connection
+
+            if (nodeToInstall instanceof MachineNode){
+                String ip = ((MachineNode) nodeToInstall).getIpAdress();
+                String user = ((MachineNode) nodeToInstall).getUsername();
+                String pw = ((MachineNode) nodeToInstall).getPassword();
+                //TODO: make ssh connection to Machine with these data
+            }
+
+            if (nodeToInstall instanceof ServiceNode){
+                path=((ServiceNode) nodeToInstall).getImplementationArtifact(ArtifactType.CREATE);
+                //TODO: take the sshConnection instance and send path to VM
+            }
+
         }
+
+        //close ssh connection?
+
         return true;
     }
 
