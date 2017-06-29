@@ -5,6 +5,7 @@ package de.toscana.transformator.model;
  */
 public class ConnectsToRelationship extends Relationship {
 
+    private static final String IMPLEMENTATION_ARTIFACT_ELEMENT_NAME = "ImplementationArtifact";
     private ArtifactPath implementationArtifact;
 
     public ConnectsToRelationship(org.w3c.dom.Node relElement, TOSCAliteModel model) throws ParsingException {
@@ -15,7 +16,7 @@ public class ConnectsToRelationship extends Relationship {
     protected void parseSpecific(org.w3c.dom.Node element) throws ParsingException {
         for (int i = 0; i < element.getChildNodes().getLength(); i++) {
             org.w3c.dom.Node child = element.getChildNodes().item(i);
-            if (child.getNodeName().equals("ImplementationArtifact")) {
+            if (child.getNodeName().equals(IMPLEMENTATION_ARTIFACT_ELEMENT_NAME)) {
                 implementationArtifact = new ArtifactPath(child.getTextContent(), this);
                 System.out.println("Set implementation artifact for connectsTo relationship" +
                         " between: " + source.name + ", " + " and " + target.name);

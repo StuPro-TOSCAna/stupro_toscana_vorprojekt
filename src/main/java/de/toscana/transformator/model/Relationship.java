@@ -7,6 +7,8 @@ import static de.toscana.transformator.util.CheckUtils.checkNull;
  */
 public abstract class Relationship {
 
+    private static final String SOURCE_ELEMENT_NAME = "Source";
+    private static final String TARGET_ELEMENT_NAME = "Target";
     /**
      * Stores the instance of the source node
      */
@@ -30,10 +32,10 @@ public abstract class Relationship {
         for (int i = 0; i < relElement.getChildNodes().getLength(); i++) {
             org.w3c.dom.Node n = relElement.getChildNodes().item(i);
             switch (n.getNodeName()) {
-                case "Source":
+                case SOURCE_ELEMENT_NAME:
                     sourceName = n.getTextContent();
                     break;
-                case "Target":
+                case TARGET_ELEMENT_NAME:
                     targetName = n.getTextContent();
                     break;
                 default:

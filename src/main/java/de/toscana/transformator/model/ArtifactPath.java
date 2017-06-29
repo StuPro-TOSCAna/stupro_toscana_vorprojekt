@@ -4,6 +4,7 @@ package de.toscana.transformator.model;
  * This class represents the path of a artifact in the TOSCAlite archive
  */
 public class ArtifactPath {
+    private static final String PATH_SEPERATOR = "/";
     private String absoultePath;
 
     public ArtifactPath(String path, Node node) {
@@ -11,11 +12,11 @@ public class ArtifactPath {
             throw new IllegalArgumentException("A node has to be supplied," +
                     " when creating a ArtifactPath");
         }
-        if (path.startsWith("/")) {
+        if (path.startsWith(PATH_SEPERATOR)) {
             this.absoultePath = path;
             return;
         }
-        absoultePath = "/" + node.name + "/" + path;
+        absoultePath = PATH_SEPERATOR + node.name + PATH_SEPERATOR + path;
     }
 
     public ArtifactPath(String path, Relationship relationship) {
@@ -23,11 +24,11 @@ public class ArtifactPath {
             throw new IllegalArgumentException("A relationship has to be supplied," +
                     " when creating a ArtifactPath");
         }
-        if (path.startsWith("/")) {
+        if (path.startsWith(PATH_SEPERATOR)) {
             this.absoultePath = path;
             return;
         }
-        absoultePath = "/relationships/" + path;
+        absoultePath = PATH_SEPERATOR + "relationships" + PATH_SEPERATOR + path;
     }
 
     public String getAbsoultePath() {

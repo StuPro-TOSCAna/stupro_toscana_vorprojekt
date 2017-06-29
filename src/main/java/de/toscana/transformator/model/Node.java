@@ -9,6 +9,11 @@ import java.util.Map;
  * Root class to represent a topology node.
  */
 public abstract class Node {
+    private static final String NAME_VALID_CHARACTERS = "abcdefghijklmnopqrstuvwxyz-_1234567890";
+    private static final String PROPERTY_ELEMENT_NAME = "Property";
+    private static final String PROPERTY_KEY_ATTRIBUTE_NAME = "key";
+    private static final String PROPERTIES_ELEMENT_NAME = "Properties";
+    private static final String NAME_ELEMENT_NAME = "Name";
     /**
      * Stores the name of the node. As in toscalite this represents the unique identifier for this node.
      */
@@ -27,7 +32,6 @@ public abstract class Node {
         if (!isValidElement(nodeElement)) {
             throw new ParsingException("The given Element is not a valid Node!");
         }
-        //TODO: Implement Parsing Operations for a Node
         parseCommonData(nodeElement);
         parseSpecificData(nodeElement);
     }
@@ -36,7 +40,7 @@ public abstract class Node {
         for (int i = 0; i < nodeElement.getChildNodes().getLength(); i++) {
             org.w3c.dom.Node child = nodeElement.getChildNodes().item(i);
             switch (child.getNodeName()) {
-                case "Name":
+                case NAME_ELEMENT_NAME:
                     if (isValidNodeName(child.getTextContent())) {
                         name = child.getTextContent();
                     } else {
@@ -44,7 +48,7 @@ public abstract class Node {
                                 " The node name " + child.getTextContent() + " is invalid!");
                     }
                     break;
-                case "Properties":
+                case PROPERTIES_ELEMENT_NAME:
                     parseProperties(child);
                     break;
             }
@@ -54,11 +58,11 @@ public abstract class Node {
     protected void parseProperties(org.w3c.dom.Node nodeElement) throws ParsingException {
         for (int i = 0; i < nodeElement.getChildNodes().getLength(); i++) {
             org.w3c.dom.Node child = nodeElement.getChildNodes().item(i);
-            if(child.getNodeName().equals("Property")) {
-                parseProperty( child);
+            if (child.getNodeName().equals(PROPERTY_ELEMENT_NAME)) {
+                parseProperty(child);
             }
         }
-        System.out.println("Parsed properties for node "+name);
+        System.out.println("Parsed properties for node " + name);
     }
 
     private void parseProperty(org.w3c.dom.Node child) throws ParsingException {
@@ -68,7 +72,7 @@ public abstract class Node {
             if (node == null || node.getNodeName() == null) {
                 continue;
             }
-            if (node.getNodeName().equalsIgnoreCase("key")) {
+            if (node.getNodeName().equals(PROPERTY_KEY_ATTRIBUTE_NAME)) {
                 key = node.getNodeValue();
             }
         }
@@ -80,7 +84,7 @@ public abstract class Node {
     }
 
     private boolean isValidNodeName(String textContent) {
-        char[] validChars = "abcdefghijklmnopqrstuvwxyz-_1234567890".toCharArray();
+        char[] validChars = NAME_VALID_CHARACTERS.toCharArray();
         int validCharCount = 0;
         for (char c : textContent.toCharArray()) {
             for (char validChar : validChars) {
@@ -97,7 +101,7 @@ public abstract class Node {
         for (int i = 0; i < nodeElement.getChildNodes().getLength(); i++) {
             org.w3c.dom.Node child = nodeElement.getChildNodes().item(i);
             switch (child.getNodeName()) {
-                case "Name":
+                case NAME_ELEMENT_NAME:
                     paramCount++;
                     break;
                 default:
