@@ -29,7 +29,7 @@ The ``Type`` and ``Name`` elements are always required. ``Properties`` can be op
 
 ### Machines
 
-A machine node represents a Linux-based system, probably Ubuntu 16.04. The deployment system does not care where the system is running, as long as the machine is reachable with SSH.
+A machine node represents a Linux-based system, probably Ubuntu 16.04. The deployment system does not care where the system is running, as long as the machine is reachable with SSH. Therefore SSH has to be installed on every target machine.
 This specific type of node gets described as follows:
 
 ```XML
@@ -58,7 +58,7 @@ A Service represents a part of a Topology that has to be installed on a machine 
 Implementation artifacts have to implement the lifecycle operations for a service. Due to TOSCAlite requiring Linux-based systems shell scripts have to be used to perform these operations.
 
 The following operations are supported:
-* Create - Required by every service. Used to create the service. This has to install all the packages required to run the service, for example.
+* Create - Required by every service. Used to create the service. This script/executable has to install all the packages required to run the service, for example.
 * Start - Optional. Used to start the service.
 * Stop - Optional. Used to stop the service.
 
