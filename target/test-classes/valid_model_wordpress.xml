@@ -4,62 +4,64 @@
             <Type>machine</Type>
             <Name>webserver</Name>
             <Properties>
-                <IP>192.168.178.1</IP>
-                <Username>root</Username>
-                <Password>pass</Password>
+                <Property key="ip">192.168.178.1</Property>
+                <Property key="username">root</Property>
+                <Property key="password">password</Property>
             </Properties>
         </Node>
         <Node>
             <Type>machine</Type>
             <Name>database</Name>
             <Properties>
-                <IP>192.168.178.2</IP>
-                <Username>root</Username>
-                <Password>pass wort</Password>
+                <Property key="ip">192.168.178.2</Property>
+                <Property key="username">root</Property>
+                <Property key="password">pass word</Property>
             </Properties>
         </Node>
         <Node>
             <Type>service</Type>
             <Name>apache-php</Name>
             <ImplementationArtifacts>
-                <Create>apache-php/install.sh</Create>
-                <Start>apache-php/start.sh</Start>
-                <Stop>apache-php/stop.sh</Stop>
+                <Create>install.sh</Create>
+                <Start>start.sh</Start>
+                <Stop>stop.sh</Stop>
             </ImplementationArtifacts>
             <DeploymentArtifacts>
-                <DeploymentArtifact>apache-php/configurations.zip</DeploymentArtifact>
+                <DeploymentArtifact>configurations.zip</DeploymentArtifact>
             </DeploymentArtifacts>
             <Properties>
-                <Port>8080</Port>
+                <Property key="port">8080</Property>
             </Properties>
         </Node>
         <Node>
             <Type>service</Type>
             <Name>wordpress</Name>
             <ImplementationArtifacts>
-                <Create>wordpress/install.sh</Create>
+                <Create>install.sh</Create>
             </ImplementationArtifacts>
             <DeploymentArtifacts>
-                <DeploymentArtifact>wordpress/wp.zip</DeploymentArtifact>
+                <DeploymentArtifact>wp.zip</DeploymentArtifact>
             </DeploymentArtifacts>
             <Properties>
-                <DefaultUsername>admin</DefaultUsername>
-                <DefaultPassword>123456</DefaultPassword>
-                <DatabaseType>MySQL</DatabaseType>
+                <Property key="defaultUsername">admin</Property>
+                <Property key="defaultPassword">password</Property>
+                <Property key="databaseType">MySQL</Property>
             </Properties>
         </Node>
         <Node>
             <Name>mysql</Name>
             <Type>service</Type>
             <ImplementationArtifacts>
-                <Create>mysql/install.sh</Create>
-                <Start>mysql/start.sh</Start>
-                <Stop>mysql/stop.sh</Stop>
+                <Create>/mysql/install.sh</Create>
+                <Start>/mysql/start.sh</Start>
+                <Stop>/mysql/stop.sh</Stop>
             </ImplementationArtifacts>
-            <DeploymentArtifact>wordpress/wp.sql</DeploymentArtifact>
+            <DeploymentArtifacts>
+                <DeploymentArtifact>/wordpress/wp.sql</DeploymentArtifact>
+            </DeploymentArtifacts>
             <Properties>
-                <Port>3306</Port>
-                <RootPassword>123456</RootPassword>
+                <Property key="port">8080</Property>
+                <Property key="rootPassword">password</Property>
             </Properties>
         </Node>
     </Nodes>
@@ -83,7 +85,7 @@
             <Type>connectsTo</Type>
             <Source>wordpress</Source>
             <Target>mysql</Target>
-            <ImplementationArtifact>wordpress/connection-init.sh</ImplementationArtifact>
+            <ImplementationArtifact>wp-connection-init.sh</ImplementationArtifact>
         </Relationship>
     </Relationships>
 </Model>

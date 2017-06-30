@@ -10,8 +10,12 @@ import java.util.Map;
  */
 public class ServiceNode extends Node {
 
-    private List<String> deploymentArtifacts;
-    private Map<ArtifactType, String> implementationArtifacts;
+    private static final String IMPLEMENTATION_ARTIFACTS_ELEMENT_NAME = "ImplementationArtifacts";
+    private static final String DEPLOYMENT_ARTIFACTS_ELEMENT_NAME = "DeploymentArtifacts";
+    private static final String DEPLOYMENT_ARTIFACT_ELEMENT_NAME = "DeploymentArtifact";
+
+    private List<ArtifactPath> deploymentArtifacts;
+    private Map<ArtifactType, ArtifactPath> implementationArtifacts;
     private Node parent;
     private List<ConnectsToRelationship> sourceConnections = new ArrayList<>();
     private List<ConnectsToRelationship> targetConnections = new ArrayList<>();
@@ -36,12 +40,12 @@ public class ServiceNode extends Node {
         System.out.print("Parsing implementation artifacts for " + name + "... ");
         for (int i = 0; i < element.getChildNodes().getLength(); i++) {
             org.w3c.dom.Node child = element.getChildNodes().item(i);
-            if (child.getNodeName().equals("ImplementationArtifacts")) {
+            if (child.getNodeName().equals(IMPLEMENTATION_ARTIFACTS_ELEMENT_NAME)) {
                 for (int j = 0; j < child.getChildNodes().getLength(); j++) {
                     org.w3c.dom.Node innerChild = child.getChildNodes().item(j);
                     try {
                         ArtifactType type = ArtifactType.getByNodeName(innerChild.getNodeName());
-                        implementationArtifacts.put(type, innerChild.getTextContent());
+                        implementationArtifacts.put(type, new ArtifactPath(innerChild.getTextContent(), this));
                     } catch (IllegalArgumentException e) {
                         throw new ParsingException("Invalid document." +
                                 " The Implementation Artifact type " + innerChild.getNodeName()
@@ -57,15 +61,15 @@ public class ServiceNode extends Node {
         System.out.print("Parsing deployment artifacts for " + name + "... ");
         for (int i = 0; i < element.getChildNodes().getLength(); i++) {
             org.w3c.dom.Node child = element.getChildNodes().item(i);
-            if (child.getNodeName().equals("DeploymentArtifacts")) {
+            if (child.getNodeName().equals(DEPLOYMENT_ARTIFACTS_ELEMENT_NAME)) {
                 for (int j = 0; j < child.getChildNodes().getLength(); j++) {
                     org.w3c.dom.Node innerChild = child.getChildNodes().item(j);
-                    if (innerChild.getNodeName().equals("DeploymentArtifact")) {
-                        deploymentArtifacts.add(innerChild.getTextContent());
+                    if (innerChild.getNodeName().equals(DEPLOYMENT_ARTIFACT_ELEMENT_NAME)) {
+                        deploymentArtifacts.add(new ArtifactPath(innerChild.getTextContent(), this));
                     } else {
                         throw new ParsingException("Invalid document." +
-                                " Elements in the deployment artifacts " +
-                                "list have to be called DeploymentArtifact." +
+                                " Elements in the deployment artifacts" +
+                                " list have to be called DeploymentArtifact." +
                                 " The error occured on node " + name);
                     }
                 }
@@ -81,7 +85,7 @@ public class ServiceNode extends Node {
         boolean createFound = false;
         for (int i = 0; i < element.getChildNodes().getLength(); i++) {
             org.w3c.dom.Node child = element.getChildNodes().item(i);
-            if (child.getNodeName().equals("ImplementationArtifacts")) {
+            if (child.getNodeName().equals(IMPLEMENTATION_ARTIFACTS_ELEMENT_NAME)) {
                 for (int j = 0; j < child.getChildNodes().getLength(); j++) {
                     org.w3c.dom.Node innerChild = child.getChildNodes().item(j);
                     if (innerChild.getNodeName().equals(ArtifactType.CREATE.getElementName())) {
@@ -102,14 +106,14 @@ public class ServiceNode extends Node {
         return implementationArtifacts.containsKey(type);
     }
 
-    public String getImplementationArtifact(ArtifactType type) {
+    public ArtifactPath getImplementationArtifact(ArtifactType type) {
         if (hasImplementationArtifact(type)) {
             return implementationArtifacts.get(type);
         }
         return null;
     }
 
-    public List<String> getDeploymentArtifacts() {
+    public List<ArtifactPath> getDeploymentArtifacts() {
         return deploymentArtifacts;
     }
 

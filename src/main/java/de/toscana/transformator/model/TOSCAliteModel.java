@@ -19,8 +19,16 @@ import java.util.Map;
  */
 public class TOSCAliteModel {
 
+    private static final String MODEL_ELEMENT_NAME = "Model";
     private static final String NODES_ELEMENT_NAME = "Nodes";
     private static final String RELATIONSHIPS_ELEMENT_NAME = "Relationships";
+    private static final String NODE_ELEMENT_NAME = "Node";
+    private static final String NODE_TYPE_MACHINE_NAME = "machine";
+    private static final String NODE_TYPE_SERVICE_NAME = "service";
+    private static final String RELATIONSHIP_ELEMENT_KEY = "Relationship";
+    private static final String HOSTED_ON_RELATIONSHIP_TYPE = "hostedOn";
+    private static final String CONNECTS_TO_RELATIONSHIP_TYPE = "connectsTo";
+    private static final String TYPE_ELEMENT_NAME = "Type";
 
     /**
      * Stores all nodes in the Topology. Maps name to the node instance
@@ -56,7 +64,7 @@ public class TOSCAliteModel {
             throw new ParsingException("Parser could not initialize properly", e);
         }
         System.out.println("Parsing");
-        if (!root.getNodeName().equals("Model")) {
+        if (!root.getNodeName().equals(MODEL_ELEMENT_NAME)) {
             throw new ParsingException("Invalid document. Root element has to be called \"Model\"");
         }
         //Read the Root nodes chilren and parse the nodes. after the nodes
@@ -81,7 +89,7 @@ public class TOSCAliteModel {
         System.out.println("Parsing nodes");
         for (int i = 0; i < e.getChildNodes().getLength(); i++) {
             org.w3c.dom.Node n = e.getChildNodes().item(i);
-            if (n.getNodeName().equals("Node")) {
+            if (n.getNodeName().equals(NODE_ELEMENT_NAME)) {
                 String type = determineElementType(n);
                 parseNode(n, type);
             } else {
@@ -99,11 +107,11 @@ public class TOSCAliteModel {
         }
         Node node = null;
         switch (type) {
-            case "machine":
+            case NODE_TYPE_MACHINE_NAME:
                 node = new MachineNode(n);
                 machines.add((MachineNode) node);
                 break;
-            case "service":
+            case NODE_TYPE_SERVICE_NAME:
                 node = new ServiceNode(n);
                 break;
             default:
@@ -120,7 +128,7 @@ public class TOSCAliteModel {
     private String determineElementType(org.w3c.dom.Node n) {
         for (int j = 0; j < n.getChildNodes().getLength(); j++) {
             org.w3c.dom.Node inner = n.getChildNodes().item(j);
-            if (inner.getNodeName().equals("Type")) {
+            if (inner.getNodeName().equals(TYPE_ELEMENT_NAME)) {
                 return inner.getTextContent();
             }
         }
@@ -131,7 +139,7 @@ public class TOSCAliteModel {
         System.out.println("Parsing relationships");
         for (int i = 0; i < e.getChildNodes().getLength(); i++) {
             org.w3c.dom.Node n = e.getChildNodes().item(i);
-            if (n.getNodeName().equals("Relationship")) {
+            if (n.getNodeName().equals(RELATIONSHIP_ELEMENT_KEY)) {
                 String type = determineElementType(n);
                 parseRelationship(n, type);
             } else {
@@ -149,10 +157,10 @@ public class TOSCAliteModel {
         }
         Relationship relationship = null;
         switch (type) {
-            case "hostedOn":
+            case HOSTED_ON_RELATIONSHIP_TYPE:
                 relationship = new HostedOnRelationship(node, this);
                 break;
-            case "connectsTo":
+            case CONNECTS_TO_RELATIONSHIP_TYPE:
                 relationship = new ConnectsToRelationship(node, this);
                 break;
             default:

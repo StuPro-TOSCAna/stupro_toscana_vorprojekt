@@ -10,15 +10,15 @@ public class MachineNode extends Node {
     /**
      * Key constant to store the key for the IP address
      */
-    private static final String IP_ADRESS_KEY = "IP";
+    private static final String IP_ADRESS_KEY = "ip";
     /**
      * Key constant to store the key for the SSH username
      */
-    private static final String USERNAME_KEY = "Username";
+    private static final String USERNAME_KEY = "username";
     /**
      * Key constant to store the key for the SSH password
      */
-    private static final String PASSWORD_KEY = "Password";
+    private static final String PASSWORD_KEY = "password";
 
     /**
      * Attribute for storing the IP/hostname
