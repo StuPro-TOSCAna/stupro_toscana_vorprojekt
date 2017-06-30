@@ -33,22 +33,23 @@ public class Engine {
 
         while (!nodesForCreation.isEmpty()) {
             Node nodeToInstall = nodesForCreation.poll();
-            String path="";
+            String path = "";
             //instance of ssh Connection
 
-            if (nodeToInstall instanceof MachineNode){
+            if (nodeToInstall instanceof MachineNode) {
                 String ip = ((MachineNode) nodeToInstall).getIpAdress();
                 String user = ((MachineNode) nodeToInstall).getUsername();
                 String pw = ((MachineNode) nodeToInstall).getPassword();
                 //TODO: make ssh connection to Machine with these data
             }
 
-            if (nodeToInstall instanceof ServiceNode){
-                path=((ServiceNode) nodeToInstall).getImplementationArtifact(ArtifactType.CREATE);
+            if (nodeToInstall instanceof ServiceNode) {
+                // path=((ServiceNode) nodeToInstall).getImplementationArtifact(ArtifactType.CREATE);
                 //TODO: take the sshConnection instance and send path to VM
             }
 
 
+        }
         //close ssh connection?
         return true;
     }
