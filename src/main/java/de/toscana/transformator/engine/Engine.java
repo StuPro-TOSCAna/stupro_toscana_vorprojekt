@@ -6,18 +6,19 @@ import java.util.Map;
 import java.util.Queue;
 
 /**
- * TODO: Description of Engine class
+ * The Engine contains methods to deploy the application and manage it at runtime.
  *
- * @author Marvin Munoz Baron, Jens Mueller
+ * @author Marvin Munoz Baron
+ * @author Jens Mueller
  *
  */
 public class Engine {
-    //private final ApplicationState applicationState;
+    //private final ApplicationState applicationState; TODO remove?
     private final TOSCAliteModel topology;
 
     Engine(TOSCAliteModel topology) {
         this.topology = topology;
-        //this.applicationState = applicationState;
+        //this.applicationState = applicationState; TODO remove?
     }
 
     /**
@@ -54,14 +55,14 @@ public class Engine {
     }
 
     /**
-     * TODO: Description of start() method
+     * start all services in the application topology
      */
     public void start() {
         // TODO: Implementation of start() method
     }
 
     /**
-     * TODO: Description function of stop() method
+     * stop all services in the application topology
      */
     public void stop() {
         // TODO: Implementation of stop() method
