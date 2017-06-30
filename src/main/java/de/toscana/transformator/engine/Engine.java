@@ -1,25 +1,24 @@
 package de.toscana.transformator.engine;
 
-import de.toscana.transformator.model.ArtifactType;
-import de.toscana.transformator.model.Node;
-import de.toscana.transformator.model.TOSCAliteModel;
+import de.toscana.transformator.model.*;
 
 import java.util.Map;
 import java.util.Queue;
 
 /**
- * TODO: Description of Engine class
+ * The Engine contains methods to deploy the application and manage it at runtime.
  *
- * @author Marvin Munoz Baron, Jens Mueller
+ * @author Marvin Munoz Baron
+ * @author Jens Mueller
  *
  */
 public class Engine {
-    //private final ApplicationState applicationState;
+    //private final ApplicationState applicationState; TODO remove?
     private final TOSCAliteModel topology;
 
     public Engine(TOSCAliteModel topology) {
         this.topology = topology;
-        //this.applicationState = applicationState;
+        //this.applicationState = applicationState; TODO remove?
     }
 
     /**
@@ -31,20 +30,31 @@ public class Engine {
         System.out.println("created");
         Creator creator = new Creator(topology);
         Queue<Node> nodesForCreation = creator.getSortedNodes();
-        Map<String, String> properties=null;
 
         while (!nodesForCreation.isEmpty()) {
             Node nodeToInstall = nodesForCreation.poll();
-            properties = nodeToInstall.getProperties();
-            String createProperty = properties.get(ArtifactType.CREATE.getElementName());
+            String path="";
+            //instance of ssh Connection
 
-            //TODO: send createProperty to the VM
-        }
+            if (nodeToInstall instanceof MachineNode){
+                String ip = ((MachineNode) nodeToInstall).getIpAdress();
+                String user = ((MachineNode) nodeToInstall).getUsername();
+                String pw = ((MachineNode) nodeToInstall).getPassword();
+                //TODO: make ssh connection to Machine with these data
+            }
+
+            if (nodeToInstall instanceof ServiceNode){
+                path=((ServiceNode) nodeToInstall).getImplementationArtifact(ArtifactType.CREATE);
+                //TODO: take the sshConnection instance and send path to VM
+            }
+
+
+        //close ssh connection?
         return true;
     }
 
     /**
-     * TODO: Description of start() method
+     * start all services in the application topology
      */
     public void start() {
         // TODO: Implementation of start() method
@@ -52,7 +62,7 @@ public class Engine {
     }
 
     /**
-     * TODO: Description function of stop() method
+     * stop all services in the application topology
      */
     public void stop() {
         // TODO: Implementation of stop() method

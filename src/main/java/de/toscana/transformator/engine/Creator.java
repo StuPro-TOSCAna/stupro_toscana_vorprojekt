@@ -16,10 +16,9 @@ import java.util.Queue;
  */
 public class Creator {
 
-    private TOSCAliteModel topology;
+
     private Map<String,Node> allNodes;
     private Queue<Node> sortedNodes = new LinkedList<>();
-
 
     /**
      * constructor of class Creator
@@ -27,7 +26,6 @@ public class Creator {
      * @param topology
      */
     public Creator(TOSCAliteModel topology) {
-        this.topology = topology;
         allNodes = topology.getNodes();
     }
 
@@ -53,7 +51,9 @@ public class Creator {
                 sortNodes(n);
             }
         }
-        sortedNodes.add(children);
+        if (!sortedNodes.contains(children)) {
+            sortedNodes.add(children);
+        }
     }
 
 

@@ -5,7 +5,7 @@ package de.toscana.transformator.model;
  */
 public class ArtifactPath {
     private static final String PATH_SEPERATOR = "/";
-    private String absoultePath;
+    private String absolutePath;
 
     public ArtifactPath(String path, Node node) {
         if (node == null) {
@@ -13,10 +13,10 @@ public class ArtifactPath {
                     " when creating a ArtifactPath");
         }
         if (path.startsWith(PATH_SEPERATOR)) {
-            this.absoultePath = path;
+            this.absolutePath = path;
             return;
         }
-        absoultePath = PATH_SEPERATOR + node.name + PATH_SEPERATOR + path;
+        absolutePath = PATH_SEPERATOR + node.name + PATH_SEPERATOR + path;
     }
 
     public ArtifactPath(String path, Relationship relationship) {
@@ -25,18 +25,18 @@ public class ArtifactPath {
                     " when creating a ArtifactPath");
         }
         if (path.startsWith(PATH_SEPERATOR)) {
-            this.absoultePath = path;
+            this.absolutePath = path;
             return;
         }
-        absoultePath = PATH_SEPERATOR + "relationships" + PATH_SEPERATOR + path;
+        absolutePath = PATH_SEPERATOR + "relationships" + PATH_SEPERATOR + path;
     }
 
-    public String getAbsoultePath() {
-        return absoultePath;
+    public String getAbsolutePath() {
+        return absolutePath;
     }
 
     @Override
     public String toString() {
-        return absoultePath;
+        return absolutePath;
     }
 }
