@@ -1,0 +1,6 @@
+#!/bin/bash  
+toscalite-checkenv
+[ $? -eq 0 ] || exit 1
+
+systemctl start mysql
+

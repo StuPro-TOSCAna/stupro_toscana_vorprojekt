@@ -1,0 +1,11 @@
+#!/bin/bash  
+toscalite-checkenv 
+[ $? -eq 0 ] || exit 1
+
+apt install -y apache2
+# setup firewall
+ufw allow 80/tcp
+ufw allow 22/tcp
+ufw --force enable
+
+systemctl stop apache2

@@ -39,6 +39,7 @@ fabric.properties
 
 # Package Files #
 *.war
+*.zip
 *.ear
 *.tar.gz
 *.rar
@@ -50,3 +51,11 @@ hs_err_pid*
 .DS_Store
 
 
+# End of https://www.gitignore.io/api/java,intellij
+#
+
+# scripting stuff
+scripts/server.cnf
+
+# vim
+*.swp
