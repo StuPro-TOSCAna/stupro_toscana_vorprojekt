@@ -11,7 +11,7 @@ export DBMACHINE_IP=127.0.0.1
 export MYSQL_ROOTPASSWORD=godpass
 export MYSQL_PORT=3306
 
-export PHPAPP_APP="php-app.zip"
+export PHPAPP_APP="phpapp.zip"
 
 export DATABASE_DATABASENAME=awesomedb 
 export DATABASE_USER=user
