@@ -1,0 +1,3 @@
+#!/bin/bash  
+# execute to create a new, up to date simple-app.zip
+zip simple-app.zip -r simple-app/*
