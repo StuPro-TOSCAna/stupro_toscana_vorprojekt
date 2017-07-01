@@ -3,6 +3,7 @@ package de.toscana.transformator.engine;
 import de.toscana.transformator.model.*;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Queue;
 
@@ -14,14 +15,18 @@ import java.util.Queue;
  *
  */
 public class Engine {
-    //private final ApplicationState applicationState; TODO remove?
+
     private final Creator creator;
     private final ArrayList<Queue> lstMachineQueues;
 
+    /**
+     * constructor of Engine Class
+     * for each command you need a new instance of Constructor
+     * @param topology
+     */
     public Engine(TOSCAliteModel topology) {
         creator=new Creator(topology);
         lstMachineQueues = creator.getAllQueues();
-        //this.applicationState = applicationState; TODO remove?
     }
 
     /**
@@ -47,7 +52,28 @@ public class Engine {
      * stop all services in the application topology
      */
     public void stop() {
-        // TODO: Implementation of stop() method
+        for(Queue<Node> nodesForCreation : lstMachineQueues){
+            MachineNode mNode = (MachineNode) nodesForCreation.peek();
+            String ip = mNode.getIpAdress();
+            String user = mNode.getUsername();
+            String pw = mNode.getPassword();
+            //TODO: make ssh connection to Machine with these data
+
+            //get stop-artifact of nodes in descending order
+            while (!nodesForCreation.isEmpty()) {
+                Iterator<Node> iterator= nodesForCreation.iterator();
+                ServiceNode currentNode=null;
+                while(iterator.hasNext()){
+                    currentNode = (ServiceNode) iterator.next();
+                }
+                nodesForCreation.remove(currentNode);
+
+                String path=currentNode.getImplementationArtifact(ArtifactType.STOP).getAbsolutePath();
+                //TODO: take the sshConnection instance and send path to VM
+            }
+
+            //close ssh-connection
+        }
     }
 
     /**
@@ -56,17 +82,18 @@ public class Engine {
      */
     private void helpCreateStart(ArtifactType type){
         for(Queue<Node> nodesForCreation : lstMachineQueues){
+            Node mNode = nodesForCreation.poll();
+            if (mNode instanceof MachineNode){
+                String ip = ((MachineNode) mNode).getIpAdress();
+                String user = ((MachineNode) mNode).getUsername();
+                String pw = ((MachineNode) mNode).getPassword();
+                //TODO: make ssh connection to Machine with these data
+            }
+
             while (!nodesForCreation.isEmpty()) {
                 Node nodeToInstall = nodesForCreation.poll();
                 String path="";
                 //instance of ssh Connection
-
-                if (nodeToInstall instanceof MachineNode){
-                    String ip = ((MachineNode) nodeToInstall).getIpAdress();
-                    String user = ((MachineNode) nodeToInstall).getUsername();
-                    String pw = ((MachineNode) nodeToInstall).getPassword();
-                    //TODO: make ssh connection to Machine with these data
-                }
 
                 if (nodeToInstall instanceof ServiceNode){
                     path=((ServiceNode) nodeToInstall).getImplementationArtifact(type).getAbsolutePath();
@@ -76,9 +103,6 @@ public class Engine {
             }
             //close ssh connection because now it follows another machine
         }
-
-
-
 
     }
 }
