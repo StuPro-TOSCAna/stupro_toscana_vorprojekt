@@ -23,6 +23,7 @@ class Main {
             System.out.println(ConsoleColors.getErrorString("File-argument missing."));
             return;
         } else {
+            File archive = new File(args[0]);
             String model = getModelXmlFileAsString(args[0]);
             if (model == null) return;
             TOSCAliteModel toscaLiteModel;
@@ -32,7 +33,7 @@ class Main {
                 System.err.println(e.getMessage());
                 return;
             }
-            engine = new Engine(toscaLiteModel);
+            engine = new Engine(toscaLiteModel, archive);
         }
 
         setUpController();
