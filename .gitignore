@@ -3,6 +3,9 @@
 target/
 **/*.iml
 
+# JaCoCo
+target/
+
 # CMake
 cmake-build-debug/
 
