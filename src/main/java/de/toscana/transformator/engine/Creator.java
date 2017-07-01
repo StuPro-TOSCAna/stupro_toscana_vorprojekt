@@ -11,7 +11,7 @@ import java.util.*;
  *         <p>
  *         Class to get the correct order for a creation
  *         <p>
- *         TODO: test and check all new methods, create dummy classes for node/topology, Logging, Exceptions
+ *         TODO: Logging, Exceptions
  */
 public class Creator {
 
@@ -26,7 +26,7 @@ public class Creator {
     /**
      * constructor of class Creator
      *
-     * @param topology
+     * @param topology the complete application topology
      */
     public Creator(TOSCAliteModel topology) {
         allNodes = topology.getNodes();

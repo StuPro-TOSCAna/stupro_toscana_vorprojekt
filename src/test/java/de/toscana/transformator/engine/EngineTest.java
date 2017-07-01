@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import sun.security.pkcs.ParsingException;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Queue;
@@ -29,6 +30,7 @@ public class EngineTest {
 
     @Before
     public void init() {
+        File emptyZIP = null;
         //create an example topology
         try {
             topology = new TOSCAliteModel(ModelTest.readResource("valid_model_simple_task_app.xml"));
@@ -39,7 +41,7 @@ public class EngineTest {
         } catch (de.toscana.transformator.model.ParsingException e) {
             e.printStackTrace();
         }
-        engine = new Engine(topology);
+        engine = new Engine(topology, emptyZIP);
     }
 
     @Test

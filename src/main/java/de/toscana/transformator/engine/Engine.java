@@ -3,6 +3,7 @@ package de.toscana.transformator.engine;
 import de.toscana.transformator.executor.SSHConnection;
 import de.toscana.transformator.model.*;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
@@ -20,16 +21,18 @@ public class Engine {
     private final Creator creator;
     private final ArrayList<Queue> lstMachineQueues;
     private SSHConnection ssh;
+    private final File zip;
 
     /**
      * constructor of Engine Class
      * for each command you need a new instance of Constructor
-     * @param topology
+     * @param topology the complete application topology
      */
-    public Engine(TOSCAliteModel topology) {
+    public Engine(TOSCAliteModel topology, File inputZip) {
         creator=new Creator(topology);
         lstMachineQueues = creator.getAllQueues();
         ssh = null;
+        zip = inputZip;
     }
 
     /**
@@ -94,8 +97,7 @@ public class Engine {
                 ssh = new SSHConnection(user, pw, ip);
                 ssh.connect();
                 if (type == ArtifactType.CREATE){
-                    //TODO get name and location of ZIP
-                    ssh.uploadAndUnzipZip(zipName, zipLocation);
+                    ssh.uploadAndUnzipZip(zip);
                 }
             }
 
