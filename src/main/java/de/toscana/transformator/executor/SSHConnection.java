@@ -7,6 +7,7 @@ package de.toscana.transformator.executor;
 import com.jcraft.jsch.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.rmi.runtime.Log;
 
 import java.io.*;
 
@@ -48,14 +49,18 @@ public class SSHConnection implements Executor {
     public void connect() {
         try {
             sesConnection = jschSSHChannel.getSession(username, connectionIP, port);
+            LOG.info("Created Session");
             sesConnection.setPassword(password);
 
             // only for testing
             sesConnection.setConfig("StrictHostKeyChecking", "No");
 
+            LOG.info("Connecting ...");
             sesConnection.connect(timeout);
+            LOG.info("Connected");
             // update and upgrade may take some time
             sendCommand("echo " + password + "| sudo -S apt-get update && sudo -S apt-get upgrade -y");
+            LOG.info("update and upgrade executed");
         } catch (JSchException jschExp) {
             jschExp.printStackTrace();
         }
@@ -94,32 +99,16 @@ public class SSHConnection implements Executor {
     /**
      * Sets working directory onto nodename and executes a command on the remote host
      *
-     * @param command
+     * @param script
      * @return
      */
-    public String sendCommand(String nodename, String command) {
-        StringBuilder out = new StringBuilder();
-        try {
-            Channel channel = sesConnection.openChannel("exec");
-            ((ChannelExec) channel).setCommand("cd " + nodename + " && " + command);
-            InputStream commandOutput = channel.getInputStream();
-            channel.connect();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(commandOutput));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                out.append(line);
-            }
-            reader.close();
-            channel.disconnect();
-        } catch (
-                JSchException jschExp) {
-            jschExp.printStackTrace();
-        } catch (
-                IOException ioExp) {
-            ioExp.printStackTrace();
-        }
-        return out.toString();
+    @Override
+    public String executeScript(String script) {
+        String[] commandSplit = script.split("/");
+        String result = sendCommand("cd "+commandSplit[0]+" && " + "echo " + password + "| sudo -S ./" + commandSplit[1]);
+        return result;
     }
+
 
     /**
      * Uploading a Zip File to the machine using sftp
@@ -172,9 +161,10 @@ public class SSHConnection implements Executor {
     /**
      * Uploads a zip file and unzips it. Overwrites already existing files
      */
+    @Override
     public String uploadAndUnzipZip(File zipFile) {
         //can be changed maybe?
-        String targetDirectory = "./";
+        String targetDirectory = "~/";
         uploadFile(zipFile, targetDirectory);
         return unzipFile(zipFile);
     }
