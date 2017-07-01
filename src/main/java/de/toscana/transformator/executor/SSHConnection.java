@@ -5,6 +5,8 @@ package de.toscana.transformator.executor;
  */
 
 
+
+
 import com.jcraft.jsch.*;
 
 import java.io.*;
@@ -92,16 +94,15 @@ public class SSHConnection implements Executor{
      * Uploading a Zip File to the machine using sftp
      * OVERWRITES already existing files with the same name
      *
-     * @param filename
+     * @param file
      */
-    public boolean uploadFile(String filename, String targetDirectory) {
+    public boolean uploadFile(File file, String targetPath) {
         try {
             Channel channel = sesConnection.openChannel("sftp");
             channel.connect();
             ChannelSftp channelSftp = (ChannelSftp) channel;
-            channelSftp.cd(targetDirectory);
-            File f = new File(filename);
-            channelSftp.put(new FileInputStream(f), f.getName());
+            channelSftp.cd(targetPath);
+            channelSftp.put(new FileInputStream(file), file.getName());
             channelSftp.disconnect();
         } catch (JSchException jschExp) {
             jschExp.printStackTrace();
@@ -125,18 +126,13 @@ public class SSHConnection implements Executor{
      * otherwise install Unzip and then unzip the File
      * Overwrites all existing files
      */
-    private String unzipFile(String zipname) {
+    private String unzipFile(File zipFile) {
         String zip="";
         //depends on the language the server is using
         if(sendCommand("apt -qq list unzip").contains("installed")) {
-            zip = sendCommand("unzip -o " + zipname);
+            zip = sendCommand("unzip -o " + zipFile.getName());
         } else {
-            sendCommand("apt-get install unzip");
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            sendCommand("echo "+password+"| sudo -S apt-get install -y unzip");
             zip = sendCommand("unzip -o " + zipname);
         }
         return zip;
@@ -145,10 +141,10 @@ public class SSHConnection implements Executor{
     /**
      * Uploads a zip file and unzips it. Overwrites already existing files
      */
-    public String uploadAndUnzipZip(String zipFilename, String localDir) {
+    public String uploadAndUnzipZip(File zipFile) {
         //can be changed maybe?
         String targetDirectory = "./";
-        uploadFile(localDir + zipFilename, targetDirectory);
-        return unzipFile(targetDirectory + zipFilename);
+        uploadFile(zipFile, targetDirectory);
+        return unzipFile(zipFile);
     }
 }
