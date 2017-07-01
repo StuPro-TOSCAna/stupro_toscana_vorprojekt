@@ -133,7 +133,7 @@ public class SSHConnection implements Executor{
             zip = sendCommand("unzip -o " + zipFile.getName());
         } else {
             sendCommand("echo "+password+"| sudo -S apt-get install -y unzip");
-            zip = sendCommand("unzip -o " + zipname);
+            zip = sendCommand("unzip -o " + zipFile.getName());
         }
         return zip;
     }
