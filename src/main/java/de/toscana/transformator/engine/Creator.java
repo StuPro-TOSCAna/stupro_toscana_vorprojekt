@@ -13,7 +13,6 @@ import java.util.*;
  * TODO: Logging, Exceptions
  */
 public class Creator {
-S
 
     private Map<String,Node> allNodes;
 
