@@ -109,7 +109,7 @@ public class Engine {
                     path=((ServiceNode) nodeToInstall).getImplementationArtifact(type).getAbsolutePath();
                     //TODO: possibly change path to proper command? Does "path" work as a command?
                     ssh.sendCommand(path);
-                }g
+                }
 
             }
             //close ssh-connection
