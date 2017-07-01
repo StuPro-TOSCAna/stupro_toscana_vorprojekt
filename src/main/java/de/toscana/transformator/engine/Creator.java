@@ -17,16 +17,12 @@ public class Creator {
 
 
     private Map<String,Node> allNodes;
-    private Queue<Node> sortedNodes = new LinkedList<Node>();
-    private ArrayList<Node> lookedNodes = new ArrayList<>();
 
     //this array list should contain all queues
     //each machine has a own queue with their nodes
     private ArrayList<Queue> allQueues = new ArrayList<>();
 
 
-    private Queue<Node> tmpNodes= new LinkedList<>();
-    private Node tmpMachine;
     /**
      * constructor of class Creator
      *
@@ -46,7 +42,7 @@ public class Creator {
      */
     protected ArrayList<Queue> getAllQueues() {
         findMachines();
-        addSortedNodes();
+        addChildren();
         return allQueues;
     }
 
@@ -61,53 +57,34 @@ public class Creator {
         }
     }
 
+
     /**
      * add the nodes to the queue by ascending order
      */
-    private void addSortedNodes(){
-        for (Map.Entry<String, Node> entry : allNodes.entrySet()) {
-            if (!(entry.getValue() instanceof MachineNode) && !(lookedNodes.contains(entry.getValue()))){
-                tmpMachine=null;
-                tmpNodes=null;
-                getAllChildren(entry.getValue());
-
-                //add the nodes which was found on the way to the last child of the current node
-                //to the machine queue where it belongs to
-                for(Queue queue : allQueues){
-                    if(queue.contains(tmpMachine)){
-                        while(!tmpNodes.isEmpty()){
-                            Node currentNode = tmpNodes.peek();
-                            if(!queue.contains(currentNode)){
-                                queue.add(tmpNodes.poll());
-                            }
-
-                        }
-                    }
-                }
-            }
+    private void addChildren(){
+        for(Queue<Node> qu : allQueues){
+            getAllChildren(qu.peek(), qu);
         }
     }
 
     /**
      * recursive method
-     * walk recursively to the last child of a node
-     * save all nodes on the way and remember the machineNode their belongs to
+     * walk recursively to the last child of a node and add each node to the queue
      *
      * @param n the current node
+     * @param qu the current queue
      */
-    private void getAllChildren(Node n){
-        lookedNodes.add(n);
-        while(!(n.getChildren().isEmpty())){
-            for (Node child : n.getChildren()){
-                getAllChildren(child);
-            }
-        }
-        if(n instanceof MachineNode){
-            tmpMachine=n;
-        } else{
-            tmpNodes.add(n);
+    private void getAllChildren(Node n, Queue<Node> qu){
+        if(!qu.contains(n)){
+            qu.add(n);
         }
 
+        while(!n.getChildren().isEmpty()){
+            for (Node child : n.getChildren()){
+                getAllChildren(child,qu);
+            }
+        }
     }
+
 
 }
