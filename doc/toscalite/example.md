@@ -1,7 +1,7 @@
 # Example `model.xml`
 
 The following XML code represents a complete example of a Topology.
-It models a WordPress application running on Apache with PHP on one machine and the Database (MySQL) running on anotherone.
+It models a WordPress application running on Apache with PHP on one machine and the Database (MySQL) running on another one.
 ```XML
 <Model>
     <Nodes>
