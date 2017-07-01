@@ -32,7 +32,7 @@ class Main {
                 System.err.println(e.getMessage());
                 return;
             }
-            engine = new Engine(toscaLiteModel);
+            engine = new Engine(toscaLiteModel,new File(args[0]));
         }
 
         setUpController();

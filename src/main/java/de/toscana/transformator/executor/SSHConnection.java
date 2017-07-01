@@ -168,7 +168,7 @@ public class SSHConnection implements Executor {
      * Overwrites all existing files
      */
     private String unzipFile(File zipFile) {
-        String zip = "";
+        String zip;
         //depends on the language the server is using
         if (sendCommand("apt -qq list unzip").contains("installed")) {
             zip = sendCommand("unzip -o " + zipFile.getName());

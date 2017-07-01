@@ -1,5 +1,4 @@
 .idea/*
-!.idea/fileTemplates/
 target/
 **/*.iml
 
