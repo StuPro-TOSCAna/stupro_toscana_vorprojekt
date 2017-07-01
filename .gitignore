@@ -1,4 +1,6 @@
-.idea/
+
+.idea/*
+!.idea/fileTemplates/
 target/
 **/*.iml
 
@@ -38,6 +40,7 @@ fabric.properties
 .mtj.tmp/
 
 # Package Files #
+*.jar
 *.war
 *.ear
 *.tar.gz
