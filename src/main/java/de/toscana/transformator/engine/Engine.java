@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Queue;
 
 /**
- * The Engine contains methods to deploy the application and manage it at runtime.
+ * The engine class contains methods to deploy the application and manage it at runtime.
  *
  * @author Marvin Munoz Baron
  * @author Jens Mueller
@@ -24,9 +24,10 @@ public class Engine {
     private final File zip;
 
     /**
-     * constructor of Engine Class
-     * for each command you need a new instance of Constructor
-     * @param topology the complete application topology
+     * Constructor of the engine class
+     * for each command you need a new instance of Constructor TODO: What does this mean?
+     * @param topology The TOSCAlite model containing the complete application topology
+     * @param inputZip The zip file containing all artifacts and models
      */
     public Engine(TOSCAliteModel topology, File inputZip) {
         creator=new Creator(topology);
@@ -36,9 +37,7 @@ public class Engine {
     }
 
     /**
-     * create the whole application with all dependencies
-     * <p>
-     * TODO: send files and commands to VM
+     * Creates the whole application with all dependencies.
      */
     public boolean create() {
         helpCreateStart(ArtifactType.CREATE);
@@ -46,14 +45,14 @@ public class Engine {
     }
 
     /**
-     * start all services in the application topology
+     * Starts all services in the application topology.
      */
     public void start() {
         helpCreateStart(ArtifactType.START);
     }
 
     /**
-     * stop all services in the application topology
+     * Stops all services in the application topology.
      */
     public void stop() {
         for(Queue<Node> nodesForCreation : lstMachineQueues){
@@ -74,7 +73,7 @@ public class Engine {
                 }
                 nodesForCreation.remove(currentNode);
                 String path=currentNode.getImplementationArtifact(ArtifactType.STOP).getAbsolutePath();
-                //TODO: possibly change path String? Does "path" work as a command?
+                //TODO: possibly change path to proper command? Does "path" work as a command?
                 ssh.sendCommand(path);
             }
             //close ssh-connection
@@ -83,8 +82,9 @@ public class Engine {
     }
 
     /**
-     * depends on the type the method will create or start
-     * @param type artifactType defines what should done
+     * Orchestrates ZIP upload and sends commands through SSH.
+     * Depending on the artifact type the method will use create or start scripts.
+     * @param type The artifact type which determines the nature of the method
      */
     private void helpCreateStart(ArtifactType type){
         for(Queue<Node> nodesForCreation : lstMachineQueues){

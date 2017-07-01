@@ -7,14 +7,13 @@ import de.toscana.transformator.model.TOSCAliteModel;
 import java.util.*;
 
 /**
+ * The creator class contains methods to get the correct order for creation, start and stop of services.
  * @author Jens Mueller
- *         <p>
- *         Class to get the correct order for a creation
- *         <p>
- *         TODO: Logging, Exceptions
+ *
+ * TODO: Logging, Exceptions
  */
 public class Creator {
-
+S
 
     private Map<String,Node> allNodes;
 
@@ -24,9 +23,8 @@ public class Creator {
 
 
     /**
-     * constructor of class Creator
-     *
-     * @param topology the complete application topology
+     * Constructor of the creator class
+     * @param topology The TOSCAlite model containing the complete application topology
      */
     public Creator(TOSCAliteModel topology) {
         allNodes = topology.getNodes();
@@ -34,9 +32,9 @@ public class Creator {
 
 
     /**
-     * get the queues with the nodes in ascending order ready for creation
-     * for each machine node there is a own queue with all nodes which belongs to the machine
-     * the first element has to be installed at first
+     * Gets the queues with the nodes in ascending order ready for creation.
+     * For each machine node there is an own queue with all nodes which belong to the machine.
+     * The first element has to be installed at first.
      *
      * @return a queue with nodes
      */
@@ -47,7 +45,7 @@ public class Creator {
     }
 
     /**
-     * find machinenodes and create for each node an own queue
+     * Finds machine nodes and creates an own queue for each node.
      */
     private void findMachines(){
         for (Map.Entry<String, Node> entry : allNodes.entrySet()) {
@@ -59,7 +57,7 @@ public class Creator {
 
 
     /**
-     * add the nodes to the queue by ascending order
+     * Adds the nodes to the queue by ascending order.
      */
     private void addChildren(){
         for(Queue<Node> qu : allQueues){
@@ -69,11 +67,10 @@ public class Creator {
     }
 
     /**
-     * recursive method
-     * walk recursively to the last child of a node and add each node to the queue
+     * Walks recursively to the last child of a node and adds each node to the queue.
      *
-     * @param n the current node
-     * @param qu the current queue
+     * @param n The current node
+     * @param qu The current queue
      */
     private void getAllChildren(Node n, Queue<Node> qu){
         if(!qu.contains(n)){

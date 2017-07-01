@@ -18,7 +18,7 @@ import static org.junit.Assert.assertTrue;
 
 
 /**
- * This class is used to test the functionality of the Engine and Creator classes.
+ * This class is used to test the functionality of the engine and creator classes.
  *
  * @author Marvin Munoz Baron
  */
