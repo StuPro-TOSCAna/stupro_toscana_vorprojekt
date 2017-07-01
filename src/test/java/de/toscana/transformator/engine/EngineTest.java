@@ -6,6 +6,8 @@ import sun.security.pkcs.ParsingException;
 
 import java.io.IOException;
 
+import static org.testng.AssertJUnit.assertTrue;
+
 
 /**
  * This class is used to test the functionality of the Engine and Creator classes.
@@ -28,6 +30,6 @@ public class EngineTest {
             e.printStackTrace();
         }
         Engine engine = new Engine(topology);
-        assertTrue()
+        assertTrue(engine!=null);
     }
 }
