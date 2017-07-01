@@ -64,6 +64,7 @@ public class Creator {
     private void addChildren(){
         for(Queue<Node> qu : allQueues){
             getAllChildren(qu.peek(), qu);
+
         }
     }
 
@@ -78,12 +79,10 @@ public class Creator {
         if(!qu.contains(n)){
             qu.add(n);
         }
-
-        while(!n.getChildren().isEmpty()){
             for (Node child : n.getChildren()){
                 getAllChildren(child,qu);
             }
-        }
+
     }
 
 
