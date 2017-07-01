@@ -2,6 +2,10 @@ package de.toscana.transformator.executor;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+
+import java.io.File;
 
 import static org.junit.Assert.*;
 
@@ -10,9 +14,10 @@ import static org.junit.Assert.*;
  * <p>
  * Test for class SSHConnection
  */
-public class SSHConnectionTest {
+@RunWith(JUnit4.class)
+public  class SSHConnectionTest {
 
-    SSHConnection instance = null;
+    private SSHConnection instance = null;
 
     /**
      * instantiates a SSHConnection with given credentials of a raspberry
@@ -20,9 +25,9 @@ public class SSHConnectionTest {
     @Before
     public void getSSHConnectionInstance() {
         //using data of my raspberry
-        String username = "user";
+        String username = "ubuntu";
         String password = "pw";
-        String connectionIp = "ip";
+        String connectionIp = "54.191.146.79";
         this.instance = new SSHConnection(username, password, connectionIp);
     }
 
@@ -33,7 +38,20 @@ public class SSHConnectionTest {
     public void testSendCommand() {
         String command = "ls";
         instance.connect();
-        assertTrue(instance.sendCommand(command).contains("empty.zip"));
+        assertTrue(instance.sendCommand(command).contains("text.txt"));
+        instance.close();
+    }
+    /**
+     * starts the connection and executes the command ls and should find at least "test.txt" in the directory
+     */
+    @Test
+    public void testExecuteScript() {
+        String script = "apache/create";
+        String script2 = "apache/start";
+        instance.connect();
+        String result = instance.executeScript(script);
+        result = instance.executeScript(script2);
+        assertTrue(instance.sendCommand("systemctl status apache2").contains("running"));
         instance.close();
     }
 
@@ -45,21 +63,23 @@ public class SSHConnectionTest {
         String directory = "D:/";
         String filename = "test.txt";
         instance.connect();
-        instance.uploadFile(directory + filename, ".");
+        instance.uploadFile(new File(directory + filename),".");
         assertTrue(instance.sendCommand("ls").contains("test.txt"));
         instance.close();
     }
 
     /**
      * starts the connection and tests the unzip procedure
-    */
+     */
     @Test
     public void testUnzip() {
         instance.connect();
-        String directory = "D:/";
+        String directory = "src/test/resources/";
         String filename = "empty.zip";
-        String result = instance.uploadAndUnzipZip(filename,directory);
+        instance.connect();
+        String result = instance.uploadAndUnzipZip(new File(directory + filename));
         assertTrue(result.contains("empty.txt"));
         instance.close();
     }
+
 }
