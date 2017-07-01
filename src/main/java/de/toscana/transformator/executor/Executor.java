@@ -8,5 +8,6 @@ import java.io.File;
 public interface Executor {
 
     String sendCommand(String command);
+    String sendCommand(String nodename, String command);
     boolean uploadFile(File file, String targetPath);
 }

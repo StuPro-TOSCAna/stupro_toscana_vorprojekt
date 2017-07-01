@@ -74,7 +74,7 @@ public class Engine {
                 nodesForCreation.remove(currentNode);
                 String path=currentNode.getImplementationArtifact(ArtifactType.STOP).getAbsolutePath();
                 //TODO: possibly change path to proper command? Does "path" work as a command?
-                ssh.sendCommand(path);
+                ssh.sendCommand(currentNode.getName(), path);
             }
             //close ssh-connection
             ssh.close();
@@ -108,7 +108,7 @@ public class Engine {
                 if (nodeToInstall instanceof ServiceNode){
                     path=((ServiceNode) nodeToInstall).getImplementationArtifact(type).getAbsolutePath();
                     //TODO: possibly change path to proper command? Does "path" work as a command?
-                    ssh.sendCommand(path);
+                    ssh.sendCommand(nodeToInstall.getName(),path);
                 }
 
             }

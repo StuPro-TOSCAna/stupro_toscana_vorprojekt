@@ -4,14 +4,14 @@ package de.toscana.transformator.executor;
  * Created by Manuel on 15.06.2017.
  */
 
-
-
-
 import com.jcraft.jsch.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 
 public class SSHConnection implements Executor{
+    private static final Logger LOG = LoggerFactory.getLogger(SSHConnection.class);
     private String username;
     private String connectionIP;
     private String password;
@@ -28,7 +28,6 @@ public class SSHConnection implements Executor{
      * @param connectionIP
      */
     public SSHConnection(String username, String password, String connectionIP) {
-
         this.jschSSHChannel = new JSch();
 
         // maybe insert known hosts via jschSSHChannel.setKnownHosts(knownHosts);
@@ -55,6 +54,8 @@ public class SSHConnection implements Executor{
             sesConnection.setConfig("StrictHostKeyChecking", "No");
 
             sesConnection.connect(timeout);
+            // update and upgrade may take some time
+            sendCommand("echo "+password+"| sudo -S apt-get update && sudo -S apt-get upgrade -y");
         } catch (JSchException jschExp) {
             jschExp.printStackTrace();
         }
@@ -133,7 +134,7 @@ public class SSHConnection implements Executor{
             zip = sendCommand("unzip -o " + zipFile.getName());
         } else {
             sendCommand("echo "+password+"| sudo -S apt-get install -y unzip");
-            zip = sendCommand("unzip -o " + zipname);
+            zip = sendCommand("unzip -o " + zipFile.getName());
         }
         return zip;
     }
