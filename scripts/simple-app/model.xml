@@ -26,7 +26,7 @@
             </ImplementationArtifacts>
         </Node>
         <Node>
-            <Name>php-app</Name>
+            <Name>phpapp</Name>
             <Type>service</Type>
             <ImplementationArtifacts>
                 <Create>create</Create>
@@ -34,7 +34,7 @@
                 <Stop>stop</Stop>
             </ImplementationArtifacts>
             <DeploymentArtifacts>
-                <DeploymentArtifact key="app">php-app.zip</DeploymentArtifact>
+                <DeploymentArtifact key="app">phpapp.zip</DeploymentArtifact>
             </DeploymentArtifacts>
         </Node>
         <Node>
@@ -76,7 +76,7 @@
     <Relationships>
         <Relationship>
             <Type>hostedOn</Type>
-            <Source>php-app</Source>
+            <Source>phpapp</Source>
             <Target>php</Target>
         </Relationship>
         <Relationship>
@@ -101,7 +101,7 @@
         </Relationship>
         <Relationship>
             <Type>connectsTo</Type>
-            <Source>php-app</Source>
+            <Source>phpapp</Source>
             <Target>database</Target>
             <ImplementationArtifact>dbconnect</ImplementationArtifact>
         </Relationship>
