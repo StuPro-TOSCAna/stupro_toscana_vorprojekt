@@ -5,6 +5,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import java.io.File;
+
 import static org.junit.Assert.*;
 
 /**
@@ -15,7 +17,7 @@ import static org.junit.Assert.*;
 @RunWith(JUnit4.class)
 public  class SSHConnectionTest {
 
-    SSHConnection instance = null;
+    private SSHConnection instance = null;
 
     /**
      * instantiates a SSHConnection with given credentials of a raspberry
@@ -36,7 +38,7 @@ public  class SSHConnectionTest {
     public void testSendCommand() {
         String command = "ls";
         instance.connect();
-        assertTrue(instance.sendCommand(command).contains("empty.zip"));
+        assertTrue(instance.sendCommand(command).contains("text.txt"));
         instance.close();
     }
 
@@ -48,7 +50,7 @@ public  class SSHConnectionTest {
         String directory = "D:/";
         String filename = "test.txt";
         instance.connect();
-        instance.uploadFile(directory + filename, ".");
+        instance.uploadFile(new File(directory + filename),".");
         assertTrue(instance.sendCommand("ls").contains("test.txt"));
         instance.close();
     }
@@ -61,7 +63,8 @@ public  class SSHConnectionTest {
         instance.connect();
         String directory = "src/test/resources/";
         String filename = "empty.zip";
-        String result = instance.uploadAndUnzipZip(filename,directory);
+        instance.connect();
+        String result = instance.uploadAndUnzipZip(new File(directory + filename));
         assertTrue(result.contains("empty.txt"));
         instance.close();
     }
