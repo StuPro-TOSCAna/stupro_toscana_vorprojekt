@@ -12,7 +12,6 @@ import static org.junit.Assert.*;
  * <p>
  * Test for class SSHConnection
  */
-public class SSHConnectionTest {
 @RunWith(JUnit4.class)
 public  class SSHConnectionTest {
 
@@ -66,4 +65,5 @@ public  class SSHConnectionTest {
         assertTrue(result.contains("empty.txt"));
         instance.close();
     }
+
 }
