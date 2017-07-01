@@ -1,5 +1,7 @@
 package de.toscana.transformator.model;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -18,6 +20,8 @@ import java.util.Map;
  * This class represents a complete, parsed topology.
  */
 public class TOSCAliteModel {
+
+    private static Logger LOG = LoggerFactory.getLogger(TOSCAliteModel.class);
 
     private static final String MODEL_ELEMENT_NAME = "Model";
     private static final String NODES_ELEMENT_NAME = "Nodes";
@@ -50,9 +54,8 @@ public class TOSCAliteModel {
      */
     public TOSCAliteModel(String xmlContent) throws ParsingException {
         initializeAttributes();
-        //TODO Implement Parsing
         //initialze document builder and document
-        System.out.println("Initializing parser");
+        LOG.debug("Initializing parser");
         Document document = null;
         Element root = null;
         try {
@@ -63,7 +66,7 @@ public class TOSCAliteModel {
             e.printStackTrace();
             throw new ParsingException("Parser could not initialize properly", e);
         }
-        System.out.println("Parsing");
+        LOG.debug("Parsing");
         if (!root.getNodeName().equals(MODEL_ELEMENT_NAME)) {
             throw new ParsingException("Invalid document. Root element has to be called \"Model\"");
         }
@@ -86,7 +89,7 @@ public class TOSCAliteModel {
     }
 
     private void parseNodes(org.w3c.dom.Node e) throws ParsingException {
-        System.out.println("Parsing nodes");
+        LOG.debug("Parsing nodes");
         for (int i = 0; i < e.getChildNodes().getLength(); i++) {
             org.w3c.dom.Node n = e.getChildNodes().item(i);
             if (n.getNodeName().equals(NODE_ELEMENT_NAME)) {
@@ -122,7 +125,7 @@ public class TOSCAliteModel {
                     " The node type " + type + " is not allowed!");
         }
         nodes.put(node.getName(), node);
-        System.out.println("Added " + node.getName() + " " + type);
+        LOG.debug("Added {} {}", type, node.name);
     }
 
     private String determineElementType(org.w3c.dom.Node n) {
@@ -136,7 +139,7 @@ public class TOSCAliteModel {
     }
 
     private void parseRelationships(org.w3c.dom.Node e) throws ParsingException {
-        System.out.println("Parsing relationships");
+        LOG.debug("Parsing relationships");
         for (int i = 0; i < e.getChildNodes().getLength(); i++) {
             org.w3c.dom.Node n = e.getChildNodes().item(i);
             if (n.getNodeName().equals(RELATIONSHIP_ELEMENT_KEY)) {
@@ -171,9 +174,9 @@ public class TOSCAliteModel {
                     " The relationship type " + type + " is not allowed!");
         }
         relationships.add(relationship);
-        System.out.println("Parsed " + type + " relationship from "
-                + relationship.source.getName() + " to "
-                + relationship.target.getName());
+        LOG.debug("Parsed {} relationship from {} to {}", type,
+                relationship.source.name,
+                relationship.target.name);
     }
 
     private void initializeAttributes() {
