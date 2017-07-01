@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 
-public class SSHConnection implements Executor{
+public class SSHConnection implements Executor {
     private static final Logger LOG = LoggerFactory.getLogger(SSHConnection.class);
     private String username;
     private String connectionIP;
@@ -55,7 +55,7 @@ public class SSHConnection implements Executor{
 
             sesConnection.connect(timeout);
             // update and upgrade may take some time
-            sendCommand("echo "+password+"| sudo -S apt-get update && sudo -S apt-get upgrade -y");
+            sendCommand("echo " + password + "| sudo -S apt-get update && sudo -S apt-get upgrade -y");
         } catch (JSchException jschExp) {
             jschExp.printStackTrace();
         }
@@ -72,6 +72,36 @@ public class SSHConnection implements Executor{
         try {
             Channel channel = sesConnection.openChannel("exec");
             ((ChannelExec) channel).setCommand(command);
+            InputStream commandOutput = channel.getInputStream();
+            channel.connect();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(commandOutput));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                out.append(line);
+            }
+            reader.close();
+            channel.disconnect();
+        } catch (
+                JSchException jschExp) {
+            jschExp.printStackTrace();
+        } catch (
+                IOException ioExp) {
+            ioExp.printStackTrace();
+        }
+        return out.toString();
+    }
+
+    /**
+     * Sets working directory onto nodename and executes a command on the remote host
+     *
+     * @param command
+     * @return
+     */
+    public String sendCommand(String nodename, String command) {
+        StringBuilder out = new StringBuilder();
+        try {
+            Channel channel = sesConnection.openChannel("exec");
+            ((ChannelExec) channel).setCommand("cd " + nodename + " && " + command);
             InputStream commandOutput = channel.getInputStream();
             channel.connect();
             BufferedReader reader = new BufferedReader(new InputStreamReader(commandOutput));
@@ -128,12 +158,12 @@ public class SSHConnection implements Executor{
      * Overwrites all existing files
      */
     private String unzipFile(File zipFile) {
-        String zip="";
+        String zip = "";
         //depends on the language the server is using
-        if(sendCommand("apt -qq list unzip").contains("installed")) {
+        if (sendCommand("apt -qq list unzip").contains("installed")) {
             zip = sendCommand("unzip -o " + zipFile.getName());
         } else {
-            sendCommand("echo "+password+"| sudo -S apt-get install -y unzip");
+            sendCommand("echo " + password + "| sudo -S apt-get install -y unzip");
             zip = sendCommand("unzip -o " + zipFile.getName());
         }
         return zip;
