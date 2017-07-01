@@ -5,6 +5,8 @@ package de.toscana.transformator.executor;
  */
 
 
+
+
 import com.jcraft.jsch.*;
 
 import java.io.*;
@@ -130,13 +132,8 @@ public class SSHConnection implements Executor{
         if(sendCommand("apt -qq list unzip").contains("installed")) {
             zip = sendCommand("unzip -o " + zipFile.getName());
         } else {
-            sendCommand("sudo apt-get install unzip");
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            zip = sendCommand("unzip -o " + zipFile.getName());
+            sendCommand("echo "+password+"| sudo -S apt-get install -y unzip");
+            zip = sendCommand("unzip -o " + zipname);
         }
         return zip;
     }

@@ -4,6 +4,8 @@ import com.sun.media.jfxmedia.logging.Logger;
 import com.sun.xml.internal.ws.api.message.ExceptionHasMessage;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.io.File;
 
@@ -15,6 +17,8 @@ import static org.junit.Assert.*;
  * Test for class SSHConnection
  */
 public class SSHConnectionTest {
+@RunWith(JUnit4.class)
+public  class SSHConnectionTest {
 
     private SSHConnection instance = null;
 
@@ -58,8 +62,9 @@ public class SSHConnectionTest {
      * starts the connection and tests the unzip procedure
     */
     @Test
-    public void testUnzip() throws Exception {
-        String directory = "D:/";
+    public void testUnzip() {
+        instance.connect();
+        String directory = "src/test/resources/";
         String filename = "empty.zip";
         instance.connect();
         String result = instance.uploadAndUnzipZip(new File(directory + filename));
