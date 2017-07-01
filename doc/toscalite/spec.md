@@ -62,6 +62,12 @@ The following operations are supported:
 * Start - Optional. Used to start the service.
 * Stop - Optional. Used to stop the service.
 
+##### Execution of Implementation aritfacts
+
+Before any script gets executed, the whole TOSCAlite archive is loaded on to every virtual machine and extracted there. All the extracted files will be located in the home directiory of the user that is defined in the machine node. 
+
+The scripts get executed in the directory the are located in, this means, that the TOSCAlite deployment system will automatically update the parent working directory. To the directory in which the script is located.
+
 #### Deployment Artifacts
 Deployment artifacts are files, such as executables, that get loaded with the implementation artifact when creating the service node. A service can have multiple deployment artifacts. There is no limitation for file types. The ability to process the deployment artifacts has to be implemented in the shell script.
 
