@@ -16,7 +16,6 @@ import static org.junit.Assert.*;
  * <p>
  * Test for class SSHConnection
  */
-public class SSHConnectionTest {
 @RunWith(JUnit4.class)
 public  class SSHConnectionTest {
 
