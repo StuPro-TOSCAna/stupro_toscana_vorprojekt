@@ -1,5 +1,8 @@
 package de.toscana.transformator.model;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +12,8 @@ import java.util.Map;
  * This class represents a service node.
  */
 public class ServiceNode extends Node {
+
+    private static Logger LOG = LoggerFactory.getLogger(ServiceNode.class);
 
     private static final String IMPLEMENTATION_ARTIFACTS_ELEMENT_NAME = "ImplementationArtifacts";
     private static final String DEPLOYMENT_ARTIFACTS_ELEMENT_NAME = "DeploymentArtifacts";
@@ -37,7 +42,6 @@ public class ServiceNode extends Node {
     }
 
     private void parseImplementationArtifacts(org.w3c.dom.Node element) throws ParsingException {
-        System.out.print("Parsing implementation artifacts for " + name + "... ");
         for (int i = 0; i < element.getChildNodes().getLength(); i++) {
             org.w3c.dom.Node child = element.getChildNodes().item(i);
             if (child.getNodeName().equals(IMPLEMENTATION_ARTIFACTS_ELEMENT_NAME)) {
@@ -54,11 +58,10 @@ public class ServiceNode extends Node {
                 }
             }
         }
-        System.out.println("Parsed " + implementationArtifacts.size() + " artifacts.");
+        LOG.debug("Parsed {} implementation artifacts for node {}.", implementationArtifacts.size(), name);
     }
 
     private void parseDeploymentArtifacts(org.w3c.dom.Node element) throws ParsingException {
-        System.out.print("Parsing deployment artifacts for " + name + "... ");
         for (int i = 0; i < element.getChildNodes().getLength(); i++) {
             org.w3c.dom.Node child = element.getChildNodes().item(i);
             if (child.getNodeName().equals(DEPLOYMENT_ARTIFACTS_ELEMENT_NAME)) {
@@ -75,7 +78,7 @@ public class ServiceNode extends Node {
                 }
             }
         }
-        System.out.println("Parsed " + deploymentArtifacts.size() + " artifacts.");
+        LOG.debug("Parsed {} deployment artifacts for node {}.", deploymentArtifacts.size(), name);
     }
 
 

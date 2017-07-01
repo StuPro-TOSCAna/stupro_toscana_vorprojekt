@@ -1,5 +1,8 @@
 package de.toscana.transformator.model;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +12,8 @@ import java.util.Map;
  * Root class to represent a topology node.
  */
 public abstract class Node {
+
+    private static Logger LOG = LoggerFactory.getLogger(ServiceNode.class);
 
     //Externalized Strings
     private static final String NAME_VALID_CHARACTERS = "abcdefghijklmnopqrstuvwxyz-_1234567890";
@@ -86,7 +91,7 @@ public abstract class Node {
                 parseProperty(child);
             }
         }
-        System.out.println("Parsed properties for node " + name);
+        LOG.debug("Parsed properties for node {}.", name);
     }
 
     /**

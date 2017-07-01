@@ -1,9 +1,14 @@
 package de.toscana.transformator.model;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * This class reperesents the ConnectsTo relationship in a model.xml
  */
 public class ConnectsToRelationship extends Relationship {
+
+    private static Logger LOG = LoggerFactory.getLogger(ConnectsToRelationship.class);
 
     private static final String IMPLEMENTATION_ARTIFACT_ELEMENT_NAME = "ImplementationArtifact";
     private ArtifactPath implementationArtifact;
@@ -18,8 +23,8 @@ public class ConnectsToRelationship extends Relationship {
             org.w3c.dom.Node child = element.getChildNodes().item(i);
             if (child.getNodeName().equals(IMPLEMENTATION_ARTIFACT_ELEMENT_NAME)) {
                 implementationArtifact = new ArtifactPath(child.getTextContent(), this);
-                System.out.println("Set implementation artifact for connectsTo relationship" +
-                        " between: " + source.name + ", " + " and " + target.name);
+                LOG.debug("Set implementation artifact for connectsTo relationship" +
+                        " between: {} and {}.", source.name, target.name);
             }
         }
     }
