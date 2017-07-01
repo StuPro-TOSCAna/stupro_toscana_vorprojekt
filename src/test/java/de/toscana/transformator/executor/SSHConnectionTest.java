@@ -2,6 +2,8 @@ package de.toscana.transformator.executor;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import static org.junit.Assert.*;
 
@@ -11,6 +13,8 @@ import static org.junit.Assert.*;
  * Test for class SSHConnection
  */
 public class SSHConnectionTest {
+@RunWith(JUnit4.class)
+public  class SSHConnectionTest {
 
     SSHConnection instance = null;
 
