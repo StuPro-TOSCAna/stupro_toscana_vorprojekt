@@ -56,7 +56,7 @@ public class SSHConnectionTest {
     @Test
     public void testUnzip() {
         instance.connect();
-        String directory = "D:/";
+        String directory = "src/test/resources/";
         String filename = "empty.zip";
         String result = instance.uploadAndUnzipZip(filename,directory);
         assertTrue(result.contains("empty.txt"));
