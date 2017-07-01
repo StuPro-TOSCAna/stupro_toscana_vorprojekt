@@ -134,11 +134,6 @@ public class SSHConnection implements Executor{
             zip = sendCommand("unzip -o " + zipname);
         } else {
             sendCommand("echo "+password+"| sudo -S apt-get install -y unzip");
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             zip = sendCommand("unzip -o " + zipname);
         }
         return zip;
