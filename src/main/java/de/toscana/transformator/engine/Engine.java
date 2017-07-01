@@ -15,10 +15,12 @@ import java.util.Queue;
  */
 public class Engine {
     //private final ApplicationState applicationState; TODO remove?
-    private final TOSCAliteModel topology;
+    private final Creator creator;
+    private final ArrayList<Queue> lstMachineQueues;
 
     public Engine(TOSCAliteModel topology) {
-        this.topology = topology;
+        creator=new Creator(topology);
+        lstMachineQueues = creator.getAllQueues();
         //this.applicationState = applicationState; TODO remove?
     }
 
@@ -28,9 +30,31 @@ public class Engine {
      * TODO: send files and commands to VM
      */
     public boolean create() {
-        Creator creator = new Creator(topology);
-        ArrayList<Queue> lstMachineQueues = creator.getAllQueues();
+        helpCreateStart(ArtifactType.CREATE);
+        return true;
+    }
 
+    /**
+     * start all services in the application topology
+     */
+    public void start() {
+        // TODO: Implementation of start() method
+        helpCreateStart(ArtifactType.START);
+
+    }
+
+    /**
+     * stop all services in the application topology
+     */
+    public void stop() {
+        // TODO: Implementation of stop() method
+    }
+
+    /**
+     * depends on the type the method will create or start
+     * @param type artifactType defines what should done
+     */
+    private void helpCreateStart(ArtifactType type){
         for(Queue<Node> nodesForCreation : lstMachineQueues){
             while (!nodesForCreation.isEmpty()) {
                 Node nodeToInstall = nodesForCreation.poll();
@@ -45,30 +69,16 @@ public class Engine {
                 }
 
                 if (nodeToInstall instanceof ServiceNode){
-                    path=((ServiceNode) nodeToInstall).getImplementationArtifact(ArtifactType.CREATE).getAbsolutePath();
+                    path=((ServiceNode) nodeToInstall).getImplementationArtifact(type).getAbsolutePath();
                     //TODO: take the sshConnection instance and send path to VM
                 }
 
             }
+            //close ssh connection because now it follows another machine
         }
 
 
-        //close ssh connection?
 
-        return true;
-    }
 
-    /**
-     * start all services in the application topology
-     */
-    public void start() {
-        // TODO: Implementation of start() method
-    }
-
-    /**
-     * stop all services in the application topology
-     */
-    public void stop() {
-        // TODO: Implementation of stop() method
     }
 }
