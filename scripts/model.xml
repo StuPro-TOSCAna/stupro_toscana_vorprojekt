@@ -4,18 +4,18 @@
             <Name>webmachine</Name>
             <Type>machine</Type>
             <Properties>
-                <Property key="ip">192.168.178.1</Property>
-                <Property key="username">root</Property>
-                <Property key="password">password1</Property>
+                <Property key="ip">129.69.214.130</Property>
+                <Property key="username">toscana-mainmachine</Property>
+                <Property key="password">iDontTellYou</Property>
             </Properties>
         </Node>
         <Node>
             <Name>dbmachine</Name>
             <Type>machine</Type>
             <Properties>
-                <Property key="ip">192.168.178.2</Property>
-                <Property key="username">root2</Property>
-                <Property key="password">passsword2</Property>
+                <Property key="ip">129.69.214.200</Property>
+                <Property key="username">toscana-database</Property>
+                <Property key="password">iDontTellYou</Property>
             </Properties>
         </Node>
         <Node>
