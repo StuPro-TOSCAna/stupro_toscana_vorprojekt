@@ -1,5 +1,6 @@
 package de.toscana.transformator.engine;
 
+import de.toscana.transformator.executor.SSHConnection;
 import de.toscana.transformator.model.*;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class Engine {
 
     private final Creator creator;
     private final ArrayList<Queue> lstMachineQueues;
+    private SSHConnection ssh;
 
     /**
      * constructor of Engine Class
@@ -27,6 +29,7 @@ public class Engine {
     public Engine(TOSCAliteModel topology) {
         creator=new Creator(topology);
         lstMachineQueues = creator.getAllQueues();
+        ssh = null;
     }
 
     /**
@@ -45,7 +48,6 @@ public class Engine {
     public void start() {
         // TODO: Implementation of start() method
         helpCreateStart(ArtifactType.START);
-
     }
 
     /**
@@ -57,7 +59,9 @@ public class Engine {
             String ip = mNode.getIpAdress();
             String user = mNode.getUsername();
             String pw = mNode.getPassword();
-            //TODO: make ssh connection to Machine with these data
+            // make ssh connection to Machine with these data
+            ssh = new SSHConnection(user, pw, ip);
+            ssh.connect();
 
             //get stop-artifact of nodes in descending order
             while (!nodesForCreation.isEmpty()) {
@@ -67,12 +71,11 @@ public class Engine {
                     currentNode = (ServiceNode) iterator.next();
                 }
                 nodesForCreation.remove(currentNode);
-
                 String path=currentNode.getImplementationArtifact(ArtifactType.STOP).getAbsolutePath();
                 //TODO: take the sshConnection instance and send path to VM
             }
-
             //close ssh-connection
+            ssh.close();
         }
     }
 
@@ -87,21 +90,23 @@ public class Engine {
                 String ip = ((MachineNode) mNode).getIpAdress();
                 String user = ((MachineNode) mNode).getUsername();
                 String pw = ((MachineNode) mNode).getPassword();
-                //TODO: make ssh connection to Machine with these data
+                // make ssh connection to Machine with these data
+                ssh = new SSHConnection(user, pw, ip);
+                ssh.connect();
             }
 
             while (!nodesForCreation.isEmpty()) {
                 Node nodeToInstall = nodesForCreation.poll();
                 String path="";
                 //instance of ssh Connection
-
                 if (nodeToInstall instanceof ServiceNode){
                     path=((ServiceNode) nodeToInstall).getImplementationArtifact(type).getAbsolutePath();
                     //TODO: take the sshConnection instance and send path to VM
                 }
 
             }
-            //close ssh connection because now it follows another machine
+            //close ssh-connection
+            ssh.close();
         }
 
     }
