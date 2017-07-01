@@ -46,7 +46,6 @@ public class Engine {
      * start all services in the application topology
      */
     public void start() {
-        // TODO: Implementation of start() method
         helpCreateStart(ArtifactType.START);
     }
 
@@ -72,7 +71,8 @@ public class Engine {
                 }
                 nodesForCreation.remove(currentNode);
                 String path=currentNode.getImplementationArtifact(ArtifactType.STOP).getAbsolutePath();
-                //TODO: take the sshConnection instance and send path to VM
+                //TODO: possibly change path String? Does "path" work as a command?
+                ssh.sendCommand(path);
             }
             //close ssh-connection
             ssh.close();
@@ -93,6 +93,10 @@ public class Engine {
                 // make ssh connection to Machine with these data
                 ssh = new SSHConnection(user, pw, ip);
                 ssh.connect();
+                if (type == ArtifactType.CREATE){
+                    //TODO get name and location of ZIP
+                    ssh.uploadAndUnzipZip(zipName, zipLocation);
+                }
             }
 
             while (!nodesForCreation.isEmpty()) {
@@ -101,7 +105,8 @@ public class Engine {
                 //instance of ssh Connection
                 if (nodeToInstall instanceof ServiceNode){
                     path=((ServiceNode) nodeToInstall).getImplementationArtifact(type).getAbsolutePath();
-                    //TODO: take the sshConnection instance and send path to VM
+                    //TODO: possibly change path to proper command? Does "path" work as a command?
+                    ssh.sendCommand(path);
                 }
 
             }
