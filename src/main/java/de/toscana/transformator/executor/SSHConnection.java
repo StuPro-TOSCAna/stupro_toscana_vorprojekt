@@ -48,6 +48,8 @@ public class SSHConnection implements Executor {
      */
     public void connect() {
         try {
+            // use this if you want to connect via a privatekey and comment setPassword function
+            //jschSSHChannel.addIdentity("/path/to/key"));
             sesConnection = jschSSHChannel.getSession(username, connectionIP, port);
             LOG.info("Created Session");
             sesConnection.setPassword(password);
@@ -61,6 +63,23 @@ public class SSHConnection implements Executor {
             // update and upgrade may take some time
             sendCommand("echo " + password + "| sudo -S apt-get update && sudo -S apt-get upgrade -y");
             LOG.info("update and upgrade executed");
+            //check if util files are there, if not upload them
+            //upload util scripts to /usr/local/bin
+            String targetPath = "/usr/local/bin/";
+            String targetFiles = sendCommand("ls "+targetPath);
+            System.out.println(targetFiles);
+            File sourceFolder = new File("src\\main\\resources\\util"); //probably gonna change
+            File[] sourceFiles = sourceFolder.listFiles();
+            for (File file : sourceFiles){
+                if (!(file.isFile() && targetFiles.contains(file.getName()))){
+                    LOG.info("uploading {}",file.getName());
+                    //have to upload to home directory and then move with sudo because upload has no root privileges
+                    uploadFile(file,"");
+                    sendCommand("echo " + password + "| sudo -S mv "+file.getName()+" "+ targetPath);
+                    //at least if i copy the file from windows i have mark them executable
+                    sendCommand("echo " + password + "| sudo -S chmod 775 "+ targetPath +file.getName());
+                }
+            }
         } catch (JSchException jschExp) {
             jschExp.printStackTrace();
         }
@@ -121,7 +140,9 @@ public class SSHConnection implements Executor {
             Channel channel = sesConnection.openChannel("sftp");
             channel.connect();
             ChannelSftp channelSftp = (ChannelSftp) channel;
-            channelSftp.cd(targetPath);
+            if (!targetPath.equals("")) {
+                channelSftp.cd(targetPath);
+            }
             channelSftp.put(new FileInputStream(file), file.getName());
             channelSftp.disconnect();
         } catch (JSchException jschExp) {
@@ -164,7 +185,7 @@ public class SSHConnection implements Executor {
     @Override
     public String uploadAndUnzipZip(File zipFile) {
         //can be changed maybe?
-        String targetDirectory = "~/";
+        String targetDirectory = "";
         uploadFile(zipFile, targetDirectory);
         return unzipFile(zipFile);
     }

@@ -25,9 +25,9 @@ public  class SSHConnectionTest {
     @Before
     public void getSSHConnectionInstance() {
         //using data of my raspberry
-        String username = "user";
+        String username = "ubuntu";
         String password = "pw";
-        String connectionIp = "ip";
+        String connectionIp = "54.191.146.79";
         this.instance = new SSHConnection(username, password, connectionIp);
     }
 
@@ -39,6 +39,19 @@ public  class SSHConnectionTest {
         String command = "ls";
         instance.connect();
         assertTrue(instance.sendCommand(command).contains("text.txt"));
+        instance.close();
+    }
+    /**
+     * starts the connection and executes the command ls and should find at least "test.txt" in the directory
+     */
+    @Test
+    public void testExecuteScript() {
+        String script = "apache/create";
+        String script2 = "apache/start";
+        instance.connect();
+        String result = instance.executeScript(script);
+        result = instance.executeScript(script2);
+        assertTrue(instance.sendCommand("systemctl status apache2").contains("running"));
         instance.close();
     }
 
@@ -57,7 +70,7 @@ public  class SSHConnectionTest {
 
     /**
      * starts the connection and tests the unzip procedure
-    */
+     */
     @Test
     public void testUnzip() {
         instance.connect();
