@@ -1,15 +1,77 @@
-# StuPro TOSCAna preliminary design study
+# TOSCA2vSphere
 [![Build Status](https://travis-ci.org/nfode/stupro_toscana_vorprojekt.svg?branch=master)](https://travis-ci.org/nfode/stupro_toscana_vorprojekt) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/46bbcc976f084a19a01300393554adf0)](https://www.codacy.com/app/nfode/stupro_toscana_vorprojekt?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=nfode/stupro_toscana_vorprojekt&amp;utm_campaign=Badge_Grade)
 [![codecov](https://codecov.io/gh/nfode/stupro_toscana_vorprojekt/branch/master/graph/badge.svg)](https://codecov.io/gh/nfode/stupro_toscana_vorprojekt)
 
+This is the repository for the preliminary design study for the study project TOSCAna. The project can be split into two parts:
 
-Open repository for the preliminary design study for TOSCAna.
+## TOSCA2vSphere
+TOSCA2vSphere is a command line tool developed in the preliminary design study for the study project TOSCAna. The purpose of this tool is to deploy a TOSCAlite model as it is definend in the corresponding archive.
 
-## Folders
+## TOSCAlite
+TOSCAlite is a very lightweight version of the OASIS TOSCA standard. It can be used to model a deployment based on Linux systems (mostly Ubuntu 16.04 LTS). You can read more about TOSCAlite in its documentation here. **TODO add link**
 
-- ```php-app/``` - Example php app
-- ```src/main/``` - Java source code
-- ```src/test/``` - Java tests
+## Project structure
+- `doc/` - Documentation
+- `php-app/` - Example php app
+- `src/main/` - Java source code
+- `src/test/` - Java tests
+- `src/test/resources/` - resources needed to test
+
+## How to get the tool
+
+### Prebuild package
+
+Download a prebuild package.
+
+**TODO** *add link to latest release prebuild package*
+
+### Build from source
+Steps to build **TOSCA2vSphere** from sources:
+1. Clone the project.
+
+    `git clone https://github.com/nfode/stupro_toscana_vorprojekt.git`
+2. Enter the projects root directory.
+
+    `cd stupro_toscana_vorprojekt`
+3. Build the project with:
+
+    `
+    mvn package
+    `
+4. You can find the generated jar file in the target folder.
+
+## Usage
+How to use **TOSCA2vSphere**:
+
+1. Start **TOSCA2vSphere** with:
+
+    `
+    java -jar de.toscana.transformator-1.0-SNAPSHOT.jar model.zip
+    `
+
+    Replace *model.zip* with the file you want to open.
+
+    **IMPORTANT**: the zip-Archive has to be valid in terms of TOSCAlite.
+
+2. If parsing the file was successful you can now use the CLI:
+    1. You can create everything needed to run your model if you enter:
+
+        `
+        create
+        `
+    2. if the model was created you can start it with:
+
+        `
+        start
+        `
+    3. and finally there is the possibility to stop it with:
+
+        `
+        stop
+        `
+
+    It is mandatory that `create` has to be called before `start` and `start` has to be called before `stop`. If not, there will be an error.
+
 
 ## Tools
 
