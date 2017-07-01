@@ -23,7 +23,8 @@ class Main {
             System.out.println(ConsoleColors.getErrorString("File-argument missing."));
             return;
         } else {
-            String model = getModelXmlFileAsString(args[0]);
+            File archive = new File(args[0]);
+            String model = getModelXmlFileAsString(archive);
             if (model == null) return;
             TOSCAliteModel toscaLiteModel;
             try {
@@ -32,7 +33,7 @@ class Main {
                 System.err.println(e.getMessage());
                 return;
             }
-            engine = new Engine(toscaLiteModel,new File(args[0]));
+            engine = new Engine(toscaLiteModel, archive);
         }
 
         setUpController();
@@ -69,16 +70,16 @@ class Main {
 
     /**
      * parses the model.xml out of the archive file
-     * @param arg the archive file path
+     * @param file the archive file
      * @return the model.xml as one line string
      */
-    private static String getModelXmlFileAsString(String arg) {
-        System.out.println("Inputfile: " + arg);
+    private static String getModelXmlFileAsString(File file) {
+        File archive = file;
+        System.out.println("Inputfile: " + archive.getName());
         String string;
-        File inputFile = new File(arg);
         ArchiveHandler archiveHandler;
         try {
-            archiveHandler = new ArchiveHandler(inputFile);
+            archiveHandler = new ArchiveHandler(archive);
             string = archiveHandler.getModelXmlFromZip();
         } catch (ArchiveHandler.ArchiveException e) {
             System.err.println(ConsoleColors.getErrorString(e.getMessage()));
