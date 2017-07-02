@@ -1,7 +1,11 @@
 package de.toscana.transformator.engine;
 
+import com.jcraft.jsch.JSchException;
+import de.toscana.transformator.executor.Executor;
 import de.toscana.transformator.executor.SSHConnection;
 import de.toscana.transformator.model.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -18,9 +22,11 @@ import java.util.Queue;
  */
 public class Engine {
 
+    private static final Logger LOG = LoggerFactory.getLogger(Engine.class);
+
     private final Creator creator;
     private final ArrayList<Queue> lstMachineQueues;
-    private SSHConnection ssh;
+    private Executor ssh;
     private final File zip;
 
     /**
@@ -38,23 +44,37 @@ public class Engine {
 
     /**
      * Creates the whole application with all dependencies.
+     * return true if successful, false otherwise
      */
     public boolean create() {
-        helpCreateStart(ArtifactType.CREATE);
-        return true;
+        try {
+            helpCreateStart(ArtifactType.CREATE);
+            return true;
+        } catch (JSchException e) {
+            LOG.error("Failed to create instance.", e);
+            return false;
+        }
     }
 
     /**
      * Starts all services in the application topology.
      */
-    public void start() {
-        helpCreateStart(ArtifactType.START);
+    public boolean start() {
+        try {
+            helpCreateStart(ArtifactType.START);
+            return true;
+        } catch (JSchException e) {
+            LOG.error("Failed to start instance.", e);
+            return false;
+
+        }
     }
 
     /**
      * Stops all services in the application topology.
+     * return true if successful, false otherwise
      */
-    public void stop() {
+    public boolean stop() {
         for(Queue<Node> nodesForCreation : lstMachineQueues){
             MachineNode mNode = (MachineNode) nodesForCreation.peek();
             String ip = mNode.getIpAdress();
@@ -74,11 +94,17 @@ public class Engine {
                 nodesForCreation.remove(currentNode);
                 String path=currentNode.getImplementationArtifact(ArtifactType.STOP).getAbsolutePath();
                 //TODO: possibly change path to proper command? Does "path" work as a command?
-                ssh.sendCommand(path);
+                try {
+                    ssh.executeScript(path);
+                } catch (JSchException e) {
+                    LOG.error("Failed to stop instance.", e);
+                    return false;
+                }
             }
             //close ssh-connection
             ssh.close();
         }
+        return true;
     }
 
     /**
@@ -86,7 +112,7 @@ public class Engine {
      * Depending on the artifact type the method will use create or start scripts.
      * @param type The artifact type which determines the nature of the method
      */
-    private void helpCreateStart(ArtifactType type){
+    private void helpCreateStart(ArtifactType type) throws JSchException {
         for(Queue<Node> nodesForCreation : lstMachineQueues){
             Node mNode = nodesForCreation.poll();
             if (mNode instanceof MachineNode){
@@ -108,7 +134,7 @@ public class Engine {
                 if (nodeToInstall instanceof ServiceNode){
                     path=((ServiceNode) nodeToInstall).getImplementationArtifact(type).getAbsolutePath();
                     //TODO: possibly change path to proper command? Does "path" work as a command?
-                    ssh.sendCommand(path);
+                    ssh.executeScript(path);
                 }
 
             }

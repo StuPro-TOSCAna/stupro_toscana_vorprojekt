@@ -1,5 +1,7 @@
 package de.toscana.transformator.executor;
 
+import com.jcraft.jsch.JSchException;
+
 import java.io.File;
 
 /**
@@ -8,24 +10,30 @@ import java.io.File;
 public interface Executor {
 
     /**
-     * sending a simple command
-     * @param command
-     * @return
-     */
-    String sendCommand(String command);
-
-    /**
      * executes the script
      *
      * @param script expects nodename/scriptname
      * @return
      */
-    String executeScript(String script);
+    String executeScript(String script) throws JSchException;
 
     /**
      * Uploads the file to the machine and unzips it
+     *
      * @param file expects a .zip file
      * @return
      */
-    String uploadAndUnzipZip(File file);
+    String uploadAndUnzipZip(File file) throws JSchException;
+
+    /**
+     * Begins a ssh connection
+     * return true if successful, else false
+     */
+    boolean connect();
+
+    /**
+     * Closes the current ssh connection
+     */
+    void close();
+
 }

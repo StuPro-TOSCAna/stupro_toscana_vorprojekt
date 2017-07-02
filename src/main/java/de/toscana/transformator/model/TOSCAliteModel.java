@@ -62,9 +62,9 @@ public class TOSCAliteModel {
             DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             document = builder.parse(new ByteArrayInputStream(xmlContent.getBytes())); //TODO Rethink reading of the XML document
             root = document.getDocumentElement();
-        } catch (ParserConfigurationException | SAXException |  IOException e) {
-            e.printStackTrace();
-            throw new ParsingException("Parser could not initialize properly. The model might be invalid.",e);
+        } catch (ParserConfigurationException | SAXException |  IOException ex) {
+            LOG.error("Parser could not initialize properly. The model might be invalid.", ex);
+            throw new ParsingException(ex);
         }
         LOG.debug("Parsing");
         if (!root.getNodeName().equals(MODEL_ELEMENT_NAME)) {

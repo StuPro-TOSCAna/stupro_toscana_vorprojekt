@@ -1,5 +1,6 @@
 package de.toscana.transformator.executor;
 
+import com.jcraft.jsch.JSchException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,7 +36,7 @@ public  class SSHConnectionTest {
      * starts the connection and executes the command ls and should find at least "test.txt" in the directory
      */
     @Test
-    public void testSendCommand() {
+    public void testSendCommand() throws JSchException {
         String command = "ls";
         instance.connect();
         assertTrue(instance.sendCommand(command).contains("text.txt"));
@@ -45,7 +46,7 @@ public  class SSHConnectionTest {
      * starts the connection and executes the command ls and should find at least "test.txt" in the directory
      */
     @Test
-    public void testExecuteScript() {
+    public void testExecuteScript() throws JSchException {
         String script = "apache/create";
         String script2 = "apache/start";
         instance.connect();
@@ -59,7 +60,7 @@ public  class SSHConnectionTest {
      * starts the connections and uploads a file via sftp
      */
     @Test
-    public void testUploadFile() {
+    public void testUploadFile() throws JSchException {
         String directory = "D:/";
         String filename = "test.txt";
         instance.connect();
@@ -72,7 +73,7 @@ public  class SSHConnectionTest {
      * starts the connection and tests the unzip procedure
      */
     @Test
-    public void testUnzip() {
+    public void testUnzip() throws JSchException {
         instance.connect();
         String directory = "src/test/resources/";
         String filename = "empty.zip";
@@ -81,5 +82,4 @@ public  class SSHConnectionTest {
         assertTrue(result.contains("empty.txt"));
         instance.close();
     }
-
 }

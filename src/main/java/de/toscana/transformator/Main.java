@@ -4,6 +4,8 @@ import de.toscana.transformator.engine.Engine;
 import de.toscana.transformator.model.ParsingException;
 import de.toscana.transformator.model.TOSCAliteModel;
 import de.toscana.transformator.util.ConsoleColors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 
@@ -11,6 +13,9 @@ import java.io.*;
  * Main entry point for the program
  */
 class Main {
+
+    private static final Logger LOG = LoggerFactory.getLogger(Main.class);
+
     private static Engine engine;
 
     /**
@@ -56,15 +61,23 @@ class Main {
     }
 
     private static void controlEngine(String s) {
+        boolean success;
         switch (s) {
             case "create":
-                engine.create();
+                success = engine.create();
                 break;
             case "start":
-                engine.start();
+                success = engine.start();
                 break;
             case "stop":
-                engine.stop();
+                success = engine.stop();
+                break;
+            default:
+                throw new IllegalStateException("Enginge can only be controlled with 'create', 'start' or 'stop'");
+        }
+        if (!success){
+            LOG.error("Unsuccessfully executed command '{}', aborting", s);
+            System.exit(1);
         }
     }
 
