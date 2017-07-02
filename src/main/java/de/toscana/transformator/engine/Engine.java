@@ -116,7 +116,9 @@ public class Engine {
      */
     private void helpCreateStart(ArtifactType type) throws JSchException {
         for(Queue<Node> nodesForCreation : lstMachineQueues){
+            ArrayList<Node> finishedNodes = new ArrayList<Node>();
             Node mNode = nodesForCreation.poll();
+            finishedNodes.add(mNode);
             if (mNode instanceof MachineNode){
                 String ip = ((MachineNode) mNode).getIpAdress();
                 String user = ((MachineNode) mNode).getUsername();
@@ -131,6 +133,7 @@ public class Engine {
 
             while (!nodesForCreation.isEmpty()) {
                 Node nodeToInstall = nodesForCreation.poll();
+                finishedNodes.add(nodeToInstall);
                 String pathCreate="";
                 String pathStart="";
 
@@ -161,9 +164,10 @@ public class Engine {
                     }
                 }
             }
+
             if(type == ArtifactType.CREATE){
                 try {
-                    executeConnects(ssh, nodesForCreation);
+                    executeConnects(ssh, finishedNodes);
                 } catch (JSchException e){
                     LOG.error("Failed to execute connects-to Relationship", e);
                 }
@@ -179,12 +183,12 @@ public class Engine {
      * @param sshConn current SSH Connection
      * @throws JSchException
      */
-    private void executeConnects(Executor sshConn, Queue<Node> qu) throws JSchException {
+    private void executeConnects(Executor sshConn, ArrayList<Node> lstNode) throws JSchException {
 
         for(Relationship rel : lstRelations){
             if(rel instanceof ConnectsToRelationship){
                 Node node=rel.getSource();
-                if(qu.contains(node)){
+                if(lstNode.contains(node)){
                     ArtifactPath relArti = ((ConnectsToRelationship) rel).getImplementationArtifact();
                     if(relArti!=null){
                         String relPath = relArti.getAbsolutePath();
