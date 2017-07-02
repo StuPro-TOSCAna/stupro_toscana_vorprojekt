@@ -143,7 +143,7 @@ public class SSHConnection implements Executor {
             Channel channel = sesConnection.openChannel("sftp");
             channel.connect();
             ChannelSftp channelSftp = (ChannelSftp) channel;
-            if (!targetPath.equals("")) {
+            if (!"".equals(targetPath)) {
                 channelSftp.cd(targetPath);
             }
             channelSftp.put(new FileInputStream(file), file.getName());
