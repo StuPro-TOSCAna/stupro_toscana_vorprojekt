@@ -1,0 +1,5 @@
+#!/bin/bash  
+# execute to create a new, up to date simple-app.zip
+cd simple-app 
+zip ../simple-app.zip -r *
+cd ..
