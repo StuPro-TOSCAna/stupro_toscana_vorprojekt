@@ -1,7 +1,6 @@
 package de.toscana.transformator.engine;
 
 import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Logger;
 import de.toscana.transformator.executor.Executor;
 import de.toscana.transformator.executor.SSHConnection;
 import de.toscana.transformator.model.*;
@@ -134,9 +133,18 @@ public class Engine {
 
                 //instance of ssh Connection
                 if (nodeToInstall instanceof ServiceNode){
-                    pathStart=((ServiceNode) nodeToInstall).getImplementationArtifact(ArtifactType.START).getAbsolutePath();
+
+                    ArtifactPath startArti = ((ServiceNode) nodeToInstall).getImplementationArtifact(ArtifactType.START);
+                    ArtifactPath createArti = ((ServiceNode) nodeToInstall).getImplementationArtifact(ArtifactType.CREATE);
+                    if(startArti!=null){
+                        pathStart=startArti.getAbsolutePath();
+                    }
+
                     if(type == ArtifactType.CREATE){
-                        pathCreate=((ServiceNode) nodeToInstall).getImplementationArtifact(ArtifactType.CREATE).getAbsolutePath();
+                        if(createArti!=null){
+                            pathCreate=createArti.getAbsolutePath();
+                        }
+
                         ssh.executeScript(pathCreate);
                         ssh.executeScript(pathStart);
                     } else{
