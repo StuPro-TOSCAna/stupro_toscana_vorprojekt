@@ -61,7 +61,7 @@ class Main {
     }
 
     private static void controlEngine(String s) {
-        boolean success;
+        boolean success = true;
         switch (s) {
             case "create":
                 success = engine.create();
@@ -75,8 +75,9 @@ class Main {
             case "exit":
                 LOG.info("shutdown");
                 System.exit(0);
+                break;
             default:
-                throw new IllegalStateException("Enginge can only be controlled with 'create', 'start' or 'stop'");
+                System.out.println("Unknown command. Available commands: (create|start|stop|exit)");
         }
         if (!success){
             LOG.error("Unsuccessfully executed command '{}', aborting", s);
