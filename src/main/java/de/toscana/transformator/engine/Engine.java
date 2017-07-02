@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Queue;
 
 /**
@@ -27,6 +28,7 @@ public class Engine {
     private final ArrayList<Queue> lstMachineQueues;
     private Executor ssh;
     private final File zip;
+    private final List<Relationship> lstRelations;
 
     /**
      * Constructor of the engine class
@@ -39,6 +41,7 @@ public class Engine {
         lstMachineQueues = creator.getAllQueues();
         ssh = null;
         zip = inputZip;
+        lstRelations=topology.getRelationships();
     }
 
     /**
@@ -143,17 +146,47 @@ public class Engine {
                     if(type == ArtifactType.CREATE){
                         if(createArti!=null){
                             pathCreate=createArti.getAbsolutePath();
+                            ssh.executeScript(pathCreate);
                         }
 
-                        ssh.executeScript(pathCreate);
-                        ssh.executeScript(pathStart);
+                        try {
+                            executeConnects(ssh);
+                        } catch (JSchException e){
+                            LOG.error("Failed to execute connects-to Relationship", e);
+                        }
+
+                        if(startArti!=null){
+                            ssh.executeScript(pathStart);
+                        }
+
                     } else{
-                        ssh.executeScript(pathStart);
+                        if(startArti!=null){
+                            ssh.executeScript(pathStart);
+                        }
                     }
                 }
             }
             ssh.close();
         }
 
+    }
+
+    /**
+     *
+     * executes all connects to relationships
+     * @param sshConn current SSH Connection
+     * @throws JSchException
+     */
+    private void executeConnects(Executor sshConn) throws JSchException {
+        for(Relationship rel : lstRelations){
+            if(rel instanceof ConnectsToRelationship){
+                ArtifactPath relArti = ((ConnectsToRelationship) rel).getImplementationArtifact();
+                if(relArti!=null){
+                    String relPath = relArti.getAbsolutePath();
+                    sshConn.executeScript(relPath);
+                }
+
+            }
+        }
     }
 }
