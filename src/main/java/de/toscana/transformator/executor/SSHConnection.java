@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.util.Map;
 
 public class SSHConnection implements Executor {
     private static final Logger LOG = LoggerFactory.getLogger(SSHConnection.class);
@@ -121,11 +122,25 @@ public class SSHConnection implements Executor {
      * @return the output of the command
      */
     @Override
-    public String executeScript(String script) throws JSchException {
-        String[] commandSplit = script.split("/");
-        String nodeName = commandSplit[1];
-        String scriptName = commandSplit[2];
-        String output = sendCommand("cd " + nodeName + " && " + "echo " + password + "| sudo -S ./" + scriptName);
+    public String executeScript(String script, Map<String, String> environment) throws JSchException {
+        String[] scriptSplit = script.split("/");
+        String nodeName = scriptSplit[0];
+        String scriptName = scriptSplit[1];
+        StringBuilder commands = new StringBuilder();
+        for (Map.Entry<String,String> entry: environment.entrySet()){
+            StringBuilder command = new StringBuilder();
+            command.append(nodeName.toUpperCase());
+            command.append("_");
+            command.append(entry.getKey().toUpperCase());
+            command.append("=");
+            command.append(entry.getValue());
+            command.append(" ");
+            LOG.info(command.toString());
+            String resultEnv = sendCommand(command.toString());
+            LOG.info(resultEnv);//debug
+            commands.append(command);
+        }
+        String output = sendCommand("cd " + nodeName + " && " + "echo " + password + "| sudo -S "+commands.toString()+"./" + scriptName);
         LOG.info("{}@{} > Executed script [node={}, operation={}]", username, connectionIP, nodeName, scriptName);
         System.out.println(output);
         return output;
