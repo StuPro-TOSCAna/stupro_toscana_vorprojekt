@@ -26,6 +26,7 @@ public class Engine {
 
     private final Creator creator;
     private final ArrayList<Queue> lstMachineQueues;
+    private final ArrayList<Queue> copyLstMachineQueues;
     private Executor ssh;
     private final File zip;
     private final List<Relationship> lstRelations;
@@ -39,6 +40,7 @@ public class Engine {
     public Engine(TOSCAliteModel topology, File inputZip) {
         creator=new Creator(topology);
         lstMachineQueues = creator.getAllQueues();
+        copyLstMachineQueues = lstMachineQueues;
         ssh = null;
         zip = inputZip;
         lstRelations=topology.getRelationships();
@@ -79,13 +81,7 @@ public class Engine {
     public boolean stop() {
         for(Queue<Node> nodesForCreation : lstMachineQueues){
             MachineNode mNode = (MachineNode) nodesForCreation.peek();
-            String ip = mNode.getIpAdress();
-            String user = mNode.getUsername();
-            String pw = mNode.getPassword();
-            // make ssh connection to Machine with these data
-            ssh = new SSHConnection(user, pw, ip);
-            ssh.connect();
-
+            makeSSHConnection(mNode);
             //get stop-artifact of nodes in descending order
             while (!nodesForCreation.isEmpty()) {
                 Iterator<Node> iterator= nodesForCreation.iterator();
@@ -116,16 +112,9 @@ public class Engine {
      */
     private void helpCreateStart(ArtifactType type) throws JSchException {
         for(Queue<Node> nodesForCreation : lstMachineQueues){
-            ArrayList<Node> finishedNodes = new ArrayList<Node>();
             Node mNode = nodesForCreation.poll();
-            finishedNodes.add(mNode);
             if (mNode instanceof MachineNode){
-                String ip = ((MachineNode) mNode).getIpAdress();
-                String user = ((MachineNode) mNode).getUsername();
-                String pw = ((MachineNode) mNode).getPassword();
-                // make ssh connection to Machine with these data
-                ssh = new SSHConnection(user, pw, ip);
-                ssh.connect();
+               makeSSHConnection((MachineNode) mNode);
                 if (type == ArtifactType.CREATE){
                     ssh.uploadAndUnzipZip(zip);
                 }
@@ -133,13 +122,11 @@ public class Engine {
 
             while (!nodesForCreation.isEmpty()) {
                 Node nodeToInstall = nodesForCreation.poll();
-                finishedNodes.add(nodeToInstall);
                 String pathCreate="";
                 String pathStart="";
 
                 //instance of ssh Connection
                 if (nodeToInstall instanceof ServiceNode){
-
                     ArtifactPath startArti = ((ServiceNode) nodeToInstall).getImplementationArtifact(ArtifactType.START);
                     ArtifactPath createArti = ((ServiceNode) nodeToInstall).getImplementationArtifact(ArtifactType.CREATE);
                     if(startArti!=null){
@@ -156,46 +143,58 @@ public class Engine {
                             ssh.executeScript(pathStart);
                         }
 
-                    } else{
-
+                    } else if(type == ArtifactType.START){
                         if(startArti!=null){
                             ssh.executeScript(pathStart);
                         }
                     }
                 }
             }
-
-            if(type == ArtifactType.CREATE){
-                try {
-                    executeConnects(ssh, finishedNodes);
-                } catch (JSchException e){
-                    LOG.error("Failed to execute connects-to Relationship", e);
-                }
-            }
-
             ssh.close();
+        }
+        if(type == ArtifactType.CREATE){
+            try {
+                executeConnects();
+            } catch (JSchException e){
+                LOG.error("Failed to execute connects-to Relationship", e);
+            }
         }
     }
 
     /**
      *
      * executes all connects to relationships
-     * @param sshConn current SSH Connection
      * @throws JSchException
      */
-    private void executeConnects(Executor sshConn, ArrayList<Node> lstNode) throws JSchException {
-
+    private void executeConnects() throws JSchException {
         for(Relationship rel : lstRelations){
             if(rel instanceof ConnectsToRelationship){
                 Node node=rel.getSource();
-                if(lstNode.contains(node)){
-                    ArtifactPath relArti = ((ConnectsToRelationship) rel).getImplementationArtifact();
-                    if(relArti!=null){
-                        String relPath = relArti.getAbsolutePath();
-                        sshConn.executeScript(relPath);
+                for(Queue qu : copyLstMachineQueues){
+                    if(qu.contains(node)){
+                        MachineNode mNode=(MachineNode) qu.peek();
+                        makeSSHConnection(mNode);
+                        ArtifactPath relArti = ((ConnectsToRelationship) rel).getImplementationArtifact();
+                        if(relArti!=null){
+                            String relPath = relArti.getAbsolutePath();
+                            ssh.executeScript(relPath);
+                        }
+                        ssh.close();
                     }
                 }
             }
         }
+    }
+
+    /**
+     * create connection to a VM
+     * @param mNode
+     */
+    private void makeSSHConnection(MachineNode mNode){
+        String ip = ((MachineNode) mNode).getIpAdress();
+        String user = ((MachineNode) mNode).getUsername();
+        String pw = ((MachineNode) mNode).getPassword();
+        ssh = new SSHConnection(user, pw, ip);
+        ssh.connect();
     }
 }
