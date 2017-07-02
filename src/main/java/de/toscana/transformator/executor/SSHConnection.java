@@ -84,7 +84,7 @@ public class SSHConnection implements Executor {
      * Executes a command on the remote host
      *
      * @param command
-     * @return
+     * @return the generated output after executing the command
      */
     public String sendCommand(String command) throws JSchException {
         StringBuilder out = new StringBuilder();
@@ -111,13 +111,17 @@ public class SSHConnection implements Executor {
      * Sets working directory onto nodename and executes a command on the remote host
      *
      * @param script
-     * @return
+     * @return the output of the command
      */
     @Override
     public String executeScript(String script) throws JSchException {
         String[] commandSplit = script.split("/");
-        String result = sendCommand("cd " + commandSplit[0] + " && " + "echo " + password + "| sudo -S ./" + commandSplit[1]);
-        return result;
+        String nodeName = commandSplit[1];
+        String scriptName = commandSplit[2];
+        String output = sendCommand("cd " + nodeName + " && " + "echo " + password + "| sudo -S ./" + scriptName);
+        LOG.info("Executed script [node={}, operation={}]", nodeName, scriptName);
+        // TODO: write output to file..
+        return output;
     }
 
 
@@ -127,7 +131,7 @@ public class SSHConnection implements Executor {
      *
      * @param file
      */
-    boolean uploadFile(File file, String targetPath) {
+    boolean uploadFile(File file, String targetPath) throws JSchException {
         try {
             Channel channel = sesConnection.openChannel("sftp");
             channel.connect();
@@ -137,8 +141,6 @@ public class SSHConnection implements Executor {
             }
             channelSftp.put(new FileInputStream(file), file.getName());
             channelSftp.disconnect();
-        } catch (JSchException jschExp) {
-            jschExp.printStackTrace();
         } catch (FileNotFoundException fnfExp) {
             fnfExp.printStackTrace();
         } catch (SftpException sftpExp) {
@@ -152,6 +154,7 @@ public class SSHConnection implements Executor {
      */
     public void close() {
         sesConnection.disconnect();
+        LOG.info("closed connection to {}@{}", username, connectionIP);
     }
 
     /**
@@ -179,6 +182,9 @@ public class SSHConnection implements Executor {
         //can be changed maybe?
         String targetDirectory = "";
         uploadFile(zipFile, targetDirectory);
-        return unzipFile(zipFile);
+        String output = unzipFile(zipFile);
+        // TODO write output to file
+        LOG.info("uploaded TOSCALite-archive to target machine");
+        return output;
     }
 }
