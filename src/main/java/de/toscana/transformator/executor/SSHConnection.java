@@ -92,11 +92,13 @@ public class SSHConnection implements Executor {
             Channel channel = sesConnection.openChannel("exec");
             ((ChannelExec) channel).setCommand(command);
             InputStream commandOutput = channel.getInputStream();
+            InputStream errorOut =((ChannelExec) channel).getErrStream();
             channel.connect();
             BufferedReader reader = new BufferedReader(new InputStreamReader(commandOutput));
             String line;
             while ((line = reader.readLine()) != null) {
                 out.append(line);
+                out.append("\n");
             }
             reader.close();
             channel.disconnect();
@@ -120,7 +122,7 @@ public class SSHConnection implements Executor {
         String scriptName = commandSplit[2];
         String output = sendCommand("cd " + nodeName + " && " + "echo " + password + "| sudo -S ./" + scriptName);
         LOG.info("{}@{} > Executed script [node={}, operation={}]", username, connectionIP, nodeName, scriptName);
-        // TODO: write output to file..
+        System.out.println(output);
         return output;
     }
 
@@ -183,8 +185,8 @@ public class SSHConnection implements Executor {
         String targetDirectory = "";
         uploadFile(zipFile, targetDirectory);
         String output = unzipFile(zipFile);
-        // TODO write output to file
         LOG.info("{}@{} > uploaded TOSCALite-archive to target machine", username, connectionIP);
+        System.out.println(output);
         return output;
     }
 }
