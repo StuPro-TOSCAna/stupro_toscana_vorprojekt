@@ -149,26 +149,28 @@ public class Engine {
                             ssh.executeScript(pathCreate);
                         }
 
-                        try {
-                            executeConnects(ssh);
-                        } catch (JSchException e){
-                            LOG.error("Failed to execute connects-to Relationship", e);
-                        }
-
                         if(startArti!=null){
                             ssh.executeScript(pathStart);
                         }
 
                     } else{
+
                         if(startArti!=null){
                             ssh.executeScript(pathStart);
                         }
                     }
                 }
             }
+            if(type == ArtifactType.CREATE){
+                try {
+                    executeConnects(ssh, nodesForCreation);
+                } catch (JSchException e){
+                    LOG.error("Failed to execute connects-to Relationship", e);
+                }
+            }
+
             ssh.close();
         }
-
     }
 
     /**
@@ -177,15 +179,18 @@ public class Engine {
      * @param sshConn current SSH Connection
      * @throws JSchException
      */
-    private void executeConnects(Executor sshConn) throws JSchException {
+    private void executeConnects(Executor sshConn, Queue<Node> qu) throws JSchException {
+
         for(Relationship rel : lstRelations){
             if(rel instanceof ConnectsToRelationship){
-                ArtifactPath relArti = ((ConnectsToRelationship) rel).getImplementationArtifact();
-                if(relArti!=null){
-                    String relPath = relArti.getAbsolutePath();
-                    sshConn.executeScript(relPath);
+                Node node=rel.getSource();
+                if(qu.contains(node)){
+                    ArtifactPath relArti = ((ConnectsToRelationship) rel).getImplementationArtifact();
+                    if(relArti!=null){
+                        String relPath = relArti.getAbsolutePath();
+                        sshConn.executeScript(relPath);
+                    }
                 }
-
             }
         }
     }
