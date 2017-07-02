@@ -47,24 +47,21 @@ public class SSHConnection implements Executor {
             // use this if you want to connect via a privatekey and comment setPassword function
             //jschSSHChannel.addIdentity("/path/to/key"));
             sesConnection = jschSSHChannel.getSession(username, connectionIP, port);
-            LOG.info("Created Session");
             sesConnection.setPassword(password);
 
             // only for testing
             sesConnection.setConfig("StrictHostKeyChecking", "No");
 
-            LOG.info("Connecting ...");
+            LOG.info("connecting to host [{}@{}, pw: {}] ..", username, connectionIP, password);
             sesConnection.connect(timeout);
-            LOG.info("Connected");
-            // update and upgrade may take some time
+            LOG.info("connection established");
             sendCommand("echo " + password + "| sudo -S apt-get update && sudo -S apt-get upgrade -y");
-            LOG.info("update and upgrade executed");
+            LOG.info("host system upgrade completed");
             //check if util files are there, if not upload them
             //upload util scripts to /usr/local/bin
             String targetPath = "/usr/local/bin/";
             String targetFiles = sendCommand("ls " + targetPath);
-            System.out.println(targetFiles);
-            File sourceFolder = new File("src\\main\\resources\\util"); //probably gonna change
+            File sourceFolder = new File("src/main/resources/util"); //probably gonna change
             File[] sourceFiles = sourceFolder.listFiles();
             for (File file : sourceFiles) {
                 if (!(file.isFile() && targetFiles.contains(file.getName()))) {

@@ -16,7 +16,6 @@ public class Creator {
 
     private Map<String,Node> allNodes;
 
-    //this array list should contain all queues
     //each machine has a own queue with their nodes
     private ArrayList<Queue> allQueues = new ArrayList<>();
 
