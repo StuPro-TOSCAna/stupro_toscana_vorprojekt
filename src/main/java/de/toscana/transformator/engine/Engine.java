@@ -1,6 +1,7 @@
 package de.toscana.transformator.engine;
 
 import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Logger;
 import de.toscana.transformator.executor.Executor;
 import de.toscana.transformator.executor.SSHConnection;
 import de.toscana.transformator.model.*;
@@ -10,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Queue;
 
 /**
@@ -129,16 +129,21 @@ public class Engine {
 
             while (!nodesForCreation.isEmpty()) {
                 Node nodeToInstall = nodesForCreation.poll();
-                String path="";
+                String pathCreate="";
+                String pathStart="";
+
                 //instance of ssh Connection
                 if (nodeToInstall instanceof ServiceNode){
-                    path=((ServiceNode) nodeToInstall).getImplementationArtifact(type).getAbsolutePath();
-                    //TODO: possibly change path to proper command? Does "path" work as a command?
-                    ssh.executeScript(path);
+                    pathStart=((ServiceNode) nodeToInstall).getImplementationArtifact(ArtifactType.START).getAbsolutePath();
+                    if(type == ArtifactType.CREATE){
+                        pathCreate=((ServiceNode) nodeToInstall).getImplementationArtifact(ArtifactType.CREATE).getAbsolutePath();
+                        ssh.executeScript(pathCreate);
+                        ssh.executeScript(pathStart);
+                    } else{
+                        ssh.executeScript(pathStart);
+                    }
                 }
-
             }
-            //close ssh-connection
             ssh.close();
         }
 
