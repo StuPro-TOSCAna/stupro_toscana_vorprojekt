@@ -28,7 +28,7 @@ public  class SSHConnectionTest {
         //using data of my raspberry
         String username = "ubuntu";
         String password = "pw";
-        String connectionIp = "54.191.146.79";
+        String connectionIp = "34.211.51.42";
         this.instance = new SSHConnection(username, password, connectionIp);
     }
 
