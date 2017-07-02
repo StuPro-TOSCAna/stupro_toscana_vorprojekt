@@ -52,11 +52,11 @@ public class SSHConnection implements Executor {
             // only for testing
             sesConnection.setConfig("StrictHostKeyChecking", "No");
 
-            LOG.info("connecting to host [{}@{}, pw: {}] ..", username, connectionIP, password);
+            LOG.info("connecting to host [{}@{}, pw: {}] ...", username, connectionIP, password);
             sesConnection.connect(timeout);
             LOG.info("connection established");
             sendCommand("echo " + password + "| sudo -S apt-get update && sudo -S apt-get upgrade -y");
-            LOG.info("host system upgrade completed");
+            LOG.info("{}@{} > host system upgrade completed", username, connectionIP);
             //check if util files are there, if not upload them
             //upload util scripts to /usr/local/bin
             String targetPath = "/usr/local/bin/";
@@ -65,7 +65,7 @@ public class SSHConnection implements Executor {
             File[] sourceFiles = sourceFolder.listFiles();
             for (File file : sourceFiles) {
                 if (!(file.isFile() && targetFiles.contains(file.getName()))) {
-                    LOG.info("uploading {}", file.getName());
+                    LOG.info("{}@{} > uploading {}", username, connectionIP, file.getName());
                     //have to upload to home directory and then move with sudo because upload has no root privileges
                     uploadFile(file, "");
                     sendCommand("echo " + password + "| sudo -S mv " + file.getName() + " " + targetPath);
@@ -119,7 +119,7 @@ public class SSHConnection implements Executor {
         String nodeName = commandSplit[1];
         String scriptName = commandSplit[2];
         String output = sendCommand("cd " + nodeName + " && " + "echo " + password + "| sudo -S ./" + scriptName);
-        LOG.info("Executed script [node={}, operation={}]", nodeName, scriptName);
+        LOG.info("{}@{} > Executed script [node={}, operation={}]", username, connectionIP, nodeName, scriptName);
         // TODO: write output to file..
         return output;
     }
@@ -184,7 +184,7 @@ public class SSHConnection implements Executor {
         uploadFile(zipFile, targetDirectory);
         String output = unzipFile(zipFile);
         // TODO write output to file
-        LOG.info("uploaded TOSCALite-archive to target machine");
+        LOG.info("{}@{} > uploaded TOSCALite-archive to target machine", username, connectionIP);
         return output;
     }
 }

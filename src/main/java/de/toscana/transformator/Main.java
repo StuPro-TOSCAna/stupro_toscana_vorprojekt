@@ -73,7 +73,7 @@ class Main {
                 success = engine.stop();
                 break;
             case "exit":
-                LOG.info("shut down");
+                LOG.info("shutdown");
                 System.exit(0);
             default:
                 throw new IllegalStateException("Enginge can only be controlled with 'create', 'start' or 'stop'");

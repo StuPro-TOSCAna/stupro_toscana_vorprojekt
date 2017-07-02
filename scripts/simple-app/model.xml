@@ -63,7 +63,7 @@
             <Name>database</Name>
             <Type>service</Type>
             <ImplementationArtifacts>
-                <Create>install</Create>
+                <Create>create</Create>
             </ImplementationArtifacts>
             <DeploymentArtifact key="databaseschema">createdb.sql</DeploymentArtifact>
             <Properties>
