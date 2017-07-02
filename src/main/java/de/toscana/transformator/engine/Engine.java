@@ -8,10 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * The engine class contains methods to deploy the application and manage it at runtime.
@@ -93,7 +90,7 @@ public class Engine {
                 String path=currentNode.getImplementationArtifact(ArtifactType.STOP).getAbsolutePath();
                 //TODO: possibly change path to proper command? Does "path" work as a command?
                 try {
-                    ssh.executeScript(path);
+                    ssh.executeScript(path, currentNode.getProperties());
                 } catch (JSchException e) {
                     LOG.error("Failed to stop instance.", e);
                     return false;
@@ -136,16 +133,16 @@ public class Engine {
                     if(type == ArtifactType.CREATE){
                         if(createArti!=null){
                             pathCreate=createArti.getAbsolutePath();
-                            ssh.executeScript(pathCreate);
+                            ssh.executeScript(pathCreate, nodeToInstall.getProperties());
                         }
 
                         if(startArti!=null){
-                            ssh.executeScript(pathStart);
+                            ssh.executeScript(pathStart, nodeToInstall.getProperties());
                         }
 
                     } else if(type == ArtifactType.START){
                         if(startArti!=null){
-                            ssh.executeScript(pathStart);
+                            ssh.executeScript(pathStart, nodeToInstall.getProperties());
                         }
                     }
                 }
@@ -177,7 +174,7 @@ public class Engine {
                         ArtifactPath relArti = ((ConnectsToRelationship) rel).getImplementationArtifact();
                         if(relArti!=null){
                             String relPath = relArti.getAbsolutePath();
-                            ssh.executeScript(relPath);
+                            ssh.executeScript(relPath, new HashMap<String,String>());
                         }
                         ssh.close();
                     }

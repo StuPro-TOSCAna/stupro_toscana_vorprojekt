@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.util.Map;
 
 public class SSHConnection implements Executor {
     private static final Logger LOG = LoggerFactory.getLogger(SSHConnection.class);
@@ -121,7 +122,7 @@ public class SSHConnection implements Executor {
      * @return the output of the command
      */
     @Override
-    public String executeScript(String script) throws JSchException {
+    public String executeScript(String script, Map<String,String> environment) throws JSchException {
         String[] commandSplit = script.split("/");
         String nodeName = commandSplit[1];
         String scriptName = commandSplit[2];

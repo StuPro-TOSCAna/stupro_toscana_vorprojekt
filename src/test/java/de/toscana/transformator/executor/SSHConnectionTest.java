@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.io.File;
+import java.util.HashMap;
 
 import static org.junit.Assert.*;
 
@@ -50,8 +51,8 @@ public  class SSHConnectionTest {
         String script = "apache/create";
         String script2 = "apache/start";
         instance.connect();
-        instance.executeScript(script);
-        instance.executeScript(script2);
+        instance.executeScript(script, new HashMap<String, String>());
+        instance.executeScript(script2, new HashMap<String, String>());
         assertTrue(instance.sendCommand("systemctl status apache2").contains("running"));
         instance.close();
     }
