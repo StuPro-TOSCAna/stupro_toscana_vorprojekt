@@ -45,7 +45,7 @@ public class SSHConnection implements Executor {
     public boolean connect() {
         try {
             // use this if you want to connect via a privatekey and comment setPassword function
-            //jschSSHChannel.addIdentity("/path/to/key"));
+            //jschSSHChannel.addIdentity("/path/to/key");
             sesConnection = jschSSHChannel.getSession(username, connectionIP, port);
             sesConnection.setPassword(password);
 
@@ -55,8 +55,9 @@ public class SSHConnection implements Executor {
             LOG.info("connecting to host [{}@{}, pw: {}] ...", username, connectionIP, password);
             sesConnection.connect(timeout);
             LOG.info("connection established");
-            sendCommand("echo " + password + "| sudo -S apt-get update && sudo -S apt-get upgrade -y");
+            String resultUpdate = sendCommand("echo " + password + "| sudo -S apt-get update && sudo -S apt-get upgrade -y");
             LOG.info("{}@{} > host system upgrade completed", username, connectionIP);
+            LOG.info("Output of update and upgrade: {}",resultUpdate);//debug
             //check if util files are there, if not upload them
             //upload util scripts to /usr/local/bin
             String targetPath = "/usr/local/bin/";
@@ -68,9 +69,11 @@ public class SSHConnection implements Executor {
                     LOG.info("{}@{} > uploading {}", username, connectionIP, file.getName());
                     //have to upload to home directory and then move with sudo because upload has no root privileges
                     uploadFile(file, "");
-                    sendCommand("echo " + password + "| sudo -S mv " + file.getName() + " " + targetPath);
+                    String resultMV = sendCommand("echo " + password + "| sudo -S mv " + file.getName() + " " + targetPath);
+                    LOG.info("Output of mv command: {}",resultMV);//debug
                     //at least if i copy the file from windows i have mark them executable
-                    sendCommand("echo " + password + "| sudo -S chmod 775 " + targetPath + file.getName());
+                    String resultChmod = sendCommand("echo " + password + "| sudo -S chmod 775 " + targetPath + file.getName());
+                    LOG.info("Output of chmod command: {}",resultChmod);//debug
                 }
             }
             return true;
@@ -89,12 +92,14 @@ public class SSHConnection implements Executor {
     public String sendCommand(String command) throws JSchException {
         StringBuilder out = new StringBuilder();
         try {
+            PipedInputStream inStream = new PipedInputStream();
+            PipedOutputStream outStream = new PipedOutputStream(inStream);
             Channel channel = sesConnection.openChannel("exec");
             ((ChannelExec) channel).setCommand(command);
-            InputStream commandOutput = channel.getInputStream();
-            InputStream errorOut =((ChannelExec) channel).getErrStream();
+            channel.setOutputStream(outStream);
+            ((ChannelExec) channel).setErrStream(outStream);
             channel.connect();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(commandOutput));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inStream));
             String line;
             while ((line = reader.readLine()) != null) {
                 out.append(line);
