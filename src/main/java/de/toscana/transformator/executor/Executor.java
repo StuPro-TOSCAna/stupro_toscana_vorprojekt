@@ -7,7 +7,25 @@ import java.io.File;
  */
 public interface Executor {
 
+    /**
+     * sending a simple command
+     * @param command
+     * @return
+     */
     String sendCommand(String command);
-    String sendCommand(String nodename, String command);
-    boolean uploadFile(File file, String targetPath);
+
+    /**
+     * executes the script
+     *
+     * @param script expects nodename/scriptname
+     * @return
+     */
+    String executeScript(String script);
+
+    /**
+     * Uploads the file to the machine and unzips it
+     * @param file expects a .zip file
+     * @return
+     */
+    String uploadAndUnzipZip(File file);
 }

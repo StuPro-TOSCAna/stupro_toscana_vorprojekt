@@ -7,10 +7,11 @@ package de.toscana.transformator.executor;
 import com.jcraft.jsch.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.rmi.runtime.Log;
 
 import java.io.*;
 
-public class SSHConnection implements Executor{
+public class SSHConnection implements Executor {
     private static final Logger LOG = LoggerFactory.getLogger(SSHConnection.class);
     private String username;
     private String connectionIP;
@@ -47,15 +48,38 @@ public class SSHConnection implements Executor{
      */
     public void connect() {
         try {
+            // use this if you want to connect via a privatekey and comment setPassword function
+            //jschSSHChannel.addIdentity("/path/to/key"));
             sesConnection = jschSSHChannel.getSession(username, connectionIP, port);
+            LOG.info("Created Session");
             sesConnection.setPassword(password);
 
             // only for testing
             sesConnection.setConfig("StrictHostKeyChecking", "No");
 
+            LOG.info("Connecting ...");
             sesConnection.connect(timeout);
+            LOG.info("Connected");
             // update and upgrade may take some time
-            sendCommand("echo "+password+"| sudo -S apt-get update && sudo -S apt-get upgrade -y");
+            sendCommand("echo " + password + "| sudo -S apt-get update && sudo -S apt-get upgrade -y");
+            LOG.info("update and upgrade executed");
+            //check if util files are there, if not upload them
+            //upload util scripts to /usr/local/bin
+            String targetPath = "/usr/local/bin/";
+            String targetFiles = sendCommand("ls "+targetPath);
+            System.out.println(targetFiles);
+            File sourceFolder = new File("src\\main\\resources\\util"); //probably gonna change
+            File[] sourceFiles = sourceFolder.listFiles();
+            for (File file : sourceFiles){
+                if (!(file.isFile() && targetFiles.contains(file.getName()))){
+                    LOG.info("uploading {}",file.getName());
+                    //have to upload to home directory and then move with sudo because upload has no root privileges
+                    uploadFile(file,"");
+                    sendCommand("echo " + password + "| sudo -S mv "+file.getName()+" "+ targetPath);
+                    //at least if i copy the file from windows i have mark them executable
+                    sendCommand("echo " + password + "| sudo -S chmod 775 "+ targetPath +file.getName());
+                }
+            }
         } catch (JSchException jschExp) {
             jschExp.printStackTrace();
         }
@@ -92,6 +116,20 @@ public class SSHConnection implements Executor{
     }
 
     /**
+     * Sets working directory onto nodename and executes a command on the remote host
+     *
+     * @param script
+     * @return
+     */
+    @Override
+    public String executeScript(String script) {
+        String[] commandSplit = script.split("/");
+        String result = sendCommand("cd "+commandSplit[0]+" && " + "echo " + password + "| sudo -S ./" + commandSplit[1]);
+        return result;
+    }
+
+
+    /**
      * Uploading a Zip File to the machine using sftp
      * OVERWRITES already existing files with the same name
      *
@@ -102,7 +140,9 @@ public class SSHConnection implements Executor{
             Channel channel = sesConnection.openChannel("sftp");
             channel.connect();
             ChannelSftp channelSftp = (ChannelSftp) channel;
-            channelSftp.cd(targetPath);
+            if (!targetPath.equals("")) {
+                channelSftp.cd(targetPath);
+            }
             channelSftp.put(new FileInputStream(file), file.getName());
             channelSftp.disconnect();
         } catch (JSchException jschExp) {
@@ -128,12 +168,12 @@ public class SSHConnection implements Executor{
      * Overwrites all existing files
      */
     private String unzipFile(File zipFile) {
-        String zip="";
+        String zip = "";
         //depends on the language the server is using
-        if(sendCommand("apt -qq list unzip").contains("installed")) {
+        if (sendCommand("apt -qq list unzip").contains("installed")) {
             zip = sendCommand("unzip -o " + zipFile.getName());
         } else {
-            sendCommand("echo "+password+"| sudo -S apt-get install -y unzip");
+            sendCommand("echo " + password + "| sudo -S apt-get install -y unzip");
             zip = sendCommand("unzip -o " + zipFile.getName());
         }
         return zip;
@@ -142,9 +182,10 @@ public class SSHConnection implements Executor{
     /**
      * Uploads a zip file and unzips it. Overwrites already existing files
      */
+    @Override
     public String uploadAndUnzipZip(File zipFile) {
         //can be changed maybe?
-        String targetDirectory = "./";
+        String targetDirectory = "";
         uploadFile(zipFile, targetDirectory);
         return unzipFile(zipFile);
     }
