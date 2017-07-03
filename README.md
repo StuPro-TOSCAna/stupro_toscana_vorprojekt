@@ -36,7 +36,7 @@ Steps to build **TOSCA2vSphere** from sources:
 1. Clone the project.
 
     `git clone https://github.com/nfode/stupro_toscana_vorprojekt.git`
-2. Enter the projects root directory.
+2. Enter the project root directory.
 
     `cd stupro_toscana_vorprojekt`
 3. Build the project with:
