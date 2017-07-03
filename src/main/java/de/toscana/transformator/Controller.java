@@ -1,5 +1,6 @@
 package de.toscana.transformator;
 
+import de.toscana.transformator.util.ConsoleColors;
 import jline.console.ConsoleReader;
 import jline.console.completer.Completer;
 import jline.console.completer.StringsCompleter;
@@ -64,7 +65,7 @@ class Controller {
     }
 
     public void changeStatusInPrompt(String s) {
-        reader.setPrompt("tosca2vsphere("+s+")> ");
+        reader.setPrompt(ConsoleColors.ANSI_PURPLE+"tosca2vsphere("+s+")> " +ConsoleColors.ANSI_RESET);
     }
 
     /**
