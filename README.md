@@ -19,9 +19,9 @@ TOSCAlite is a very lightweight version of the OASIS TOSCA standard. It can be u
 - [`phpapp/`](phpapp/) - Example php app
 - [`example_models/`](example_models/) - Example TOSCAlite conform models
 - [`src/main/java/`](src/main/java/) - Java source code
-- [`src/java/resources/`](src/java/resources/) - resources needed for the program, f.ex. logger properties
+- [`src/java/resources/`](src/java/resources/) - Resources needed for the program, f.ex. logger properties
 - [`src/test/java/`](src/test/java/) - Java tests
-- [`src/test/resources/`](src/test/resources/) - resources needed to test
+- [`src/test/resources/`](src/test/resources/) - Resources needed to test
 
 ## Obtaining TOSCA2vSphere
 
