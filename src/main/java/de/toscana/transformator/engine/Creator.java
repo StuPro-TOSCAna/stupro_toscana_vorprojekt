@@ -15,9 +15,6 @@ import java.util.*;
 public class Creator {
 
     private Map<String,Node> allNodes;
-
-    //each machine has a own queue with their nodes
-    private ArrayList<Queue> allQueues = new ArrayList<>();
     private ArrayList<ArrayList<Node>> allBranches = new ArrayList<>();
 
 
@@ -31,8 +28,8 @@ public class Creator {
 
 
     /**
-     * Gets the queues with the nodes in ascending order ready for creation.
-     * For each machine node there is an own queue with all nodes which belong to the machine.
+     * Gets the array with the nodes in ascending order ready for creation.
+     * For each machine node there is an own array with all nodes which belong to the machine.
      * The first element has to be installed at first.
      *
      * @return a queue with nodes
@@ -44,13 +41,12 @@ public class Creator {
     }
 
     /**
-     * Finds machine nodes and creates an own queue for each node.
+     * Finds machine nodes and creates an own array for each machinenode.
      */
     private void findMachines(){
         for (Map.Entry<String, Node> entry : allNodes.entrySet()) {
             if(entry.getValue() instanceof MachineNode){
-                //allQueues.add(new LinkedList<Node>(Arrays.asList(entry.getValue())));
-                allBranches.add(new ArrayList<Node>(Arrays.asList(entry.getValue())));
+                allBranches.add(new ArrayList<>(Arrays.asList(entry.getValue())));
             }
         }
     }
@@ -60,23 +56,16 @@ public class Creator {
      * Adds the nodes to the queue by ascending order.
      */
     private void addChildren(){
-        /*
-        for(Queue<Node> qu : allQueues){
-            getAllChildren(qu.peek(), qu);
-
-        }
-        */
-
         for(ArrayList<Node> currentBranch : allBranches){
             getAllChildren(currentBranch.get(0), currentBranch);
         }
     }
 
     /**
-     * Walks recursively to the last child of a node and adds each node to the queue.
+     * Walks recursively to the last child of a node and adds each node to the array.
      *
      * @param n The current node
-     * @param qu The current queue
+     * @param branch current branch list
      */
     private void getAllChildren(Node n, ArrayList<Node> branch){
 
@@ -87,15 +76,6 @@ public class Creator {
         for(Node child : n.getChildren()){
             getAllChildren(child, branch);
         }
-
-        /*
-        if(!qu.contains(n)){
-            qu.add(n);
-        }
-            for (Node child : n.getChildren()){
-                getAllChildren(child,qu);
-            }
-        */
 
     }
 
