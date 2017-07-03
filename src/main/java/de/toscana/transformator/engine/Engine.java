@@ -15,7 +15,6 @@ import java.util.*;
  *
  * @author Marvin Munoz Baron
  * @author Jens Mueller
- *
  */
 public class Engine {
 
@@ -31,16 +30,17 @@ public class Engine {
     /**
      * Constructor of the engine class
      * for each command you need a new instance of Constructor TODO: What does this mean?
+     *
      * @param topology The TOSCAlite model containing the complete application topology
      * @param inputZip The zip file containing all artifacts and models
      */
     public Engine(TOSCAliteModel topology, File inputZip) {
-        creator=new Creator(topology);
+        creator = new Creator(topology);
         lstMachineQueues = creator.getAllQueues();
         copyLstMachineQueues = lstMachineQueues;
         ssh = null;
         zip = inputZip;
-        lstRelations=topology.getRelationships();
+        lstRelations = topology.getRelationships();
     }
 
     /**
@@ -76,18 +76,18 @@ public class Engine {
      * return true if successful, false otherwise
      */
     public boolean stop() {
-        for(Queue<Node> nodesForCreation : lstMachineQueues){
+        for (Queue<Node> nodesForCreation : lstMachineQueues) {
             MachineNode mNode = (MachineNode) nodesForCreation.peek();
             makeSSHConnection(mNode);
             //get stop-artifact of nodes in descending order
             while (!nodesForCreation.isEmpty()) {
-                Iterator<Node> iterator= nodesForCreation.iterator();
-                ServiceNode currentNode=null;
-                while(iterator.hasNext()){
+                Iterator<Node> iterator = nodesForCreation.iterator();
+                ServiceNode currentNode = null;
+                while (iterator.hasNext()) {
                     currentNode = (ServiceNode) iterator.next();
                 }
                 nodesForCreation.remove(currentNode);
-                String path=currentNode.getImplementationArtifact(ArtifactType.STOP).getAbsolutePath();
+                String path = currentNode.getImplementationArtifact(ArtifactType.STOP).getAbsolutePath();
                 //TODO: possibly change path to proper command? Does "path" work as a command?
                 try {
                     ssh.executeScript(path, currentNode.getProperties());
@@ -105,43 +105,44 @@ public class Engine {
     /**
      * Orchestrates ZIP upload and sends commands through SSH.
      * Depending on the artifact type the method will use create or start scripts.
+     *
      * @param type The artifact type which determines the nature of the method
      */
     private void helpCreateStart(ArtifactType type) throws JSchException {
-        for(Queue<Node> nodesForCreation : lstMachineQueues){
+        for (Queue<Node> nodesForCreation : lstMachineQueues) {
             Node mNode = nodesForCreation.poll();
-            if (mNode instanceof MachineNode){
-               makeSSHConnection((MachineNode) mNode);
-                if (type == ArtifactType.CREATE){
+            if (mNode instanceof MachineNode) {
+                makeSSHConnection((MachineNode) mNode);
+                if (type == ArtifactType.CREATE) {
                     ssh.uploadAndUnzipZip(zip);
                 }
             }
 
             while (!nodesForCreation.isEmpty()) {
                 Node nodeToInstall = nodesForCreation.poll();
-                String pathCreate="";
-                String pathStart="";
+                String pathCreate = "";
+                String pathStart = "";
 
                 //instance of ssh Connection
-                if (nodeToInstall instanceof ServiceNode){
+                if (nodeToInstall instanceof ServiceNode) {
                     ArtifactPath startArtifact = ((ServiceNode) nodeToInstall).getImplementationArtifact(ArtifactType.START);
                     ArtifactPath createArtifact = ((ServiceNode) nodeToInstall).getImplementationArtifact(ArtifactType.CREATE);
-                    if(startArtifact!=null){
-                        pathStart=startArtifact.getAbsolutePath();
+                    if (startArtifact != null) {
+                        pathStart = startArtifact.getAbsolutePath();
                     }
 
-                    if(type == ArtifactType.CREATE){
-                        if(createArtifact!=null){
-                            pathCreate=createArtifact.getAbsolutePath();
+                    if (type == ArtifactType.CREATE) {
+                        if (createArtifact != null) {
+                            pathCreate = createArtifact.getAbsolutePath();
                             ssh.executeScript(pathCreate, nodeToInstall.getProperties());
                         }
 
-                        if(startArtifact!=null){
+                        if (startArtifact != null) {
                             ssh.executeScript(pathStart, nodeToInstall.getProperties());
                         }
 
-                    } else if(type == ArtifactType.START){
-                        if(startArtifact!=null){
+                    } else if (type == ArtifactType.START) {
+                        if (startArtifact != null) {
                             ssh.executeScript(pathStart, nodeToInstall.getProperties());
                         }
                     }
@@ -149,31 +150,31 @@ public class Engine {
             }
             ssh.close();
         }
-        if(type == ArtifactType.CREATE){
+        if (type == ArtifactType.CREATE) {
             try {
                 executeConnects();
-            } catch (JSchException e){
+            } catch (JSchException e) {
                 LOG.error("Failed to execute connects-to Relationship", e);
             }
         }
     }
 
     /**
-     *
      * executes all connects to relationships
+     *
      * @throws JSchException
      */
     private void executeConnects() throws JSchException {
-        for(Relationship relationship : lstRelations){
-            if(relationship instanceof ConnectsToRelationship){
-                Node node=relationship.getSource();
-                for(Queue qu : copyLstMachineQueues){
-                    if(qu.contains(node)){
-                        MachineNode mNode=(MachineNode) qu.peek();
+        for (Relationship relationship : lstRelations) {
+            if (relationship instanceof ConnectsToRelationship) {
+                Node node = relationship.getSource();
+                for (Queue queue : copyLstMachineQueues) {
+                    if (queue.contains(node)) {
+                        MachineNode mNode = (MachineNode) queue.peek();
                         makeSSHConnection(mNode);
-                        ArtifactPath relArti = ((ConnectsToRelationship) relationship).getImplementationArtifact();
-                        if(relArti!=null){
-                            String relPath = relArti.getAbsolutePath();
+                        ArtifactPath relArtifact = ((ConnectsToRelationship) relationship).getImplementationArtifact();
+                        if (relArtifact != null) {
+                            String relPath = relArtifact.getAbsolutePath();
                             ssh.executeScript(relPath, new HashMap<>());
                         }
                         ssh.close();
@@ -185,9 +186,10 @@ public class Engine {
 
     /**
      * create connection to a VM
+     *
      * @param mNode
      */
-    private void makeSSHConnection(MachineNode mNode){
+    private void makeSSHConnection(MachineNode mNode) {
         String ip = mNode.getIpAdress();
         String user = mNode.getUsername();
         String pw = mNode.getPassword();
