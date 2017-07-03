@@ -11,6 +11,7 @@ debconf-set-selections <<< "mysql-server mysql-server/root_password_again passwo
 apt -y install mysql-server
 systemctl stop mysql
 toscalite-setvalue /etc/mysql/mysql.conf.d/mysqld.cnf port $MYSQL_PORT
+toscalite-setvalue /etc/mysql/mysql.conf.d/mysqld.cnf bind-address 0.0.0.0
 
 # open mysql port in firewall
 ufw allow ${MYSQL_PORT}/tcp
