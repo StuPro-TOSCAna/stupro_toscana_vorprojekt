@@ -49,9 +49,9 @@ public class MainTest {
 
     @Test
     public void zipWithInvalidModel(){
-        setUpOutPutStream();
+        setUpErrOutPutStream();
         Main.main(new String[]{testResFolder+"zipwithinvalidmodel.zip"});
-        String output = getOutPutString();
+        String output = getErrOutPutString();
         boolean contains = output.contains("Parser could not initialize properly. The model might be invalid.");
         assertTrue(contains);
     }

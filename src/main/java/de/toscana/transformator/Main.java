@@ -4,7 +4,6 @@ import de.toscana.transformator.engine.Engine;
 import de.toscana.transformator.model.ParsingException;
 import de.toscana.transformator.model.TOSCAliteModel;
 import de.toscana.transformator.util.ConsoleColors;
-import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
