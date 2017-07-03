@@ -32,7 +32,7 @@ public class Creator {
      * For each machine node there is an own array with all nodes which belong to the machine.
      * The first element has to be installed at first.
      *
-     * @return a queue with nodes
+     * @return a array of array with nodes
      */
     protected ArrayList<ArrayList<Node>> getAllBranches() {
         findMachines();
