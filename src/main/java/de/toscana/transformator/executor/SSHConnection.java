@@ -68,26 +68,34 @@ public class SSHConnection implements Executor {
             String updateCommand = getRootEscalation() + "apt-get update && sudo -S apt-get upgrade -y";
             sendAndPrintCommand(updateCommand);
             LOG.info("host system upgrade completed", username, connectionIP);
-            //check if util files are there, if not upload them
-            //upload util scripts to /usr/local/bin
-            String targetPath = "/usr/local/bin/";
-            String targetFiles = sendCommand("ls " + targetPath);
-            File sourceFolder = new File("src/main/resources/util"); //probably gonna change
-            File[] sourceFiles = sourceFolder.listFiles();
-            for (File file : sourceFiles) {
-                if (!(file.isFile() && targetFiles.contains(file.getName()))) {
-                    LOG.info("uploading {}", username, connectionIP, file.getName());
-                    //have to upload to home directory and then move with sudo because upload has no root privileges
-                    uploadFile(file, "");
-                    sendAndPrintCommand(getRootEscalation() + "mv " + file.getName() + " " + targetPath);
-                    //at least if i copy the file from windows i have mark them executable
-                    String resultChmod = sendAndPrintCommand(getRootEscalation() + "chmod 775 " + targetPath + file.getName());
-                }
-            }
+
+            uploadUtilScripts();
             return true;
         } catch (JSchException ex) {
             LOG.error("Failed to connect to target '{}@{}' with password '{}'. Is host reachable?", username, connectionIP, password, ex);
             return false;
+        }
+    }
+
+    /**
+     * checks if util files are avaiable on the machine
+     * if not upload them
+     * @throws JSchException
+     */
+    private void uploadUtilScripts() throws JSchException {
+        String targetPath = "/usr/local/bin/";
+        String targetFiles = sendCommand("ls " + targetPath);
+        File sourceFolder = new File("src/main/resources/util"); //probably gonna change
+        File[] sourceFiles = sourceFolder.listFiles();
+        for (File file : sourceFiles) {
+            if (!(file.isFile() && targetFiles.contains(file.getName()))) {
+                LOG.info("uploading {}", username, connectionIP, file.getName());
+                //have to upload to home directory and then move with sudo because upload has no root privileges
+                uploadFile(file, "");
+                sendAndPrintCommand(getRootEscalation() + "mv " + file.getName() + " " + targetPath);
+                //at least if i copy the file from windows i have mark them executable
+                String resultChmod = sendAndPrintCommand(getRootEscalation() + "chmod 775 " + targetPath + file.getName());
+            }
         }
     }
 
@@ -103,9 +111,10 @@ public class SSHConnection implements Executor {
             PipedInputStream inStream = new PipedInputStream();
             PipedOutputStream outStream = new PipedOutputStream(inStream);
             Channel channel = sesConnection.openChannel("exec");
-            ((ChannelExec) channel).setCommand(command);
+            ChannelExec execChannel = (ChannelExec) channel;
+            execChannel.setCommand(command);
             channel.setOutputStream(outStream);
-            ((ChannelExec) channel).setErrStream(outStream);
+            execChannel.setErrStream(outStream);
             channel.connect();
             BufferedReader reader = new BufferedReader(new InputStreamReader(inStream));
             String line;
