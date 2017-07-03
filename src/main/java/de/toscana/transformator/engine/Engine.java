@@ -26,6 +26,7 @@ public class Engine {
     private Executor ssh;
     private final File zip;
     private final List<Relationship> lstRelations;
+    private final Environment environment;
 
     /**
      * Constructor of the engine class
@@ -38,6 +39,7 @@ public class Engine {
         allBranches = creator.getAllBranches();
         zip = inputZip;
         lstRelations = topology.getRelationships();
+        environment = new Environment(topology);
     }
 
     /**
