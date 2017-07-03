@@ -10,6 +10,7 @@ import org.junit.runners.JUnit4;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -48,9 +49,9 @@ public class MainTest {
 
     @Test
     public void zipWithInvalidModel(){
-        setUpErrOutPutStream();
+        setUpOutPutStream();
         Main.main(new String[]{testResFolder+"zipwithinvalidmodel.zip"});
-        String output = getErrOutPutString();
+        String output = getOutPutString();
         boolean contains = output.contains("Parser could not initialize properly. The model might be invalid.");
         assertTrue(contains);
     }

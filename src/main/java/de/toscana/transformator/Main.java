@@ -4,6 +4,7 @@ import de.toscana.transformator.engine.Engine;
 import de.toscana.transformator.model.ParsingException;
 import de.toscana.transformator.model.TOSCAliteModel;
 import de.toscana.transformator.util.ConsoleColors;
+import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,9 +45,9 @@ class Main {
         setUpController();
     }
 
-
+    private static Controller controller;
     private static void setUpController() {
-        Controller controller = new Controller();
+        controller = new Controller();
 
         // set listener to react on cli input
         controller.setListener(s -> {
@@ -65,19 +66,20 @@ class Main {
         switch (s) {
             case "create":
                 success = engine.create();
+                controller.changeStatusInPrompt("created");
                 break;
             case "start":
                 success = engine.start();
+                controller.changeStatusInPrompt("started");
                 break;
             case "stop":
                 success = engine.stop();
+                controller.changeStatusInPrompt("stopped");
                 break;
             case "exit":
                 LOG.info("shutdown");
                 System.exit(0);
                 break;
-            default:
-                System.out.println("Unknown command. Available commands: (create|start|stop|exit)");
         }
         if (!success){
             LOG.error("Unsuccessfully executed command '{}', aborting", s);

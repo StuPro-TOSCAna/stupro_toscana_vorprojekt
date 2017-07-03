@@ -29,14 +29,20 @@ class Controller {
      */
     private static void printHelp() {
         // TODO: 22.06.17 better description
+        System.out.println("help - show the help");
         System.out.println("create - create the model");
         System.out.println("start - start the model");
         System.out.println("stop - stop the model");
+        System.out.println("cls - clean the screen");
+        System.out.println("exit - leave the CLI");
+        System.out.println("quit - leave the CLI");
     }
 
     public void setListener(ControllerListener listener) {
         this.listener = listener;
     }
+
+
 
     /**
      * creates the cli and listens for input
@@ -44,7 +50,7 @@ class Controller {
     public void createReader() {
         try {
             reader = new ConsoleReader();
-            reader.setPrompt(ANSI_CYAN + "tosca2vsphere\u001B[0m> ");
+            changeStatusInPrompt("parsed");
             setUpCompletors(reader);
             String line;
             while ((line = reader.readLine()) != null) {
@@ -55,6 +61,10 @@ class Controller {
         }
     }
 
+    public void changeStatusInPrompt(String s) {
+        reader.setPrompt(ANSI_CYAN + "tosca2vsphere\u001B[0m("+s+")> ");
+    }
+
     /**
      * handles what the user enters into the cli
      * @param line the text the user enters
@@ -63,22 +73,27 @@ class Controller {
      * @throws IOException
      */
     private boolean handleInput(String line) throws IOException {
+        line = line.trim();
         if ("help".equals(line)) {
             printHelp();
         }
         // checks if input is one of the valid commands for the engine
-        if (actionsForEngine.contains(line)) {
+        else if (actionsForEngine.contains(line)) {
             listener.action(line);
         }
 
-        if (line.equalsIgnoreCase("quit") || line.equalsIgnoreCase("exit")) {
+        else if (line.equalsIgnoreCase("quit") || line.equalsIgnoreCase("exit")) {
             listener.action("exit");
             return true;
         }
 
         //clears the screen for the current reader
-        if (line.equalsIgnoreCase("cls")) {
+        else if (line.equalsIgnoreCase("cls")) {
             reader.clearScreen();
+        }
+        else {
+                System.out.println("Unknown command. Available commands:");
+                printHelp();
         }
         return false;
     }
@@ -98,7 +113,7 @@ class Controller {
      */
     private void setUpCompletors(ConsoleReader reader) {
         List<Completer> completors = new LinkedList<>();
-        completors.add(new StringsCompleter("create", "start", "stop", "exit", "help"));
+        completors.add(new StringsCompleter("create", "start", "stop", "exit", "help", "cls"));
         for (Completer c : completors) {
             reader.addCompleter(c);
         }
