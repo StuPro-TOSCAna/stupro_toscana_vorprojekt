@@ -3,14 +3,14 @@ package de.toscana.transformator;
 import jline.console.ConsoleReader;
 import jline.console.completer.Completer;
 import jline.console.completer.StringsCompleter;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import static de.toscana.transformator.util.ConsoleColors.ANSI_CYAN;
 
 /**
  * Created by nick on 22.06.17.
@@ -19,6 +19,7 @@ class Controller {
     private final List<String> actionsForEngine;
     private ControllerListener listener;
     private ConsoleReader reader;
+    private static final Logger LOG = LoggerFactory.getLogger(Controller.class);
 
     public Controller() {
         this.actionsForEngine = Arrays.asList("create","start", "stop");
@@ -47,7 +48,7 @@ class Controller {
     /**
      * creates the cli and listens for input
      */
-    public void createReader() {
+    public void createReader() throws IOException {
         try {
             reader = new ConsoleReader();
             changeStatusInPrompt("parsed");
@@ -56,13 +57,14 @@ class Controller {
             while ((line = reader.readLine()) != null) {
                 if (handleInput(line)) break;
             }
-        } catch (Throwable t) {
-            t.printStackTrace();
+        } catch (IOException ex) {
+            LOG.error("Setting up the CLI failed.",ex);
+            throw ex;
         }
     }
 
     public void changeStatusInPrompt(String s) {
-        reader.setPrompt(ANSI_CYAN + "tosca2vsphere\u001B[0m("+s+")> ");
+        reader.setPrompt("tosca2vsphere("+s+")> ");
     }
 
     /**
@@ -98,11 +100,12 @@ class Controller {
         return false;
     }
 
-    public void stopReader() {
+    public void stopReader() throws IOException {
         try {
             reader.delete();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("Stopping the reader failed.",e);
+            throw e;
         }
         reader = null;
     }
