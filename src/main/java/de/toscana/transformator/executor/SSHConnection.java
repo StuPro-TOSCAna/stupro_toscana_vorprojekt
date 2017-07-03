@@ -117,7 +117,7 @@ public class SSHConnection implements Executor {
      * @param command
      * @return the generated output after executing the command
      */
-    private String sendCommand(String command) throws JSchException {
+    protected String sendCommand(String command) throws JSchException {
         StringBuilder out = new StringBuilder();
         try {
             PipedInputStream inStream = new PipedInputStream();
