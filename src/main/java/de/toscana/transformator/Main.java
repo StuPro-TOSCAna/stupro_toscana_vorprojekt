@@ -3,7 +3,6 @@ package de.toscana.transformator;
 import de.toscana.transformator.engine.Engine;
 import de.toscana.transformator.model.ParsingException;
 import de.toscana.transformator.model.TOSCAliteModel;
-import de.toscana.transformator.util.ConsoleColors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +24,7 @@ class Main {
     public static void main(String[] args) {
         printTitle();
         if (args.length == 0) {
-            System.out.println(ConsoleColors.getErrorString("File-argument missing."));
+            System.err.println("File-argument missing.");
             return;
         } else {
             File archive = new File(args[0]);
@@ -35,7 +34,6 @@ class Main {
             try {
                 toscaLiteModel = new TOSCAliteModel(model);
             } catch (ParsingException e) {
-                System.err.println(e.getMessage());
                 return;
             }
             engine = new Engine(toscaLiteModel, archive);
@@ -53,11 +51,15 @@ class Main {
             if (engine != null) {
                 controlEngine(s);
             } else {
-                System.out.println(ConsoleColors.getErrorString("Something went wrong!"));
+                LOG.error("Something went wrong!");
                 return;
             }
         });
-        controller.createReader();
+        try {
+            controller.createReader();
+        } catch (IOException e) {
+            return;
+        }
     }
 
     private static void controlEngine(String s) {
@@ -100,7 +102,7 @@ class Main {
             archiveHandler = new ArchiveHandler(archive);
             string = archiveHandler.getModelXmlFromZip();
         } catch (ArchiveHandler.ArchiveException e) {
-            System.err.println(ConsoleColors.getErrorString(e.getMessage()));
+            LOG.error("Parsing the archive failed",e);
             return null;
         }
         return string;

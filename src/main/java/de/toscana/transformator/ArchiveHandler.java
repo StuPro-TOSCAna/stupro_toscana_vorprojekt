@@ -1,5 +1,8 @@
 package de.toscana.transformator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
@@ -10,6 +13,7 @@ import java.util.zip.ZipFile;
  */
 public class ArchiveHandler {
     private final File archive;
+    private static final Logger LOG = LoggerFactory.getLogger(ArchiveHandler.class);
 
     /**
      * Exceptions for the Archive Handler
@@ -17,6 +21,9 @@ public class ArchiveHandler {
     public class ArchiveException extends Exception {
         public ArchiveException(String message){
             super(message);
+        }
+        public ArchiveException(Throwable cause) {
+            super(cause);
         }
     }
 
@@ -60,7 +67,7 @@ public class ArchiveHandler {
                 }
             }
         } catch(Exception e) {
-            e.printStackTrace();
+            throw new ArchiveException(e);
         }
         if(modelFile == null){
             throw new ArchiveException("Parsing the archive went wrong. Check if a model.xml is existent.");
@@ -75,7 +82,7 @@ public class ArchiveHandler {
      * @param zipfile the archive file
      * @return the file as one line string
      */
-    private String transformXmlFileToString(ZipEntry modelFile, ZipFile zipfile) {
+    private String transformXmlFileToString(ZipEntry modelFile, ZipFile zipfile) throws ArchiveException {
         StringBuilder builder = new StringBuilder();
         InputStream stream;
         try {
@@ -89,7 +96,7 @@ public class ArchiveHandler {
                 builder.append(line);
             }
         } catch (IOException e) {
-            return null;
+            throw new ArchiveException("Transforming the XML to a single line string failed.");
         }
         return builder.toString();
     }

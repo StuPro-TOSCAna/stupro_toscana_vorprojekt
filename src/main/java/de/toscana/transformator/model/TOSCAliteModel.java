@@ -70,7 +70,7 @@ public class TOSCAliteModel {
         if (!root.getNodeName().equals(MODEL_ELEMENT_NAME)) {
             throw new ParsingException("Invalid document. Root element has to be called \"Model\"");
         }
-        //Read the Root nodes chilren and parse the nodes. after the nodes
+        //Read the Root nodes children and parse the nodes. after the nodes
         //the relationships will be parsed, because they need the nodes created in order to link them.
         for (int i = 0; i < root.getChildNodes().getLength(); i++) {
             org.w3c.dom.Node e = root.getChildNodes().item(i);
