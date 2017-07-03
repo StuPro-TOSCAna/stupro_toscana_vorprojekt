@@ -2,11 +2,6 @@
 [![Build Status](https://travis-ci.org/nfode/stupro_toscana_vorprojekt.svg?branch=master)](https://travis-ci.org/nfode/stupro_toscana_vorprojekt) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/46bbcc976f084a19a01300393554adf0)](https://www.codacy.com/app/nfode/stupro_toscana_vorprojekt?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=nfode/stupro_toscana_vorprojekt&amp;utm_campaign=Badge_Grade)
 [![codecov](https://codecov.io/gh/nfode/stupro_toscana_vorprojekt/branch/master/graph/badge.svg)](https://codecov.io/gh/nfode/stupro_toscana_vorprojekt)
 
-
-Open repository for the preliminary design study for TOSCAna.
-
-This is the repository for the preliminary design study for the study project TOSCAna. The project consists of the following two subprojects:
-
 ## Table of Contents
 * [StuPro TOSCAna preliminary design study](#stupro-toscana-preliminary-design-study)
     * [TOSCA2vSphere](#tosca2vsphere)
@@ -19,12 +14,18 @@ This is the repository for the preliminary design study for the study project TO
     * [Tools](#tools)
       * [Util scripts](#util-scripts)
       * [IntelliJ](#intellij)
+      
+## Introduction
+Open repository for the preliminary design study for TOSCAna.
 
-## TOSCA2vSphere
-TOSCA2vSphere is a command line tool developed in the preliminary design study for the study project TOSCAna. The purpose of this tool is to deploy a TOSCAlite model as it is definend in the corresponding archive.
+This is the repository for the preliminary design study for the study project TOSCAna. The project consists of the following two subprojects:
 
-## TOSCAlite
-TOSCAlite is a very lightweight version of the OASIS TOSCA standard. It can be used to model a deployment based on Linux systems (mostly Ubuntu 16.04 LTS). You can read more about TOSCAlite in its documentation [here](doc/toscalite/).
+
+    ### TOSCA2vSphere
+    TOSCA2vSphere is a command line tool developed in the preliminary design study for the study project TOSCAna. The purpose of this tool is to deploy a TOSCAlite model as it is definend in the corresponding archive.
+    
+    ### TOSCAlite
+    TOSCAlite is a very lightweight version of the OASIS TOSCA standard. It can be used to model a deployment based on Linux systems (mostly Ubuntu 16.04 LTS). You can read more about TOSCAlite in its documentation [here](doc/toscalite/).
 
 ## Project structure
 - [`doc/`](doc/) - Documentation
