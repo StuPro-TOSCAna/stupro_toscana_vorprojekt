@@ -191,7 +191,7 @@ public class SSHConnection implements Executor {
      * closes the connected session
      */
     public void close() {
-        if (sesConnection != null) {
+        if (sesConnection != null && sesConnection.isConnected()) {
             sesConnection.disconnect();
             LOG.info("closed connection to {}@{}", username, connectionIP);
         }
