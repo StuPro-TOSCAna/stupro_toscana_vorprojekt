@@ -13,7 +13,9 @@ systemctl stop mysql
 toscalite-setvalue /etc/mysql/mysql.conf.d/mysqld.cnf port $MYSQL_PORT
 
 # open mysql port in firewall
-ufw allow $MYSQL_PORT
+ufw allow ${MYSQL_PORT}/tcp
+ufw allow 22/tcp
+
 ufw --force enable
 
 systemctl stop mysql
