@@ -50,6 +50,7 @@ public class Engine {
         try {
             helpCreateStart(ArtifactType.CREATE);
             exeConnectsToRelations();
+            stop();
             return true;
         } catch (JSchException e) {
             LOG.error("Failed to create instance.", e);
