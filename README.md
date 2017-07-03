@@ -15,7 +15,7 @@ TOSCAlite is a very lightweight version of the OASIS TOSCA standard. It can be u
 
 ## Project structure
 - `doc/` - Documentation
-- `php-app/` - Example php app
+- `phpapp/` - Example php app
 - `src/main/` - Java source code
 - `src/test/` - Java tests
 - `src/test/resources/` - resources needed to test
