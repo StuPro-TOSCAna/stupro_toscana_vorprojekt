@@ -24,7 +24,7 @@
                 <Stop>stop.sh</Stop>
             </ImplementationArtifacts>
             <DeploymentArtifacts>
-                <DeploymentArtifact>configurations.zip</DeploymentArtifact>
+                <DeploymentArtifact key="config">configurations.zip</DeploymentArtifact>
             </DeploymentArtifacts>
             <Properties>
                 <Property key="port">8080</Property>
@@ -54,7 +54,7 @@
                 <Stop>/mysql/stop.sh</Stop>
             </ImplementationArtifacts>
             <DeploymentArtifacts>
-                <DeploymentArtifact>/wordpress/wp.sql</DeploymentArtifact>
+                <DeploymentArtifact key="wpinit">/wordpress/wp.sql</DeploymentArtifact>
             </DeploymentArtifacts>
             <Properties>
                 <Property key="port">8080</Property>

@@ -13,13 +13,14 @@ import java.util.Map;
  */
 public class ServiceNode extends Node {
 
+    public static final String DEPLOYMENT_ARTIFACT_ATRIBUTE_NAME = "key";
     private static Logger LOG = LoggerFactory.getLogger(ServiceNode.class);
 
     private static final String IMPLEMENTATION_ARTIFACTS_ELEMENT_NAME = "ImplementationArtifacts";
     private static final String DEPLOYMENT_ARTIFACTS_ELEMENT_NAME = "DeploymentArtifacts";
     private static final String DEPLOYMENT_ARTIFACT_ELEMENT_NAME = "DeploymentArtifact";
 
-    private List<ArtifactPath> deploymentArtifacts;
+    private Map<String, ArtifactPath> deploymentArtifacts;
     private Map<ArtifactType, ArtifactPath> implementationArtifacts;
     private Node parent;
     private List<ConnectsToRelationship> sourceConnections = new ArrayList<>();
@@ -35,7 +36,7 @@ public class ServiceNode extends Node {
         //Initialize storage collections. This has to be done here instead of the declaration
         //because this gets executed by the parent constructor
         implementationArtifacts = new HashMap<>();
-        deploymentArtifacts = new ArrayList<>();
+        deploymentArtifacts = new HashMap<>();
         //Parse specific data
         parseImplementationArtifacts(element);
         parseDeploymentArtifacts(element);
@@ -67,8 +68,17 @@ public class ServiceNode extends Node {
             if (child.getNodeName().equals(DEPLOYMENT_ARTIFACTS_ELEMENT_NAME)) {
                 for (int j = 0; j < child.getChildNodes().getLength(); j++) {
                     org.w3c.dom.Node innerChild = child.getChildNodes().item(j);
+
+                    String key = getKeyAttribute(innerChild);
+
+                    if (key == null | !isKeyValid(key)) {
+                        throw new ParsingException("Invalid document." +
+                                " Every deployment artifact needs a key." +
+                                " The error occured on node " + name);
+                    }
+
                     if (innerChild.getNodeName().equals(DEPLOYMENT_ARTIFACT_ELEMENT_NAME)) {
-                        deploymentArtifacts.add(new ArtifactPath(innerChild.getTextContent(), this));
+                        deploymentArtifacts.put(key, new ArtifactPath(innerChild.getTextContent(), this));
                     } else {
                         throw new ParsingException("Invalid document." +
                                 " Elements in the deployment artifacts" +
@@ -116,7 +126,7 @@ public class ServiceNode extends Node {
         return null;
     }
 
-    public List<ArtifactPath> getDeploymentArtifacts() {
+    public Map<String, ArtifactPath> getDeploymentArtifacts() {
         return deploymentArtifacts;
     }
 

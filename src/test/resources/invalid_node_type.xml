@@ -27,7 +27,7 @@
                 <Stop>stop.sh</Stop>
             </ImplementationArtifacts>
             <DeploymentArtifacts>
-                <DeploymentArtifact>configurations.zip</DeploymentArtifact>
+                <DeploymentArtifact key="config">configurations.zip</DeploymentArtifact>
             </DeploymentArtifacts>
             <Properties>
                 <Property key="port">8080</Property>
@@ -40,7 +40,7 @@
                 <Create>install.sh</Create>
             </ImplementationArtifacts>
             <DeploymentArtifacts>
-                <DeploymentArtifact>wp.zip</DeploymentArtifact>
+                <DeploymentArtifact key="wp">wp.zip</DeploymentArtifact>
             </DeploymentArtifacts>
             <Properties>
                 <Property key="defaultUsername">admin</Property>
@@ -57,7 +57,7 @@
                 <Stop>/mysql/stop.sh</Stop>
             </ImplementationArtifacts>
             <DeploymentArtifacts>
-                <DeploymentArtifact>/wordpress/wp.sql</DeploymentArtifact>
+                <DeploymentArtifact key="wpsql">/wordpress/wp.sql</DeploymentArtifact>
             </DeploymentArtifacts>
             <Properties>
                 <Property key="port">8080</Property>
