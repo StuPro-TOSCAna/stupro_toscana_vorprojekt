@@ -2,14 +2,14 @@
 
 ## Introduction
 
-TOSCAlite is a very lightweight version of the OASIS TOSCA standard. It can be used to model a deployment based on Linux systems (mostly Ubuntu 16.04 LTS)
+TOSCAlite is a very lightweight version of the OASIS TOSCA standard. It can be used to model a deployment based on Linux systems (mostly Ubuntu 16.04 LTS).
 
 ## Nodes
 
-A node defined in the ``model.xml`` (see Packaging) represents a node in a TOSCAlite topology.
+A node defined in the ``model.xml`` (see [Packaging](#packaging)) represents a node in a TOSCAlite topology.
 TOSCAlite defines two types of nodes. It is not possible to extend TOSCAlite with more types of nodes.
 
-In XML a node gets defined as following:
+In XML a node gets defined as follows:
 
 ```XML
 <Node>
@@ -22,14 +22,14 @@ In XML a node gets defined as following:
 ```
 **Explanation:**
 * ``Type`` - This defines the node type. In TOSCAlite only two types are allowed. (``service`` and ``machine``)
-* ``Name`` - The name of a node is used to uniquely identify the node in the topology. It is the nodes primary identifier. The names are only allowed to contain the following characters ``abcdefghijklmnopqrstuvwxyz-_1234567890``
-* ``Properties`` -  Has to contain Property elements, with the attribute Key. the key is required to be a lower-case name without spaces (allowed characters `abcdefghijklmnopqrstuvxyz`). 
+* ``Name`` - This defines the node name. A node's name is used to uniquely identify the node in the topology. It is the node's primary identifier. Node names are only allowed to contain the following characters ``abcdefghijklmnopqrstuvwxyz-_1234567890``
+* ``Properties`` -  This block defines the node's properties. It has to contain property elements, each with an attribute Key. The attribute key is required to be a lower-case name without spaces (allowed characters `abcdefghijklmnopqrstuvxyz`).
 
-The ``Type`` and ``Name`` elements are always required. ``Properties`` can be optional, at least in service nodes.
+The ``Type`` and ``Name`` elements are always required. ``Properties`` are mandatory in machine nodes and optional in service nodes.
 
 ### Machines
 
-A machine node represents a Linux-based system, probably Ubuntu 16.04. The deployment system does not care where the system is running, as long as the machine is reachable with SSH. Therefore SSH has to be installed on every target machine.
+A machine node represents a Linux-based system, usually Ubuntu 16.04. The deployment system does not check whether the system is running, as long as the machine is reachable with SSH. Therefore SSH has to be installed on every target machine.
 This specific type of node gets described as follows:
 
 ```XML
@@ -43,33 +43,33 @@ This specific type of node gets described as follows:
     </Properties>
 </Node>
 ```
-**Explanations:**
-* ``Type`` - For a service node the type has to always be ``service``.
-* `Name` - See node description.
-* `Properties` - The Properties block is required in a machine node, because it is used to define IP-Adress (Host), Username and Password. The names for those can be taken from the example above.
-    * For simplicity TOSCAlite only supports SSH-Authentication based on username and password. Public/ Private Key authentication is not supported.
+**Explanation:**
+* ``Type`` - For a machine node the type always has to be ``machine``. In a service node it would be ``service``.
+* `Name` - As specified earlier a name refers to the unique name of a node. (See [Nodes](#nodes))
+* `Properties` - The properties block is mandatory in a machine node, because it is used to define the IP address (of the host), a username and password. The specific attribute keys for these mandatory properties can be taken from the example above.
+    * For simplicity TOSCAlite only supports SSH authentication based on username and password. Public/private key authentication is not supported.
 
 ### Services
 
-A Service represents a part of a Topology that has to be installed on a machine or on top of other services. The steps to install (start and stop) the service are defined in shell scripts (see *Implementation Artifacts*). Files other then shell scripts get defined in deployment artifacts. 
+A service represents the part of a topology that has to be installed on a machine or on top of other services. The steps to install, start or stop the service are defined in shell scripts (see [Implementation Artifacts](#implementation-artifacts)). Files other then shell scripts get defined in deployment artifacts.
 
 #### Implementation Artifacts
 
-Implementation artifacts have to implement the lifecycle operations for a service. Due to TOSCAlite requiring Linux-based systems shell scripts have to be used to perform these operations.
+Implementation artifacts have to implement the lifecycle operations for a service. Due to TOSCAlite requiring Linux-based systems, shell scripts have to be used to perform these operations.
 
 The following operations are supported:
-* Create - Required by every service. Used to create the service. This script/ executable has to install all the packages required to run the service, for example.
+* Create - Mandatory for every service. Used to create the service. This script/ executable should install all the packages required to run the service.
 * Start - Optional. Used to start the service.
 * Stop - Optional. Used to stop the service.
 
 ##### Execution of Implementation Artifacts
 
-Before any script gets executed, the whole TOSCAlite archive is loaded on to every virtual machine and extracted there. All the extracted files will be located in the home directiory of the user that is defined in the machine node. 
+Before any script gets executed, the whole TOSCAlite archive is loaded onto every virtual machine and extracted there. All the extracted files will be located in the home directory of the user that is defined in the machine node.
 
-The scripts get executed in the directory they are located in, this means, that the TOSCAlite deployment system will automatically update the parent working directory to the directory in which the script is located.
+The scripts get executed in the directory they are located in. This means that the TOSCAlite deployment system will automatically change the parent working directory to the directory in which the script is located.
 
 #### Deployment Artifacts
-Deployment artifacts are files, such as executables, that get loaded with the implementation artifact when creating the service node. A service can have multiple deployment artifacts. There is no limitation for file types. The ability to process the deployment artifacts has to be implemented in the shell script.
+Deployment artifacts are files, such as executables, that get loaded onto the machine with the implementation artifacts when creating the service node. A service can have multiple deployment artifacts. There is no limitation for file types. The ability to process the deployment artifacts has to be implemented in the shell script.
 
 #### Definition in XML
 
@@ -91,12 +91,12 @@ Deployment artifacts are files, such as executables, that get loaded with the im
 </Node>
 ```
 **Explanation:**
-* `ImplementationArtifacts` - The Implementation Artifact section contains paths to shell scripts that perform specific operations (Start, Stop and Create) on the Machine
+* `ImplementationArtifacts` - The implementation artifact section contains paths to shell scripts that perform specific operations (start, stop and create) on the machine.
     * `Create` (**Required**) - Defines the path to the shell script that has to be executed when deploying the application.
     * `Start` (**Optional**) - Defines the path to the shell script that has to be executed when starting the application.
     * `Stop` (**Optional**) - Defines the path to the shell script that has to be executed when stopping the application.
-    * How the paths of artifacts have to look is described under *Artifact Paths*
-* `DeploymentArtifacts` - List of paths for deployment artifacts
+    * How the paths of artifacts have to be specified is described under *Artifact Paths*
+* `DeploymentArtifacts` - Defines a list of paths for deployment artifacts.
 
 #### Artifact Paths
 
@@ -106,14 +106,14 @@ For service nodes the relative path in the archive is converted to `/<Nodename>/
 
 In order to define absolute paths within the archive a `/` has to be added in front.
 
-### Environment-Variable Mapping of Properties
+### Environment Variable Mapping of Properties
 
 The value of properties gets mapped to environment variables in the following naming scheme: `<Nodename>_<PropertyKey>`.
-The key and the node name get converted to Upper case letters. Before the execution of the scripts starts all environment variables get created. It is possible to access all Properties even the ones from another node as long as both nodes belong to the same machine.
+The key and the node name get converted into upper case letters. Before the execution of the scripts starts, all environment variables get created. It is possible to access all properties, even the ones from another node, as long as both nodes belong to the same machine.
 
 ## Relationships
 
-In order to model a topology it is necessary to model the edges (Relationships) of a topology graph. Relationships get defined in a seperate block than nodes themselves (See Packaging/model.xml). Every node in XML gets defined as follows.
+In order to model a topology, it is necessary to model the edges (relationships) of a topology graph. Relationships get defined in their own block, seperate from nodes themselves (See [Packaging/model.xml](#model.xml)). Every relationship in XML gets defined as follows:
 
 ```XML
 <Relationship>
@@ -124,22 +124,22 @@ In order to model a topology it is necessary to model the edges (Relationships) 
 ```
 
 **Explanation**:
-* `Type` - Just like with nodes, this represents the type of the relationship and is either `hostedOn` for a HostedOn relationship or `connectsTo` for a ConnectsTo relationship.
+* `Type` - Just like with nodes, this represents the type of the relationship and is either `hostedOn` for a "hostedOn" relationship or `connectsTo` for a "connectsTo" relationship.
 * `Source` - The name of the source node of the relationship
 * `Target` - The name of the target node of the relationship
 
-All of the elements described above are necessary for describing a relationship.
+All elements described above are mandatory to describe a relationship.
 
 ### HostedOn
-If two nodes are in a hosted on relationship, they will be deployed on the same machine. The target node is always the parent node of the source node. When deploying an application, this means that the Target will be Created and started before the souce, when stopping the implementation artifacts of the service nodes will be executed in the opposite directon.
+If two nodes are in a hostedOn relationship, they will be deployed on the same machine. The target node is always the parent node of the source node. This means that when deploying an application, the target will be created and started before the source. When stopping, the implementation artifacts of the service nodes will be executed in the  reverse order.
 
-The hosted on relationship does not allow self connections and it does not allow machine nodes as sources, only as targets.
+The hostedOn relationship does not allow self connections or machine nodes as sources, only as targets.
 
 ### ConnectsTo
 
-The connects to relationship describes a network connection between two nodes. Just like the hosted on relationship, this is a directional relationship. In order to allow the source node to connect to the target node it needs to know the connection information (e.g. IP-Adress). This information gets programmed into the application using a implementation artifact (Shell script) that gets executed after the service node was created.
+The connectsTo relationship describes a network connection between two nodes. Just like the hostedOn relationship, connectsTo is a directional relationship. In order to allow the source node to connect to the target node, it needs to know the connection information (e.g. IP address). This information gets programmed into the application using an implementation artifact (shell script) that gets executed after the service node was created.
 
-A example definition for a connects to relationship:
+A example definition for a connectsTo relationship:
 
 ```XML
 <Relationship>
@@ -150,19 +150,19 @@ A example definition for a connects to relationship:
 </Relationship>
 ```
 
-If the path in the implementation artifact is relative the TOSCAlite deployment system assumes the file is located in a folder called `relationships` within the Zip archive.
+If the path in the implementation artifact is relative, the TOSCAlite deployment system assumes the file is located in a folder called `relationships` within the ZIP archive.
 
-The connects to relationship does not allow self connections and connections with (or between) machine nodes.
+The connectsTo relationship does not allow self connections or connections with (or between) machine nodes.
 
 ## Packaging
 
-An application modeled in TOSCAlite gets packaged as a `.zip`-Archive, this archive contains all the artifacts and the `model.xml` which describes the topology graph. The folder structure of the archive should contain one folder for every service node defined in the `model.xml` this folder contains all artifacts associated with this node (if no absolute path gets defined). The Implementation artifacts for connects to relationships will be stored in a folder called `relationships`  
+An application modeled in TOSCAlite gets packaged as a `.zip` archive. This archive contains all the artifacts and the `model.xml` which describes the topology graph. The folder structure of the archive should contain one folder for every service node defined in the `model.xml`. Each folder contains all artifacts associated with this node (if no absolute path gets defined). The implementation artifacts for connectsTo relationships will be stored in a folder called `relationships`.
 
 ### model.xml
 
-The ``model.xml`` describes the topology graph. Nodes and Relationships get described in seperate blocks. 
+The ``model.xml`` describes the topology graph. Nodes and relationships get described in seperate blocks.
 
-An empty model.xml file looks as follows:
+An empty model.xml file gets defined as follows:
 ```XML
 <Model>
     <Nodes>
