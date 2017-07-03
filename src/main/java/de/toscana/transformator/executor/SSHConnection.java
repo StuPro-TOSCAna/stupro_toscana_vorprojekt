@@ -123,6 +123,7 @@ public class SSHConnection implements Executor {
      */
     @Override
     public String executeScript(String script, Map<String, String> environment) throws JSchException {
+        script = script.substring(1);
         String[] scriptSplit = script.split("/");
         String nodeName = scriptSplit[0];
         String scriptName = scriptSplit[1];
