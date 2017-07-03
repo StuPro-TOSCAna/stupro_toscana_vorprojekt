@@ -51,7 +51,7 @@ This specific type of node gets described as follows:
 
 ### Services
 
-A service represents the part of a topology that has to be installed on a machine or on top of other services. The steps to install, start or stop the service are defined in its implementation artifacts. If additional files are needed for deployment they can be defined as deployment artifacts. 
+A service represents the part of a topology that has to be installed on a machine or on top of other services. The steps to install, start or stop the service are defined in its implementation artifacts. If additional files are needed for deployment they can be defined as deployment artifacts.
 
 #### Implementation Artifacts
 
@@ -59,14 +59,14 @@ Implementation artifacts have to implement the lifecycle operations for a servic
 
 The following operations are supported:
 * Create - Mandatory for every service. Used to create the service. This script/executable should install all the packages required to run the service.
-* Start - Optional. Used to start the service.
+* Start - Mandatory for every service. Used to start the service.
 * Stop - Optional. Used to stop the service.
 
 ##### Execution of Implementation Artifacts
 
 Before any script gets executed, the whole TOSCAlite archive is loaded onto every virtual machine and extracted there. All extracted files will be located in the home directory of the user that is defined in the machine node.
 
-The scripts get executed in the directory they are located in. This means that the TOSCAlite deployment system has to automatically change the parent working directory to the directory in which the script is located.
+The scripts get executed in the directory they are located in. This means that the TOSCAlite deployment will automatically change the parent working directory to the directory in which the script is located.
 
 #### Deployment Artifacts
 A deployment artifact represents any file which can be used by implementation artifacts.
@@ -94,7 +94,7 @@ A service can have none or multiple deployment artifacts.
 **Explanation:**
 * `ImplementationArtifacts` - The implementation artifact section contains paths to shell scripts that perform specific operations (start, stop and create) on the machine.
     * `Create` (**Required**) - Defines the path to the shell script that has to be executed when deploying the application.
-    * `Start` (**Optional**) - Defines the path to the shell script that has to be executed when starting the application.
+    * `Start` (**Required**) - Defines the path to the shell script that has to be executed when starting the application.
     * `Stop` (**Optional**) - Defines the path to the shell script that has to be executed when stopping the application.
     * How the paths of artifacts have to be specified is described under *Artifact Paths*
 * `DeploymentArtifacts` - Defines a list of paths for deployment artifacts.
@@ -108,7 +108,7 @@ For service nodes the relative path in the archive is converted to `/<nodename>/
 In order to define absolute paths within the archive a `/` has to be added in front.
 
 ### Usage of Properties and Deployment Artifacts in Implementation Artifacts
-Implementation artifacts can make use of the defined values of properties and deployment artifacts. It is assured that every implementation artifact has access to every property and every deployment artifact via environment variables. 
+Implementation artifacts can make use of the defined values of properties and deployment artifacts. It is assured that every implementation artifact has access to every property and every deployment artifact via environment variables.
 
 ##### Example
 
