@@ -18,6 +18,7 @@ public class Creator {
 
     //each machine has a own queue with their nodes
     private ArrayList<Queue> allQueues = new ArrayList<>();
+    private ArrayList<ArrayList<Node>> allBranches = new ArrayList<>();
 
 
     /**
@@ -36,10 +37,10 @@ public class Creator {
      *
      * @return a queue with nodes
      */
-    protected ArrayList<Queue> getAllQueues() {
+    protected ArrayList<ArrayList<Node>> getAllBranches() {
         findMachines();
         addChildren();
-        return allQueues;
+        return allBranches;
     }
 
     /**
@@ -48,7 +49,8 @@ public class Creator {
     private void findMachines(){
         for (Map.Entry<String, Node> entry : allNodes.entrySet()) {
             if(entry.getValue() instanceof MachineNode){
-                allQueues.add(new LinkedList<Node>(Arrays.asList(entry.getValue())));
+                //allQueues.add(new LinkedList<Node>(Arrays.asList(entry.getValue())));
+                allBranches.add(new ArrayList<Node>(Arrays.asList(entry.getValue())));
             }
         }
     }
@@ -58,9 +60,15 @@ public class Creator {
      * Adds the nodes to the queue by ascending order.
      */
     private void addChildren(){
+        /*
         for(Queue<Node> qu : allQueues){
             getAllChildren(qu.peek(), qu);
 
+        }
+        */
+
+        for(ArrayList<Node> currentBranch : allBranches){
+            getAllChildren(currentBranch.get(0), currentBranch);
         }
     }
 
@@ -70,13 +78,24 @@ public class Creator {
      * @param n The current node
      * @param qu The current queue
      */
-    private void getAllChildren(Node n, Queue<Node> qu){
+    private void getAllChildren(Node n, ArrayList<Node> branch){
+
+        if(!branch.contains(n)){
+            branch.add(n);
+        }
+
+        for(Node child : n.getChildren()){
+            getAllChildren(child, branch);
+        }
+
+        /*
         if(!qu.contains(n)){
             qu.add(n);
         }
             for (Node child : n.getChildren()){
                 getAllChildren(child,qu);
             }
+        */
 
     }
 
