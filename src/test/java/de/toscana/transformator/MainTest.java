@@ -1,6 +1,5 @@
 package de.toscana.transformator;
 
-import de.toscana.transformator.util.ConsoleColors;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -12,7 +11,6 @@ import org.junit.runners.JUnit4;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
