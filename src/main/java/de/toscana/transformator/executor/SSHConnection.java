@@ -38,6 +38,14 @@ public class SSHConnection implements Executor {
         this.username = username;
         this.password = password;
         this.connectionIP = connectionIP;
+
+        setupSafeShutdown();
+    }
+
+    private void setupSafeShutdown() {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            close();
+        }));
     }
 
     /**
@@ -89,7 +97,7 @@ public class SSHConnection implements Executor {
      * @param command
      * @return the generated output after executing the command
      */
-     String sendCommand(String command) throws JSchException {
+    String sendCommand(String command) throws JSchException {
         StringBuilder out = new StringBuilder();
         try {
             PipedInputStream inStream = new PipedInputStream();
@@ -102,7 +110,7 @@ public class SSHConnection implements Executor {
             BufferedReader reader = new BufferedReader(new InputStreamReader(inStream));
             String line;
             while ((line = reader.readLine()) != null) {
-                if(out.length() != 0){
+                if (out.length() != 0) {
                     out.append("\n");
                 }
                 out.append(line);
@@ -118,6 +126,7 @@ public class SSHConnection implements Executor {
 
     /**
      * Like sendCommand(String command), but also prints the executed command and the resulting standard and error output to std out
+     *
      * @param command
      * @return
      * @throws JSchException
@@ -142,16 +151,16 @@ public class SSHConnection implements Executor {
         String nodeName = scriptSplit[0];
         String scriptName = scriptSplit[1];
         String environmentChain = "";
-        for (Map.Entry<String,String> entry: environment.entrySet()){
+        for (Map.Entry<String, String> entry : environment.entrySet()) {
             String environmentEntry = nodeName.toUpperCase() + "_" + entry.getKey().toUpperCase() + "=" + entry.getValue() + " ";
             environmentChain += environmentEntry;
         }
         LOG.info("executing operation {}:{}", nodeName, scriptName);
-        return sendAndPrintCommand("cd " + nodeName + " && "  + getRootEscalation() +  environmentChain +" ./" + scriptName);
+        return sendAndPrintCommand("cd " + nodeName + " && " + getRootEscalation() + environmentChain + " ./" + scriptName);
     }
 
-    private String getRootEscalation(){
-        return " echo \"" + password +"\" | sudo -S ";
+    private String getRootEscalation() {
+        return " echo \"" + password + "\" | sudo -S ";
     }
 
     /**
@@ -182,8 +191,10 @@ public class SSHConnection implements Executor {
      * closes the connected session
      */
     public void close() {
-        sesConnection.disconnect();
-        LOG.info("closed connection to {}@{}", username, connectionIP);
+        if (sesConnection != null) {
+            sesConnection.disconnect();
+            LOG.info("closed connection to {}@{}", username, connectionIP);
+        }
     }
 
     /**
@@ -218,14 +229,14 @@ public class SSHConnection implements Executor {
     }
 
     private String getPrompt() throws JSchException {
-       String workingDirectory = getWorkingDirectory();
-       return username + "@" + connectionIP + ":" + workingDirectory + "# ";
+        String workingDirectory = getWorkingDirectory();
+        return username + "@" + connectionIP + ":" + workingDirectory + "# ";
     }
 
     private String getWorkingDirectory() throws JSchException {
         String workingDirectory = sendCommand("pwd");
         if (workingDirectory.equals("/home/" + username)) {
-           workingDirectory = "~";
+            workingDirectory = "~";
         }
         return workingDirectory;
     }
