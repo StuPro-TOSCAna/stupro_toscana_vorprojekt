@@ -64,9 +64,9 @@ The following operations are supported:
 
 ##### Execution of Implementation Artifacts
 
-Before any script gets executed, the whole TOSCAlite archive is loaded onto every virtual machine and extracted there. All the extracted files will be located in the home directory of the user that is defined in the machine node.
+Before any script gets executed, the whole TOSCAlite archive is loaded onto every virtual machine and extracted there. All extracted files will be located in the home directory of the user that is defined in the machine node.
 
-The scripts get executed in the directory they are located in. This means that the TOSCAlite deployment system will automatically change the parent working directory to the directory in which the script is located.
+The scripts get executed in the directory they are located in. This means that the TOSCAlite deployment system has to automatically change the parent working directory to the directory in which the script is located.
 
 #### Deployment Artifacts
 A deployment artifact represents any file which can be used by implementation artifacts.
