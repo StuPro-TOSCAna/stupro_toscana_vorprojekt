@@ -57,9 +57,9 @@ public class SSHConnection implements Executor {
             sesConnection.connect(timeout);
             LOG.info("connection established");
             LOG.info("updating target");
-            String updateCommand = "echo " + password + "| sudo -S apt-get update && sudo -S apt-get upgrade -y";
+            String updateCommand = getRootEscalation() + "apt-get update && sudo -S apt-get upgrade -y";
             sendAndPrintCommand(updateCommand);
-            LOG.info("{}@{} > host system upgrade completed", username, connectionIP);
+            LOG.info("host system upgrade completed", username, connectionIP);
             //check if util files are there, if not upload them
             //upload util scripts to /usr/local/bin
             String targetPath = "/usr/local/bin/";
@@ -68,12 +68,12 @@ public class SSHConnection implements Executor {
             File[] sourceFiles = sourceFolder.listFiles();
             for (File file : sourceFiles) {
                 if (!(file.isFile() && targetFiles.contains(file.getName()))) {
-                    LOG.info("{}@{} > uploading {}", username, connectionIP, file.getName());
+                    LOG.info("uploading {}", username, connectionIP, file.getName());
                     //have to upload to home directory and then move with sudo because upload has no root privileges
                     uploadFile(file, "");
-                    sendAndPrintCommand("echo " + password + "| sudo -S mv " + file.getName() + " " + targetPath);
+                    sendAndPrintCommand(getRootEscalation() + "mv " + file.getName() + " " + targetPath);
                     //at least if i copy the file from windows i have mark them executable
-                    String resultChmod = sendAndPrintCommand("echo " + password + "| sudo -S chmod 775 " + targetPath + file.getName());
+                    String resultChmod = sendAndPrintCommand(getRootEscalation() + "chmod 775 " + targetPath + file.getName());
                 }
             }
             return true;
@@ -127,7 +127,6 @@ public class SSHConnection implements Executor {
         String output = sendCommand(command);
         System.out.println(output);
         return output;
-
     }
 
     /**
@@ -144,15 +143,16 @@ public class SSHConnection implements Executor {
         String scriptName = scriptSplit[1];
         String environmentChain = "";
         for (Map.Entry<String,String> entry: environment.entrySet()){
-            String environmentEntry = nodeName.toUpperCase() + "_" + entry.getValue().toUpperCase() + "=" + entry.getValue() + " ";
+            String environmentEntry = nodeName.toUpperCase() + "_" + entry.getKey().toUpperCase() + "=" + entry.getValue() + " ";
             environmentChain += environmentEntry;
         }
-        String output = sendAndPrintCommand("cd " + nodeName + " && " + "echo " + password + "| sudo -S "+ environmentChain +"./" + scriptName);
-        LOG.info("{}@{} > executed operation {}:{}", username, connectionIP, nodeName, scriptName);
-        System.out.println(output);
-        return output;
+        LOG.info("executing operation {}:{}", nodeName, scriptName);
+        return sendAndPrintCommand("cd " + nodeName + " && "  + getRootEscalation() +  environmentChain +" ./" + scriptName);
     }
 
+    private String getRootEscalation(){
+        return " echo \"" + password +"\" | sudo -S ";
+    }
 
     /**
      * Uploading a Zip File to the machine using sftp
@@ -192,14 +192,9 @@ public class SSHConnection implements Executor {
      * Overwrites all existing files
      */
     private String unzipFile(File zipFile) throws JSchException {
-        String zip;
         //depends on the language the server is using
-        if (sendCommand("apt -qq list unzip").contains("installed")) {
-            zip = sendCommand("unzip -o " + zipFile.getName());
-        } else {
-            sendCommand("echo " + password + "| sudo -S apt-get install -y unzip");
-            zip = sendCommand("unzip -o " + zipFile.getName());
-        }
+        sendCommand(getRootEscalation() + "apt install -y unzip");
+        String zip = sendCommand("unzip -o " + zipFile.getName());
         return zip;
     }
 
@@ -212,7 +207,7 @@ public class SSHConnection implements Executor {
         String targetDirectory = "";
         uploadFile(zipFile, targetDirectory);
         String output = unzipFile(zipFile);
-        LOG.info("{}@{} > uploaded TOSCALite-archive to target machine", username, connectionIP);
+        LOG.info("uploaded TOSCALite-archive to target machine", username, connectionIP);
         System.out.println(output);
         return output;
     }
@@ -234,4 +229,5 @@ public class SSHConnection implements Executor {
         }
         return workingDirectory;
     }
+
 }
