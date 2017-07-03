@@ -20,11 +20,11 @@ Open repository for the preliminary design study for TOSCAna.
 This is the repository for the preliminary design study for the study project TOSCAna. The project consists of the following two subprojects:
 
 
-    ### TOSCA2vSphere
-    TOSCA2vSphere is a command line tool developed in the preliminary design study for the study project TOSCAna. The purpose of this tool is to deploy a TOSCAlite model as it is definend in the corresponding archive.
-    
-    ### TOSCAlite
-    TOSCAlite is a very lightweight version of the OASIS TOSCA standard. It can be used to model a deployment based on Linux systems (mostly Ubuntu 16.04 LTS). You can read more about TOSCAlite in its documentation [here](doc/toscalite/).
+### TOSCA2vSphere
+TOSCA2vSphere is a command line tool developed in the preliminary design study for the study project TOSCAna. The purpose of this tool is to deploy a TOSCAlite model as it is definend in the corresponding archive.
+
+### TOSCAlite
+TOSCAlite is a very lightweight version of the OASIS TOSCA standard. It can be used to model a deployment based on Linux systems (mostly Ubuntu 16.04 LTS). You can read more about TOSCAlite in its documentation [here](doc/toscalite/).
 
 ## Project structure
 - [`doc/`](doc/) - Documentation
