@@ -11,10 +11,11 @@ This is the repository for the preliminary design study for the study project TO
 TOSCA2vSphere is a command line tool developed in the preliminary design study for the study project TOSCAna. The purpose of this tool is to deploy a TOSCAlite model as it is definend in the corresponding archive.
 
 ## TOSCAlite
-TOSCAlite is a very lightweight version of the OASIS TOSCA standard. It can be used to model a deployment based on Linux systems (mostly Ubuntu 16.04 LTS). You can read more about TOSCAlite in its documentation here. **TODO add link**
+TOSCAlite is a very lightweight version of the OASIS TOSCA standard. It can be used to model a deployment based on Linux systems (mostly Ubuntu 16.04 LTS). You can read more about TOSCAlite in its documentation [here](doc/toscalite/).
 
 ## Project structure
 - `doc/` - Documentation
+- `utils/` - Scripts that help building and running the app
 - `phpapp/` - Example php app
 - `src/main/` - Java source code
 - `src/test/` - Java tests
@@ -75,7 +76,6 @@ How to use **TOSCA2vSphere**:
 
     It is mandatory that `create` has to be called before `start` and `start` has to be called before `stop`. If not, there will be an error.
 
-
 ## Tools
 
 Tools that are used in this project.
@@ -86,7 +86,15 @@ Tools that are used in this project.
 - Code analysis: [Codacy](https://www.codacy.com/app/nfode/stupro_toscana_vorprojekt/dashboard)
 - Code coverage: [Codecov](https://codecov.io/gh/nfode/stupro_toscana_vorprojekt), [Get browser extension](https://github.com/codecov/browser-extension)
 
+### Util scripts
+
+In the folder [`util`](util/) you can find util scripts for operating systems with **bash**. 
+- `utils/build_with_test` - builds with tests
+- `utils/build_without_test` - builds without tests for test purposes
+- `utils/run_with_example_phpapp` - starts the CLI with the example php app
+
+
 ### IntelliJ
 
-In the folder `doc/config/IntelliJ` you can find a class template named `Class.java`. This template adds automatically everything you need for logging to the header when you create a new class.
+In the folder [`doc/config/IntelliJ`](doc/config/IntelliJ/) you can find a class template named `Class.java`. This template adds automatically everything you need for logging to the header when you create a new class.
 If you want to use this file, copy it to the folder `.idea/fileTemplates/internal/Class.java`.  

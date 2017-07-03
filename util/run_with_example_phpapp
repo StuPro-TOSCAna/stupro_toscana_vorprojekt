@@ -1,0 +1,8 @@
+#!/bin/bash
+
+cd example_models/simple-app/
+zip ../simple-app.zip -r *
+cd ../
+cd ../
+java -jar target/de.toscana.transformator-1.0-SNAPSHOT.jar example_models/simple-app.zip
+rm example_models/simple-app.zip
