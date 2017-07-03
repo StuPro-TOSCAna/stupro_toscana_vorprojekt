@@ -8,7 +8,7 @@ Open repository for the preliminary design study for TOSCAna.
 ## Folders
 [![codecov](https://codecov.io/gh/nfode/stupro_toscana_vorprojekt/branch/master/graph/badge.svg)](https://codecov.io/gh/nfode/stupro_toscana_vorprojekt)
 
-This is the repository for the preliminary design study for the study project TOSCAna. The project can be split into two parts:
+This is the repository for the preliminary design study for the study project TOSCAna. The project consists of the following two subprojects:
 
 ## TOSCA2vSphere
 TOSCA2vSphere is a command line tool developed in the preliminary design study for the study project TOSCAna. The purpose of this tool is to deploy a TOSCAlite model as it is definend in the corresponding archive.
@@ -23,7 +23,7 @@ TOSCAlite is a very lightweight version of the OASIS TOSCA standard. It can be u
 - `src/test/` - Java tests
 - `src/test/resources/` - resources needed to test
 
-## How to get the tool
+## Obtaining TOSCA2vSphere
 
 ### Prebuild package
 
@@ -57,7 +57,7 @@ How to use **TOSCA2vSphere**:
 
     Replace *model.zip* with the file you want to open.
 
-    **IMPORTANT**: the zip-Archive has to be valid in terms of TOSCAlite.
+    **IMPORTANT**: The topology described in the model.xml of the .zip archive has to match the requirements described in the TOSCAlite specification.
 
 2. If parsing the file was successful you can now use the CLI:
     1. You can create everything needed to run your model if you enter:
@@ -88,3 +88,8 @@ Tools that are used in this project.
 - CI: [TravisCI](https://travis-ci.org/nfode/stupro_toscana_vorprojekt)
 - Code analysis: [Codacy](https://www.codacy.com/app/nfode/stupro_toscana_vorprojekt/dashboard)
 - Code coverage: [Codecov](https://codecov.io/gh/nfode/stupro_toscana_vorprojekt), [Get browser extension](https://github.com/codecov/browser-extension)
+
+### IntelliJ
+
+In the folder `doc/config/IntelliJ` you can find a class template named `Class.java`. This template adds automatically everything you need for logging to the header when you create a new class.
+If you want to use this file, copy it to the folder `.idea/fileTemplates/internal/Class.java`.  
