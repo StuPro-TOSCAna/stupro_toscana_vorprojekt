@@ -1,9 +1,5 @@
 package de.toscana.transformator.executor;
 
-/**
- * Created by Manuel on 15.06.2017.
- */
-
 import com.jcraft.jsch.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +7,10 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.util.Map;
 
+/**
+ * A connection to a machine via ssh. Provides several functions to execute on the remote machine.
+ * @author mklopp
+ */
 public class SSHConnection implements Executor {
     private static final Logger LOG = LoggerFactory.getLogger(SSHConnection.class);
 
@@ -28,10 +28,10 @@ public class SSHConnection implements Executor {
     /**
      * Standard constructor that takes the credentials and the hostname/ip. Also instantiates a SSH Channel
      *
-     * @param username
-     * @param password
-     * @param connectionIP
-     * @param environment environment variables for all nodes on all machines
+     * @param username     username of the remote user
+     * @param password     password of the remote user
+     * @param connectionIP ip of the remote host
+     * @param environment  environment variables for all nodes on all machines
      */
     public SSHConnection(String username, String password, String connectionIP, Map<String, String> environment) throws JSchException {
         // maybe insert known hosts via jschSSHChannel.setKnownHosts(knownHosts);
@@ -46,6 +46,9 @@ public class SSHConnection implements Executor {
         setupSafeShutdown();
     }
 
+    /**
+     * Executes close() if the jvm is shutdown for safety reasons
+     */
     private void setupSafeShutdown() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             close();
@@ -54,6 +57,8 @@ public class SSHConnection implements Executor {
 
     /**
      * creates a session and connects to the remote host
+     * also updates and upgrades the host
+     * and sets up the EnvironmentChain used by the scripts
      */
     public boolean connect() {
         try {
@@ -72,7 +77,6 @@ public class SSHConnection implements Executor {
             String updateCommand = getRootEscalation() + "apt-get update && sudo -S apt-get upgrade -y";
             sendAndPrintCommand(updateCommand);
             LOG.info("host system upgrade completed", username, connectionIP);
-            uploadUtilScripts();
             setUpEnvChain();
             return true;
         } catch (JSchException ex) {
@@ -82,27 +86,10 @@ public class SSHConnection implements Executor {
     }
 
     /**
-     * checks if util files are avaiable on the machine
-     * if not upload them
+     * Edits the global string with all environment variables and their values
+     *
      * @throws JSchException
      */
-    private void uploadUtilScripts() throws JSchException {
-        String targetPath = "/usr/local/bin/";
-        String targetFiles = sendCommand("ls " + targetPath);
-        File sourceFolder = new File("src/main/resources/util"); //probably gonna change
-        File[] sourceFiles = sourceFolder.listFiles();
-        for (File file : sourceFiles) {
-            if (!(file.isFile() && targetFiles.contains(file.getName()))) {
-                LOG.info("uploading {}", username, connectionIP, file.getName());
-                //have to upload to home directory and then move with sudo because upload has no root privileges
-                uploadFile(file, "");
-                sendAndPrintCommand(getRootEscalation() + "mv " + file.getName() + " " + targetPath);
-                //at least if i copy the file from windows i have mark them executable
-                sendAndPrintCommand(getRootEscalation() + "chmod 775 " + targetPath + file.getName());
-            }
-        }
-    }
-
     private void setUpEnvChain() throws JSchException {
         StringBuilder environmentChainBuilder = new StringBuilder();
         for (Map.Entry<String, String> entry : environment.entrySet()) {
@@ -111,10 +98,11 @@ public class SSHConnection implements Executor {
         }
         environmentChain = environmentChainBuilder.toString();
     }
+
     /**
-     * Executes a command on the remote host
+     * Executes a command on the remote host and reads the output and error of that command
      *
-     * @param command
+     * @param command command to send to the remote host
      * @return the generated output after executing the command
      */
     protected String sendCommand(String command) throws JSchException {
@@ -148,11 +136,11 @@ public class SSHConnection implements Executor {
     /**
      * Like sendCommand(String command), but also prints the executed command and the resulting standard and error output to std out
      *
-     * @param command
-     * @return
+     * @param command command to send to the remote host
+     * @return the string of standard and error output
      * @throws JSchException
      */
-    public String sendAndPrintCommand(String command) throws JSchException {
+    private String sendAndPrintCommand(String command) throws JSchException {
         printCommand(command);
         String output = sendCommand(command);
         System.out.println(output);
@@ -160,9 +148,9 @@ public class SSHConnection implements Executor {
     }
 
     /**
-     * Sets working directory onto nodename and executes a command on the remote host
+     * Sets working directory onto nodename and executes the script on the remote host
      *
-     * @param script
+     * @param script script to execute
      * @return the output of the command
      */
     @Override
@@ -171,11 +159,14 @@ public class SSHConnection implements Executor {
         String[] scriptSplit = script.split("/");
         String nodeName = scriptSplit[0];
         String scriptName = scriptSplit[1];
-        //TODO all others together or change spec
         LOG.info("executing operation {}:{}", nodeName, scriptName);
-        return sendAndPrintCommand("cd " + nodeName + " && " + getRootEscalation() + environmentChain +" ./" + scriptName);
+        return sendAndPrintCommand("cd " + nodeName + " && " + getRootEscalation() + environmentChain + " ./" + scriptName);
     }
 
+    /**
+     * return string with root password and sudo prefix
+     * @return string with root
+     */
     private String getRootEscalation() {
         return " echo \"" + password + "\" | sudo -S ";
     }
@@ -184,9 +175,9 @@ public class SSHConnection implements Executor {
      * Uploading a Zip File to the machine using sftp
      * OVERWRITES already existing files with the same name
      *
-     * @param file
+     * @param file file to upload, should be .zip
      */
-    public boolean uploadFile(File file, String targetPath) throws JSchException {
+    private boolean uploadFile(File file, String targetPath) throws JSchException {
         try {
             Channel channel = sesConnection.openChannel("sftp");
             channel.connect();
@@ -198,10 +189,10 @@ public class SSHConnection implements Executor {
             channelSftp.disconnect();
             return true;
         } catch (FileNotFoundException fnfExp) {
-            LOG.error("File not found",fnfExp);
+            LOG.error("File not found", fnfExp);
             return false;
         } catch (SftpException sftpExp) {
-            LOG.error("File upload failed",sftpExp);
+            LOG.error("File upload failed", sftpExp);
             return false;
         }
     }
@@ -217,9 +208,9 @@ public class SSHConnection implements Executor {
     }
 
     /**
-     * Tests if Unzip is installed, if it is installed unzip the File on the Machine
-     * otherwise install Unzip and then unzip the File
+     * Unzip is installed and the zipFile gets unziped
      * Overwrites all existing files
+     * @param zipFile
      */
     private String unzipFile(File zipFile) throws JSchException {
         sendCommand(getRootEscalation() + "apt install -y unzip");
@@ -243,7 +234,6 @@ public class SSHConnection implements Executor {
 
     private void printCommand(String command) throws JSchException {
         System.out.println(getPrompt() + command);
-
     }
 
     private String getPrompt() throws JSchException {
