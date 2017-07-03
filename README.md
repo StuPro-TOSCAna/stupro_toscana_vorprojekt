@@ -14,12 +14,13 @@ TOSCA2vSphere is a command line tool developed in the preliminary design study f
 TOSCAlite is a very lightweight version of the OASIS TOSCA standard. It can be used to model a deployment based on Linux systems (mostly Ubuntu 16.04 LTS). You can read more about TOSCAlite in its documentation [here](doc/toscalite/).
 
 ## Project structure
-- `doc/` - Documentation
-- `utils/` - Scripts that help building and running the app
-- `phpapp/` - Example php app
-- `src/main/` - Java source code
-- `src/test/` - Java tests
-- `src/test/resources/` - resources needed to test
+- [`doc/`](doc/) - Documentation
+- [`utils/`](utils/) - Scripts that help building and running the app
+- [`phpapp/`](phpapp/) - Example php app
+- [`src/main/java/`](src/main/java/) - Java source code
+- [`src/java/resources/`](src/java/resources/) - resources needed for the program, f.ex. logger properties
+- [`src/test/java/`](src/test/java/) - Java tests
+- [`src/test/resources/`](src/test/resources/) - resources needed to test
 
 ## Obtaining TOSCA2vSphere
 

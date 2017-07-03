@@ -1,7 +1,0 @@
-#!/bin/bash  
-# usage: setstub file key value
-# replaces all occurences of STUB_'key' in given file with 'value'
-TARGET_FILE=$1
-KEY=$2
-VALUE=$3
-sed -i "s:STUB_$KEY:$VALUE:g" $TARGET_FILE

@@ -1,8 +1,0 @@
-#!/bin/bash  
-# changes values of key-value-pairs.
-# usage: setvalue path-to-configfile key-name new-value
-CONFIG_FILE=$1
-TARGET_KEY=$2
-REPLACEMENT_VALUE=$3
-
-sed -i "s/^\($TARGET_KEY\s*=\s*\).*$/\1$REPLACEMENT_VALUE/" $CONFIG_FILE
