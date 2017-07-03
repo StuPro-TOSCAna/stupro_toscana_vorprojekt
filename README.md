@@ -3,17 +3,16 @@
 [![codecov](https://codecov.io/gh/nfode/stupro_toscana_vorprojekt/branch/master/graph/badge.svg)](https://codecov.io/gh/nfode/stupro_toscana_vorprojekt)
 
 ## Table of Contents
-* [StuPro TOSCAna preliminary design study](#stupro-toscana-preliminary-design-study)
-    * [TOSCA2vSphere](#tosca2vsphere)
-    * [TOSCAlite](#toscalite)
-    * [Project structure](#project-structure)
-    * [Obtaining TOSCA2vSphere](#obtaining-tosca2vsphere)
-      * [Prebuild package](#prebuild-package)
-      * [Build from source](#build-from-source)
-    * [Usage](#usage)
-    * [Tools](#tools)
-      * [Util scripts](#util-scripts)
-      * [IntelliJ](#intellij)
+* [Introduction](#introduction)
+* [Project structure](#project-structure)
+* [Obtaining TOSCA2vSphere](#obtaining-tosca2vsphere)
+  * [Prebuild package](#prebuild-package)
+  * [Build from source](#build-from-source)
+* [Usage](#usage)
+* [Tools](#tools)
+  * [Util scripts](#util-scripts)
+  * [IntelliJ](#intellij)
+
       
 ## Introduction
 Open repository for the preliminary design study for TOSCAna.
