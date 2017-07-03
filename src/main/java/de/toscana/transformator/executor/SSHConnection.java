@@ -53,12 +53,13 @@ public class SSHConnection implements Executor {
             // only for testing
             sesConnection.setConfig("StrictHostKeyChecking", "No");
 
-            LOG.info("connecting to host [{}@{}, pw: {}] ...", username, connectionIP, password);
+            LOG.info("connecting to target '{}@{}' with password '{}' ...", username, connectionIP, password);
             sesConnection.connect(timeout);
             LOG.info("connection established");
-            String resultUpdate = sendCommand("echo " + password + "| sudo -S apt-get update && sudo -S apt-get upgrade -y");
+            LOG.info("updating target");
+            String updateCommand = "echo " + password + "| sudo -S apt-get update && sudo -S apt-get upgrade -y";
+            sendAndPrintCommand(updateCommand);
             LOG.info("{}@{} > host system upgrade completed", username, connectionIP);
-            LOG.info("Output of update and upgrade: {}",resultUpdate);//debug
             //check if util files are there, if not upload them
             //upload util scripts to /usr/local/bin
             String targetPath = "/usr/local/bin/";
@@ -70,16 +71,14 @@ public class SSHConnection implements Executor {
                     LOG.info("{}@{} > uploading {}", username, connectionIP, file.getName());
                     //have to upload to home directory and then move with sudo because upload has no root privileges
                     uploadFile(file, "");
-                    String resultMV = sendCommand("echo " + password + "| sudo -S mv " + file.getName() + " " + targetPath);
-                    LOG.info("Output of mv command: {}",resultMV);//debug
+                    sendAndPrintCommand("echo " + password + "| sudo -S mv " + file.getName() + " " + targetPath);
                     //at least if i copy the file from windows i have mark them executable
-                    String resultChmod = sendCommand("echo " + password + "| sudo -S chmod 775 " + targetPath + file.getName());
-                    LOG.info("Output of chmod command: {}",resultChmod);//debug
+                    String resultChmod = sendAndPrintCommand("echo " + password + "| sudo -S chmod 775 " + targetPath + file.getName());
                 }
             }
             return true;
         } catch (JSchException ex) {
-            LOG.error("Connecting to target [ip={},user={},password={}] failed. Is host reachable?", connectionIP, username, password, ex);
+            LOG.error("Failed to connect to target '{}@{}' with password '{}'. Is host reachable?", username, connectionIP, password, ex);
             return false;
         }
     }
@@ -90,7 +89,7 @@ public class SSHConnection implements Executor {
      * @param command
      * @return the generated output after executing the command
      */
-    public String sendCommand(String command) throws JSchException {
+     String sendCommand(String command) throws JSchException {
         StringBuilder out = new StringBuilder();
         try {
             PipedInputStream inStream = new PipedInputStream();
@@ -103,8 +102,10 @@ public class SSHConnection implements Executor {
             BufferedReader reader = new BufferedReader(new InputStreamReader(inStream));
             String line;
             while ((line = reader.readLine()) != null) {
+                if(out.length() != 0){
+                    out.append("\n");
+                }
                 out.append(line);
-                out.append("\n");
             }
             reader.close();
             channel.disconnect();
@@ -113,6 +114,20 @@ public class SSHConnection implements Executor {
             ioExp.printStackTrace();
         }
         return out.toString();
+    }
+
+    /**
+     * Like sendCommand(String command), but also prints the executed command and the resulting standard and error output to std out
+     * @param command
+     * @return
+     * @throws JSchException
+     */
+    String sendAndPrintCommand(String command) throws JSchException {
+        printCommand(command);
+        String output = sendCommand(command);
+        System.out.println(output);
+        return output;
+
     }
 
     /**
@@ -127,22 +142,13 @@ public class SSHConnection implements Executor {
         String[] scriptSplit = script.split("/");
         String nodeName = scriptSplit[0];
         String scriptName = scriptSplit[1];
-        StringBuilder commands = new StringBuilder();
+        String environmentChain = "";
         for (Map.Entry<String,String> entry: environment.entrySet()){
-            StringBuilder command = new StringBuilder();
-            command.append(nodeName.toUpperCase());
-            command.append("_");
-            command.append(entry.getKey().toUpperCase());
-            command.append("=");
-            command.append(entry.getValue());
-            command.append(" ");
-            LOG.info(command.toString());
-            String resultEnv = sendCommand(command.toString());
-            LOG.info(resultEnv);//debug
-            commands.append(command);
+            String environmentEntry = nodeName.toUpperCase() + "_" + entry.getValue().toUpperCase() + "=" + entry.getValue() + " ";
+            environmentChain += environmentEntry;
         }
-        String output = sendCommand("cd " + nodeName + " && " + "echo " + password + "| sudo -S "+commands.toString()+"./" + scriptName);
-        LOG.info("{}@{} > Executed script [node={}, operation={}]", username, connectionIP, nodeName, scriptName);
+        String output = sendAndPrintCommand("cd " + nodeName + " && " + "echo " + password + "| sudo -S "+ environmentChain +"./" + scriptName);
+        LOG.info("{}@{} > executed operation {}:{}", username, connectionIP, nodeName, scriptName);
         System.out.println(output);
         return output;
     }
@@ -209,5 +215,23 @@ public class SSHConnection implements Executor {
         LOG.info("{}@{} > uploaded TOSCALite-archive to target machine", username, connectionIP);
         System.out.println(output);
         return output;
+    }
+
+    private void printCommand(String command) throws JSchException {
+        System.out.println(getPrompt() + command);
+
+    }
+
+    private String getPrompt() throws JSchException {
+       String workingDirectory = getWorkingDirectory();
+       return username + "@" + connectionIP + ":" + workingDirectory + "# ";
+    }
+
+    private String getWorkingDirectory() throws JSchException {
+        String workingDirectory = sendCommand("pwd");
+        if (workingDirectory.equals("/home/" + username)) {
+           workingDirectory = "~";
+        }
+        return workingDirectory;
     }
 }
