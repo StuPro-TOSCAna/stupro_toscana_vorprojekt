@@ -7,6 +7,19 @@ Open repository for the preliminary design study for TOSCAna.
 
 This is the repository for the preliminary design study for the study project TOSCAna. The project consists of the following two subprojects:
 
+## Table of Contents
+* [StuPro TOSCAna preliminary design study](#stupro-toscana-preliminary-design-study)
+    * [TOSCA2vSphere](#tosca2vsphere)
+    * [TOSCAlite](#toscalite)
+    * [Project structure](#project-structure)
+    * [Obtaining TOSCA2vSphere](#obtaining-tosca2vsphere)
+      * [Prebuild package](#prebuild-package)
+      * [Build from source](#build-from-source)
+    * [Usage](#usage)
+    * [Tools](#tools)
+      * [Util scripts](#util-scripts)
+      * [IntelliJ](#intellij)
+
 ## TOSCA2vSphere
 TOSCA2vSphere is a command line tool developed in the preliminary design study for the study project TOSCAna. The purpose of this tool is to deploy a TOSCAlite model as it is definend in the corresponding archive.
 
@@ -22,19 +35,6 @@ TOSCAlite is a very lightweight version of the OASIS TOSCA standard. It can be u
 - [`src/main/resources/`](src/main/resources/) - Resources needed for the program, f.ex. logger properties
 - [`src/test/java/`](src/test/java/) - Java tests
 - [`src/test/resources/`](src/test/resources/) - Resources needed to test
-
-## Table of Contents
-* [StuPro TOSCAna preliminary design study](#stupro-toscana-preliminary-design-study)
-    * [TOSCA2vSphere](#tosca2vsphere)
-    * [TOSCAlite](#toscalite)
-    * [Project structure](#project-structure)
-    * [Obtaining TOSCA2vSphere](#obtaining-tosca2vsphere)
-      * [Prebuild package](#prebuild-package)
-      * [Build from source](#build-from-source)
-    * [Usage](#usage)
-    * [Tools](#tools)
-      * [Util scripts](#util-scripts)
-      * [IntelliJ](#intellij)
 
 
 ## Obtaining TOSCA2vSphere
