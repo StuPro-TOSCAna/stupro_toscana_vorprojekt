@@ -45,20 +45,20 @@ This specific type of node gets described as follows:
 ```
 **Explanation:**
 * ``Type`` - For a machine node the type always has to be ``machine``. In a service node it would be ``service``.
-* `Name` - As specified earlier a name refers to the unique name of a node. (See [Nodes](#nodes))
+* `Name` - As specified earlier, a name refers to the unique name of a node. (See [Nodes](#nodes))
 * `Properties` - The properties block is mandatory in a machine node, because it is used to define the IP address (of the host), a username and password. The specific attribute keys for these mandatory properties can be taken from the example above.
     * For simplicity TOSCAlite only supports SSH authentication based on username and password. Public/private key authentication is not supported.
 
 ### Services
 
-A service represents the part of a topology that has to be installed on a machine or on top of other services. The steps to install, start or stop the service are defined in shell scripts (see [Implementation Artifacts](#implementation-artifacts)). Files other then shell scripts get defined in deployment artifacts.
+A service represents the part of a topology that has to be installed on a machine or on top of other services. The steps to install, start or stop the service are defined in shell scripts (see [Implementation Artifacts](#implementation-artifacts)). Files other than shell scripts get defined in deployment artifacts.
 
 #### Implementation Artifacts
 
 Implementation artifacts have to implement the lifecycle operations for a service. Due to TOSCAlite requiring Linux-based systems, shell scripts have to be used to perform these operations.
 
 The following operations are supported:
-* Create - Mandatory for every service. Used to create the service. This script/ executable should install all the packages required to run the service.
+* Create - Mandatory for every service. Used to create the service. This script/executable should install all the packages required to run the service.
 * Start - Optional. Used to start the service.
 * Stop - Optional. Used to stop the service.
 
