@@ -1,7 +1,5 @@
 package de.toscana.transformator;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.Enumeration;
@@ -9,11 +7,13 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 /**
- * Created by nick on 28.06.17.
+ *
+ * This class is used to validate the archive file and to parse the model.xml to a string
+ *
+ * @Author Nick Fode
  */
 public class ArchiveHandler {
     private final File archive;
-    private static final Logger LOG = LoggerFactory.getLogger(ArchiveHandler.class);
 
     /**
      * Exceptions for the Archive Handler

@@ -14,7 +14,10 @@ import java.util.List;
 
 
 /**
- * Created by nick on 22.06.17.
+ *
+ * This class holds everything needed to create the interactive CLI.
+ *
+ * @Author Nick Fode
  */
 class Controller {
     private final List<String> actionsForEngine;
@@ -30,7 +33,6 @@ class Controller {
      * prints the help text
      */
     private static void printHelp() {
-        // TODO: 22.06.17 better description
         System.out.println("help - show the help");
         System.out.println("create - create the model");
         System.out.println("start - start the model");

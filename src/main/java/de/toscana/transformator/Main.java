@@ -10,6 +10,8 @@ import java.io.*;
 
 /**
  * Main entry point for the program
+ *
+ * @Author Nick Fode
  */
 class Main {
 
