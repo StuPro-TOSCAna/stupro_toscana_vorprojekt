@@ -1,0 +1,13 @@
+#!/bin/bash  
+# requires: $ENVIRONMENT_SETUP_DB_CHECKENV - checkenv script
+# requires: $ENVIRONMENT_SETUP_DB_SETVALUE - setvalue script
+# requires: $ENVIRONMENT_SETUP_DB_SETSTUB - setstub script
+
+toscalite-checkenv "$ENVIRONMENT_SETUP_DB_CHECKENV" "$ENVIRONMENT_SETUP_DB_SETVALUE" "$ENVIRONMENT_SETUP_DB_SETSTUB"
+[ $? -eq 0 ] || exit 1
+
+# install util scripts
+mv $ENVIRONMENT_SETUP_DB_SETSTUB /usr/local/bin
+mv $ENVIRONMENT_SETUP_DB_SETVALUE /usr/local/bin
+mv $ENVIRONMENT_SETUP_DB_CHECKENV  /usr/local/bin
+
