@@ -4,6 +4,8 @@
 
 ## Table of Contents
 * [Introduction](#introduction)
+  * [TOSCA2vSphere](#tosca2vsphere)
+  * [TOSCAlite](#toscalite)
 * [Project structure](#project-structure)
 * [Obtaining TOSCA2vSphere](#obtaining-tosca2vsphere)
   * [Prebuild package](#prebuild-package)
@@ -18,7 +20,6 @@
 Open repository for the preliminary design study for TOSCAna.
 
 This is the repository for the preliminary design study for the study project TOSCAna. The project consists of the following two subprojects:
-
 
 ### TOSCA2vSphere
 TOSCA2vSphere is a command line tool developed in the preliminary design study for the study project TOSCAna. The purpose of this tool is to deploy a TOSCAlite model as it is definend in the corresponding archive.
