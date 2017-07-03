@@ -65,7 +65,9 @@
             <ImplementationArtifacts>
                 <Create>create</Create>
             </ImplementationArtifacts>
-            <DeploymentArtifact key="databaseschema">createdb.sql</DeploymentArtifact>
+            <DeploymentArtifacts>
+                <DeploymentArtifact key="databaseschema">createdb.sql</DeploymentArtifact>
+            </DeploymentArtifacts>
             <Properties>
                 <Property key="user">simpleuser</Property>
                 <Property key="password">pass</Property>
