@@ -29,7 +29,7 @@ public  class SSHConnectionTest {
         //using data of my raspberry
         String username = "ubuntu";
         String password = "pw";
-        String connectionIp = "34.211.51.42";
+        String connectionIp = "54.186.36.46";
         this.instance = new SSHConnection(username, password, connectionIp);
     }
 
@@ -50,9 +50,11 @@ public  class SSHConnectionTest {
     public void testExecuteScript() throws JSchException {
         String script = "apache/create";
         String script2 = "apache/start";
+        HashMap<String, String> map = new HashMap<>();
+        map.put("passwd", "1234");
         instance.connect();
-        instance.executeScript(script, new HashMap<String, String>());
-        instance.executeScript(script2, new HashMap<String, String>());
+        instance.executeScript(script, map);
+        instance.executeScript(script2, map);
         assertTrue(instance.sendCommand("systemctl status apache2").contains("running"));
         instance.close();
     }
