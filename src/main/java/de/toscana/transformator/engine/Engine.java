@@ -40,6 +40,7 @@ public class Engine {
         zip = inputZip;
         lstRelations = topology.getRelationships();
         environmentMap = new Environment(topology).getEnvironmentMap();
+        LOG.info("Created Engine");
     }
 
     /**
@@ -49,8 +50,11 @@ public class Engine {
     public boolean create() {
         try {
             helpCreateStart(ArtifactType.CREATE);
+            LOG.info("Model is successfully created");
             exeConnectsToRelations();
+            LOG.info("Connects-To-Relations are successfully created");
             stop();
+            LOG.info("All Nodes stop after creating");
             return true;
         } catch (JSchException e) {
             LOG.error("Failed to create instance.", e);
@@ -64,6 +68,7 @@ public class Engine {
     public boolean start() {
         try {
             helpCreateStart(ArtifactType.START);
+            LOG.info("Start successfully all Nodes");
             return true;
         } catch (JSchException e) {
             LOG.error("Failed to start instance.", e);
@@ -103,6 +108,7 @@ public class Engine {
             }
             ssh.close();
         }
+        LOG.info("Stopped successfully all Nodes");
         return true;
 
     }

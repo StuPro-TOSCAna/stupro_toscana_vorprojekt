@@ -10,8 +10,7 @@ import java.util.*;
  * The creator class contains methods to get the correct order for creation, start and stop of services.
  *
  * @author Jens Mueller
- *         <p>
- *         TODO: Logging, Exceptions
+ *
  */
 public class Creator {
 
@@ -55,7 +54,7 @@ public class Creator {
 
 
     /**
-     * Adds the nodes to the queue by ascending order.
+     * Adds the nodes to the array by ascending order.
      */
     private void addChildren(){
         for(ArrayList<Node> currentBranch : allBranches){
