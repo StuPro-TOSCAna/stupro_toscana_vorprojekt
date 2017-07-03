@@ -103,6 +103,16 @@ public abstract class Node {
      */
     private void parseProperty(org.w3c.dom.Node child) throws ParsingException {
         String key = null;
+        key = getKeyAttribute(child);
+        if (key == null || !isKeyValid(key)) {
+            throw new ParsingException("Invalid document." +
+                    " A Error occured in node: " + name + " while parsing the property key " + key);
+        }
+        properties.put(key, child.getTextContent());
+    }
+
+    protected String getKeyAttribute(org.w3c.dom.Node child) {
+        String key = null;
         for (int j = 0; j < child.getAttributes().getLength(); j++) {
             org.w3c.dom.Node node = child.getAttributes().item(j);
             if (node == null || node.getNodeName() == null) {
@@ -112,11 +122,7 @@ public abstract class Node {
                 key = node.getNodeValue();
             }
         }
-        if (key == null || !isKeyValid(key)) {
-            throw new ParsingException("Invalid document." +
-                    " A Error occured in node: " + name + " while parsing the property key " + key);
-        }
-        properties.put(key, child.getTextContent());
+        return key;
     }
 
     /**
@@ -125,7 +131,7 @@ public abstract class Node {
      * @param key the key to check
      * @return true if all characters in the key are in the valid charset.
      */
-    private boolean isKeyValid(String key) {
+    protected boolean isKeyValid(String key) {
         char[] keys = PROPERTY_KEY_VALID_CHARACTERS.toCharArray();
         int cnt = getValidCharCount(key, keys);
         return cnt == key.length();
