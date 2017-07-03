@@ -8,7 +8,7 @@ import java.io.File;
  * Interface of an Executor. It provides functions that are used
  * to upload the model and execute specific scripts of this model.
  *
- * @author mklopp
+ * @author Manuel Kloppenburg
  */
 public interface Executor {
 

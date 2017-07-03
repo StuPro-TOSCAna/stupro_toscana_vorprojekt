@@ -9,7 +9,7 @@ import java.util.Map;
 
 /**
  * A connection to a machine via ssh. Provides several functions to execute on the remote machine.
- * @author mklopp
+ * @author Manuel Kloppenburg
  */
 public class SSHConnection implements Executor {
     private static final Logger LOG = LoggerFactory.getLogger(SSHConnection.class);
@@ -213,7 +213,7 @@ public class SSHConnection implements Executor {
      * @param zipFile
      */
     private String unzipFile(File zipFile) throws JSchException {
-        sendCommand(getRootEscalation() + "apt install -y unzip");
+        sendCommand(getRootEscalation() + "apt-get install -y unzip");
         String zip = sendCommand("unzip -o " + zipFile.getName());
         return zip;
     }
