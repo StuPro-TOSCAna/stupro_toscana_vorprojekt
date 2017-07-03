@@ -124,24 +124,24 @@ public class Engine {
 
                 //instance of ssh Connection
                 if (nodeToInstall instanceof ServiceNode){
-                    ArtifactPath startArti = ((ServiceNode) nodeToInstall).getImplementationArtifact(ArtifactType.START);
-                    ArtifactPath createArti = ((ServiceNode) nodeToInstall).getImplementationArtifact(ArtifactType.CREATE);
-                    if(startArti!=null){
-                        pathStart=startArti.getAbsolutePath();
+                    ArtifactPath startArtifact = ((ServiceNode) nodeToInstall).getImplementationArtifact(ArtifactType.START);
+                    ArtifactPath createArtifact = ((ServiceNode) nodeToInstall).getImplementationArtifact(ArtifactType.CREATE);
+                    if(startArtifact!=null){
+                        pathStart=startArtifact.getAbsolutePath();
                     }
 
                     if(type == ArtifactType.CREATE){
-                        if(createArti!=null){
-                            pathCreate=createArti.getAbsolutePath();
+                        if(createArtifact!=null){
+                            pathCreate=createArtifact.getAbsolutePath();
                             ssh.executeScript(pathCreate, nodeToInstall.getProperties());
                         }
 
-                        if(startArti!=null){
+                        if(startArtifact!=null){
                             ssh.executeScript(pathStart, nodeToInstall.getProperties());
                         }
 
                     } else if(type == ArtifactType.START){
-                        if(startArti!=null){
+                        if(startArtifact!=null){
                             ssh.executeScript(pathStart, nodeToInstall.getProperties());
                         }
                     }
@@ -164,17 +164,17 @@ public class Engine {
      * @throws JSchException
      */
     private void executeConnects() throws JSchException {
-        for(Relationship rel : lstRelations){
-            if(rel instanceof ConnectsToRelationship){
-                Node node=rel.getSource();
+        for(Relationship relationship : lstRelations){
+            if(relationship instanceof ConnectsToRelationship){
+                Node node=relationship.getSource();
                 for(Queue qu : copyLstMachineQueues){
                     if(qu.contains(node)){
                         MachineNode mNode=(MachineNode) qu.peek();
                         makeSSHConnection(mNode);
-                        ArtifactPath relArti = ((ConnectsToRelationship) rel).getImplementationArtifact();
+                        ArtifactPath relArti = ((ConnectsToRelationship) relationship).getImplementationArtifact();
                         if(relArti!=null){
                             String relPath = relArti.getAbsolutePath();
-                            ssh.executeScript(relPath, new HashMap<String,String>());
+                            ssh.executeScript(relPath, new HashMap<>());
                         }
                         ssh.close();
                     }
@@ -188,9 +188,9 @@ public class Engine {
      * @param mNode
      */
     private void makeSSHConnection(MachineNode mNode){
-        String ip = ((MachineNode) mNode).getIpAdress();
-        String user = ((MachineNode) mNode).getUsername();
-        String pw = ((MachineNode) mNode).getPassword();
+        String ip = mNode.getIpAdress();
+        String user = mNode.getUsername();
+        String pw = mNode.getPassword();
         ssh = new SSHConnection(user, pw, ip);
         ssh.connect();
     }

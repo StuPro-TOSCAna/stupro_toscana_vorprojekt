@@ -8,13 +8,14 @@ import java.util.*;
 
 /**
  * The creator class contains methods to get the correct order for creation, start and stop of services.
- * @author Jens Mueller
  *
- * TODO: Logging, Exceptions
+ * @author Jens Mueller
+ *         <p>
+ *         TODO: Logging, Exceptions
  */
 public class Creator {
 
-    private Map<String,Node> allNodes;
+    private Map<String, Node> allNodes;
 
     //each machine has a own queue with their nodes
     private ArrayList<Queue> allQueues = new ArrayList<>();
@@ -22,6 +23,7 @@ public class Creator {
 
     /**
      * Constructor of the creator class
+     *
      * @param topology The TOSCAlite model containing the complete application topology
      */
     public Creator(TOSCAliteModel topology) {
@@ -45,10 +47,10 @@ public class Creator {
     /**
      * Finds machine nodes and creates an own queue for each node.
      */
-    private void findMachines(){
+    private void findMachines() {
         for (Map.Entry<String, Node> entry : allNodes.entrySet()) {
-            if(entry.getValue() instanceof MachineNode){
-                allQueues.add(new LinkedList<Node>(Arrays.asList(entry.getValue())));
+            if (entry.getValue() instanceof MachineNode) {
+                allQueues.add(new LinkedList<>(Arrays.asList(entry.getValue())));
             }
         }
     }
@@ -57,9 +59,9 @@ public class Creator {
     /**
      * Adds the nodes to the queue by ascending order.
      */
-    private void addChildren(){
-        for(Queue<Node> qu : allQueues){
-            getAllChildren(qu.peek(), qu);
+    private void addChildren() {
+        for (Queue<Node> nodeQueue : allQueues) {
+            getAllChildren(nodeQueue.peek(), nodeQueue);
 
         }
     }
@@ -67,16 +69,16 @@ public class Creator {
     /**
      * Walks recursively to the last child of a node and adds each node to the queue.
      *
-     * @param n The current node
-     * @param qu The current queue
+     * @param node      The current node
+     * @param nodeQueue The current queue
      */
-    private void getAllChildren(Node n, Queue<Node> qu){
-        if(!qu.contains(n)){
-            qu.add(n);
+    private void getAllChildren(Node node, Queue<Node> nodeQueue) {
+        if (!nodeQueue.contains(node)) {
+            nodeQueue.add(node);
         }
-            for (Node child : n.getChildren()){
-                getAllChildren(child,qu);
-            }
+        for (Node child : node.getChildren()) {
+            getAllChildren(child, nodeQueue);
+        }
 
     }
 
