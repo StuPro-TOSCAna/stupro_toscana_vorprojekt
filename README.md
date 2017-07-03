@@ -106,12 +106,12 @@ Tools that are used in this project.
 ### Util scripts
 
 In the folder [`util`](util/) you can find util scripts for operating systems with **bash**. 
-- `utils/build_with_test` - builds with tests
-- `utils/build_without_test` - builds without tests for test purposes
-- `utils/run_with_example_phpapp` - starts the CLI with the example php app
+- [`utils/build_with_test`](utils/build_with_test) - builds with tests
+- [`utils/build_without_test`](utils/build_without_test) - builds without tests for test purposes
+- [`utils/run_with_example_phpapp`](utils/run_with_example_phpapp) - starts the CLI with the example php app
 
 
 ### IntelliJ
 
 In the folder [`doc/config/IntelliJ`](doc/config/IntelliJ/) you can find a class template named `Class.java`. This template adds automatically everything you need for logging to the header when you create a new class.
-If you want to use this file, copy it to the folder `.idea/fileTemplates/internal/Class.java`.  
+If you want to use this file, copy it to the folder [`.idea/fileTemplates/internal/Class.java`](.idea/fileTemplates/internal/Class.java).  
