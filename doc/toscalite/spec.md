@@ -22,8 +22,8 @@ In XML a node gets defined as follows:
 ```
 **Explanation:**
 * ``Type`` - This defines the node type. In TOSCAlite only two types are allowed. (``service`` and ``machine``)
-* ``Name`` - This defines the node name. A node's name is used to uniquely identify the node in the topology. It is the node's primary identifier. Node names are only allowed to contain the following characters ``abcdefghijklmnopqrstuvwxyz-_1234567890``
-* ``Properties`` -  This block defines the node's properties. It has to contain property elements, each with an attribute Key. The attribute key is required to be a lower-case name without spaces (allowed characters `abcdefghijklmnopqrstuvxyz`).
+* ``Name`` - This defines the node name. A nodes name is used to uniquely identify the node in the topology. It is the nodes primary identifier. Node names are only allowed to contain the following characters ``abcdefghijklmnopqrstuvwxyz-_1234567890``
+* ``Properties`` -  This block defines the nodes properties. It has to contain property elements, each with an attribute Key. The attribute key is required to be a lower-case name without spaces (allowed characters `abcdefghijklmnopqrstuvxyz`).
 
 The ``Type`` and ``Name`` elements are always required. ``Properties`` are mandatory in machine nodes and optional in service nodes.
 
