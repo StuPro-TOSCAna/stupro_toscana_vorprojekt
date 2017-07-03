@@ -4,8 +4,9 @@
 toscalite-checkenv "$PHPAPP_APP"
 [ $? -eq 0 ] || exit 1
 
-rm /var/www/html/index.html
+rm --force /var/www/html/index.html
 apt -y install unzip
-unzip $PHPAPP_APP -d /var/www/html/
+unzip -o $PHPAPP_APP -d /var/www/html/
+
 
 
