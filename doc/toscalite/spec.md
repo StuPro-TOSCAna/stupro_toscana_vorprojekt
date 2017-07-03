@@ -59,7 +59,7 @@ Implementation artifacts have to implement the lifecycle operations for a servic
 
 The following operations are supported:
 * Create - Mandatory for every service. Used to create the service. This script/executable should install all the packages required to run the service.
-* Start - Mandatory for every service. Used to start the service.
+* Start - Optional. Used to start the service.
 * Stop - Optional. Used to stop the service.
 
 ##### Execution of Implementation Artifacts
@@ -94,7 +94,7 @@ A service can have none or multiple deployment artifacts.
 **Explanation:**
 * `ImplementationArtifacts` - The implementation artifact section contains paths to shell scripts that perform specific operations (start, stop and create) on the machine.
     * `Create` (**Required**) - Defines the path to the shell script that has to be executed when deploying the application.
-    * `Start` (**Required**) - Defines the path to the shell script that has to be executed when starting the application.
+    * `Start` (**Optional**) - Defines the path to the shell script that has to be executed when starting the application.
     * `Stop` (**Optional**) - Defines the path to the shell script that has to be executed when stopping the application.
     * How the paths of artifacts have to be specified is described under *Artifact Paths*
 * `DeploymentArtifacts` - Defines a list of paths for deployment artifacts.
