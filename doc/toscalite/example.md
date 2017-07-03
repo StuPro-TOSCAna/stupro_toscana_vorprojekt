@@ -32,7 +32,7 @@ It models a WordPress application running on Apache with PHP on one machine and 
                 <Stop>stop.sh</Stop>
             </ImplementationArtifacts>
             <DeploymentArtifacts>
-                <DeploymentArtifact>configurations.zip</DeploymentArtifact>
+                <DeploymentArtifact key="artifact">configurations.zip</DeploymentArtifact>
             </DeploymentArtifacts>
             <Properties>
                 <Property key="port">8080</Property>
