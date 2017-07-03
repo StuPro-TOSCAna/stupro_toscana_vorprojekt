@@ -1,6 +1,7 @@
 package de.toscana.transformator;
 
 import de.toscana.transformator.util.ConsoleColors;
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -46,15 +47,14 @@ public class MainTest {
         return result;
     }
 
-// TODO: 03.07.17 Fix this test, it works in intellij but doesnt work with mvn
-//    @Test
-//    public void zipWithInvalidModel(){
-//        setUpErrOutPutStream();
-//        Main.main(new String[]{testResFolder+"zipwithinvalidmodel.zip"});
-//        String output = getErrOutPutString();
-//        boolean contains = output.contains("Parser could not initialize properly. The model might be invalid.");
-//        assertTrue(contains);
-//    }
+    @Test
+    public void zipWithInvalidModel(){
+        setUpErrOutPutStream();
+        Main.main(new String[]{testResFolder+"zipwithinvalidmodel.zip"});
+        String output = getErrOutPutString();
+        boolean contains = output.contains("org.xml.sax.SAXParseException; lineNumber: 1; columnNumber: 1; Content is not allowed in prolog.");
+        assertTrue(contains);
+    }
 
     @Test
     public void zipWithOutModel(){
@@ -74,6 +74,14 @@ public class MainTest {
         stderr = System.err;
         outputStream = new ByteArrayOutputStream();
         System.setErr(new PrintStream(outputStream));
+    }
+
+    @After
+    public void cleanUp(){
+        stderr = null;
+        stdout = null;
+        outputStream = null;
+
     }
 
 }
