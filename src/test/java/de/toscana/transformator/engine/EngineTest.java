@@ -50,33 +50,34 @@ public class EngineTest {
     }
 
     @Test
-    public void testCreatorQueues(){
+    public void testCreatorBranches(){
         Creator creator = new Creator(topology);
-        ArrayList<Queue> allQueues = creator.getAllQueues();
-        Queue<Node> firstQueue = allQueues.get(0);
-        Queue<Node> secondQueue = allQueues.get(1);
+        ArrayList<ArrayList<Node>> allBranches = creator.getAllBranches();
+        ArrayList<Node> firstBranch= allBranches.get(0);
+        ArrayList<Node> secondBranch = allBranches.get(1);
 
-        assertEquals(2,allQueues.size());
-        assertTrue(firstQueue.peek() instanceof MachineNode);
-        assertEquals("webmachine" , firstQueue.poll().getName());
-        assertEquals("apache" , firstQueue.poll().getName());
-        assertEquals("php" , firstQueue.poll().getName());
-        assertEquals("php-app" , firstQueue.poll().getName());
 
-        assertTrue(secondQueue.peek() instanceof MachineNode);
-        assertEquals("dbmachine" , secondQueue.poll().getName());
-        assertEquals("mysql" , secondQueue.poll().getName());
-        assertEquals("database" , secondQueue.poll().getName());
+        assertEquals(2,allBranches.size());
+        assertTrue(firstBranch.get(0) instanceof MachineNode);
+        assertEquals("webmachine" , firstBranch.get(0).getName());
+        assertEquals("apache" , firstBranch.get(1).getName());
+        assertEquals("php" , firstBranch.get(2).getName());
+        assertEquals("php-app" , firstBranch.get(3).getName());
+
+        assertTrue(secondBranch.get(0) instanceof MachineNode);
+        assertEquals("dbmachine" , secondBranch.get(0).getName());
+        assertEquals("mysql" , secondBranch.get(1).getName());
+        assertEquals("database" , secondBranch.get(2).getName());
     }
 
     @Test
     public void testMachineNodeProperties(){
         Creator creator = new Creator(topology);
-        ArrayList<Queue> allQueues = creator.getAllQueues();
-        Queue<Node> firstQueue = allQueues.get(0);
-        Queue<Node> secondQueue = allQueues.get(1);
-        MachineNode webMachine = (MachineNode) firstQueue.peek();
-        MachineNode dbMachine = (MachineNode) secondQueue.peek();
+        ArrayList<ArrayList<Node>> allBranches = creator.getAllBranches();
+        ArrayList<Node> firstBranch= allBranches.get(0);
+        ArrayList<Node> secondBranch = allBranches.get(1);
+        MachineNode webMachine = (MachineNode) firstBranch.get(0);
+        MachineNode dbMachine = (MachineNode) secondBranch.get(0);
 
         assertEquals("192.168.178.1" ,webMachine.getIpAdress());
         assertEquals("root" ,webMachine.getUsername());
@@ -85,7 +86,6 @@ public class EngineTest {
         assertEquals("192.168.178.2" ,dbMachine.getIpAdress());
         assertEquals("root2" ,dbMachine.getUsername());
         assertEquals("passsword2" ,dbMachine.getPassword());
-
     }
 
 }
