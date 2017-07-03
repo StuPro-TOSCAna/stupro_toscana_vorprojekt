@@ -113,7 +113,7 @@ The key and the node name get converted into upper case letters. Before the exec
 
 ## Relationships
 
-In order to model a topology, it is necessary to model the edges (relationships) of a topology graph. Relationships get defined in their own block, seperate from nodes themselves (See [Packaging/model.xml](#model.xml)). Every relationship in XML gets defined as follows:
+In order to model a topology, it is necessary to model the edges (relationships) of a topology graph. Relationships get defined in their own block, seperate from nodes themselves (See [Packaging/model.xml](#modelxml)). Every relationship in XML gets defined as follows:
 
 ```XML
 <Relationship>
