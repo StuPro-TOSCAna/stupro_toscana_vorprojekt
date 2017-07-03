@@ -10,6 +10,7 @@ import java.util.Map;
 
 /**
  * Created by hnicke on 03.07.17.
+ * Helper class which provides all properties and deployment artifacts in form of a map.
  */
 public class Environment {
 

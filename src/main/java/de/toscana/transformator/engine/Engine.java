@@ -26,7 +26,7 @@ public class Engine {
     private Executor ssh;
     private final File zip;
     private final List<Relationship> lstRelations;
-    private final Environment environment;
+    private final Map<String,String> environmentMap;
 
     /**
      * Constructor of the engine class
@@ -39,7 +39,7 @@ public class Engine {
         allBranches = creator.getAllBranches();
         zip = inputZip;
         lstRelations = topology.getRelationships();
-        environment = new Environment(topology);
+        environmentMap = new Environment(topology).getEnvironmentMap();
     }
 
     /**
@@ -79,7 +79,12 @@ public class Engine {
 
         for(ArrayList<Node> currentBranch : allBranches){
             MachineNode mNode = (MachineNode) currentBranch.get(0);
-            makeSSHConnection(mNode);
+            try {
+                makeSSHConnection(mNode);
+            } catch (JSchException e) {
+                LOG.error("Failed to stop instace", e);
+                return false;
+            }
 
             for(int i=currentBranch.size()-1;i>0;i--){
                 ServiceNode sNode = (ServiceNode) currentBranch.get(i);
@@ -88,7 +93,7 @@ public class Engine {
                     String stopExe = stopPath.getAbsolutePath();
 
                     try {
-                        ssh.executeScript(stopExe, sNode.getProperties());
+                        ssh.executeScript(stopExe);
                     } catch (JSchException e) {
                         LOG.error("Failed to stop instance.", e);
                         return false;
@@ -163,11 +168,11 @@ public class Engine {
      *
      * @param mNode
      */
-    private void makeSSHConnection(MachineNode mNode){
+    private void makeSSHConnection(MachineNode mNode) throws JSchException {
         String ip = mNode.getIpAdress();
         String user = mNode.getUsername();
         String pw = mNode.getPassword();
-        ssh = new SSHConnection(user, pw, ip);
+        ssh = new SSHConnection(user, pw, ip, environmentMap);
         ssh.connect();
     }
 
@@ -178,7 +183,7 @@ public class Engine {
      */
     private void executeScript(ArtifactPath pathToExe, Map<String,String> environment) throws JSchException {
         if(pathToExe!=null){
-            ssh.executeScript(pathToExe.getAbsolutePath(), environment);
+            ssh.executeScript(pathToExe.getAbsolutePath());
         }
     }
 }
