@@ -1,0 +1,13 @@
+#!/bin/bash  
+# requires: $ENVIRONMENT_SETUP_WEB_CHECKENV - checkenv script
+# requires: $ENVIRONMENT_SETUP_WEB_SETVALUE - setvalue script
+# requires: $ENVIRONMENT_SETUP_WEB_SETSTUB - setstub script
+
+toscalite-checkenv "$ENVIRONMENT_SETUP_WEB_CHECKENV" "$ENVIRONMENT_SETUP_WEB_SETVALUE" "$ENVIRONMENT_SETUP_WEB_SETSTUB"
+[ $? -eq 0 ] || exit 1
+
+# install util scripts
+mv $ENVIRONMENT_SETUP_WEB_SETSTUB /usr/local/bin
+mv $ENVIRONMENT_SETUP_WEB_SETVALUE /usr/local/bin
+mv $ENVIRONMENT_SETUP_WEB_CHECKENV  /usr/local/bin
+
