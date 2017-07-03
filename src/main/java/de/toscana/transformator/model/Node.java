@@ -16,9 +16,8 @@ public abstract class Node {
     private static Logger LOG = LoggerFactory.getLogger(ServiceNode.class);
 
     //Externalized Strings
-    private static final String NAME_VALID_CHARACTERS = "abcdefghijklmnopqrstuvwxyz-_1234567890";
-    private static final String PROPERTY_KEY_VALID_CHARACTERS = "abcdefghijklmnopqrstuvwxyz" +
-            "abcdefghijklmnopqrstuvwxyz".toUpperCase();
+    private static final String NAME_VALID_CHARACTERS = "abcdefghijklmnopqrstuvwxyz_1234567890";
+    private static final String PROPERTY_KEY_VALID_CHARACTERS = "abcdefghijklmnopqrstuvwxyz";
     private static final String[] INVALID_NODE_NAMES = {"relationships"};
     private static final String PROPERTY_ELEMENT_NAME = "Property";
     private static final String PROPERTY_KEY_ATTRIBUTE_NAME = "key";
