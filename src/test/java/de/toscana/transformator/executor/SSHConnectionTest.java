@@ -25,12 +25,14 @@ public  class SSHConnectionTest {
      * instantiates a SSHConnection with given credentials of a raspberry
      */
     @Before
-    public void getSSHConnectionInstance() {
+    public void getSSHConnectionInstance() throws JSchException {
         //using data of my raspberry
         String username = "ubuntu";
         String password = "pw";
-        String connectionIp = "54.186.36.46";
-        this.instance = new SSHConnection(username, password, connectionIp);
+        String connectionIp = "34.209.25.179";
+        HashMap<String, String> map = new HashMap<>();
+        map.put("apache_passwd", "1234");
+        this.instance = new SSHConnection(username, password, connectionIp, map);
     }
 
     /**
@@ -48,13 +50,11 @@ public  class SSHConnectionTest {
      */
     @Test
     public void testExecuteScript() throws JSchException {
-        String script = "apache/create";
-        String script2 = "apache/start";
-        HashMap<String, String> map = new HashMap<>();
-        map.put("passwd", "1234");
+        String script = "/apache/create";
+        String script2 = "/apache/start";
         instance.connect();
-        instance.executeScript(script, map);
-        instance.executeScript(script2, map);
+        instance.executeScript(script);
+        instance.executeScript(script2);
         assertTrue(instance.sendCommand("systemctl status apache2").contains("running"));
         instance.close();
     }
