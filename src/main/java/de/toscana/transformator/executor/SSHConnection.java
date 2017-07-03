@@ -19,6 +19,8 @@ public class SSHConnection implements Executor {
     private final String username;
     private final String connectionIP;
     private final String password;
+    private final Map<String, String> environment;
+    private String environmentChain;
 
     private final JSch jschSSHChannel = new JSch();
     private Session sesConnection;
@@ -29,8 +31,9 @@ public class SSHConnection implements Executor {
      * @param username
      * @param password
      * @param connectionIP
+     * @param environment environment variables for all nodes on all machines
      */
-    public SSHConnection(String username, String password, String connectionIP) {
+    public SSHConnection(String username, String password, String connectionIP, Map<String, String> environment) throws JSchException {
         // maybe insert known hosts via jschSSHChannel.setKnownHosts(knownHosts);
         // on unix should be in ~/.ssh/known_hosts
         // on windows might take it from putty? or create an own known_hosts file
@@ -38,7 +41,8 @@ public class SSHConnection implements Executor {
         this.username = username;
         this.password = password;
         this.connectionIP = connectionIP;
-
+        this.environment = environment;
+        this.environmentChain = "";
         setupSafeShutdown();
     }
 
@@ -68,8 +72,8 @@ public class SSHConnection implements Executor {
             String updateCommand = getRootEscalation() + "apt-get update && sudo -S apt-get upgrade -y";
             sendAndPrintCommand(updateCommand);
             LOG.info("host system upgrade completed", username, connectionIP);
-
             uploadUtilScripts();
+            setUpEnvChain();
             return true;
         } catch (JSchException ex) {
             LOG.error("Failed to connect to target '{}@{}' with password '{}'. Is host reachable?", username, connectionIP, password, ex);
@@ -94,18 +98,26 @@ public class SSHConnection implements Executor {
                 uploadFile(file, "");
                 sendAndPrintCommand(getRootEscalation() + "mv " + file.getName() + " " + targetPath);
                 //at least if i copy the file from windows i have mark them executable
-                String resultChmod = sendAndPrintCommand(getRootEscalation() + "chmod 775 " + targetPath + file.getName());
+                sendAndPrintCommand(getRootEscalation() + "chmod 775 " + targetPath + file.getName());
             }
         }
     }
 
+    private void setUpEnvChain() throws JSchException {
+        StringBuilder environmentChainBuilder = new StringBuilder();
+        for (Map.Entry<String, String> entry : environment.entrySet()) {
+            String environmentEntry = entry.getKey().toUpperCase() + "=" + entry.getValue() + " ";
+            environmentChainBuilder.append(environmentEntry);
+        }
+        environmentChain = environmentChainBuilder.toString();
+    }
     /**
      * Executes a command on the remote host
      *
      * @param command
      * @return the generated output after executing the command
      */
-    String sendCommand(String command) throws JSchException {
+    private String sendCommand(String command) throws JSchException {
         StringBuilder out = new StringBuilder();
         try {
             PipedInputStream inStream = new PipedInputStream();
@@ -140,7 +152,7 @@ public class SSHConnection implements Executor {
      * @return
      * @throws JSchException
      */
-    String sendAndPrintCommand(String command) throws JSchException {
+    public String sendAndPrintCommand(String command) throws JSchException {
         printCommand(command);
         String output = sendCommand(command);
         System.out.println(output);
@@ -154,18 +166,14 @@ public class SSHConnection implements Executor {
      * @return the output of the command
      */
     @Override
-    public String executeScript(String script, Map<String, String> environment) throws JSchException {
+    public String executeScript(String script) throws JSchException {
         script = script.substring(1);
         String[] scriptSplit = script.split("/");
         String nodeName = scriptSplit[0];
         String scriptName = scriptSplit[1];
-        String environmentChain = "";
-        for (Map.Entry<String, String> entry : environment.entrySet()) {
-            String environmentEntry = nodeName.toUpperCase() + "_" + entry.getKey().toUpperCase() + "=" + entry.getValue() + " ";
-            environmentChain += environmentEntry;
-        }
+        //TODO all others together or change spec
         LOG.info("executing operation {}:{}", nodeName, scriptName);
-        return sendAndPrintCommand("cd " + nodeName + " && " + getRootEscalation() + environmentChain + " ./" + scriptName);
+        return sendAndPrintCommand("cd " + nodeName + " && " + getRootEscalation() + environmentChain +" ./" + scriptName);
     }
 
     private String getRootEscalation() {
@@ -178,7 +186,7 @@ public class SSHConnection implements Executor {
      *
      * @param file
      */
-    boolean uploadFile(File file, String targetPath) throws JSchException {
+    public boolean uploadFile(File file, String targetPath) throws JSchException {
         try {
             Channel channel = sesConnection.openChannel("sftp");
             channel.connect();
@@ -188,12 +196,14 @@ public class SSHConnection implements Executor {
             }
             channelSftp.put(new FileInputStream(file), file.getName());
             channelSftp.disconnect();
+            return true;
         } catch (FileNotFoundException fnfExp) {
-            fnfExp.printStackTrace();
+            LOG.error("File not found",fnfExp);
+            return false;
         } catch (SftpException sftpExp) {
-            sftpExp.printStackTrace();
+            LOG.error("File upload failed",sftpExp);
+            return false;
         }
-        return true;
     }
 
     /**
@@ -212,7 +222,6 @@ public class SSHConnection implements Executor {
      * Overwrites all existing files
      */
     private String unzipFile(File zipFile) throws JSchException {
-        //depends on the language the server is using
         sendCommand(getRootEscalation() + "apt install -y unzip");
         String zip = sendCommand("unzip -o " + zipFile.getName());
         return zip;

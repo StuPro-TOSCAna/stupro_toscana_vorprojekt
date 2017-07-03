@@ -48,13 +48,13 @@ public  class SSHConnectionTest {
      */
     @Test
     public void testExecuteScript() throws JSchException {
-        String script = "apache/create";
-        String script2 = "apache/start";
+        String script = "/apache/create";
+        String script2 = "/apache/start";
         HashMap<String, String> map = new HashMap<>();
         map.put("passwd", "1234");
         instance.connect();
-        instance.executeScript(script, map);
-        instance.executeScript(script2, map);
+        instance.executeScript(script);
+        instance.executeScript(script2);
         assertTrue(instance.sendCommand("systemctl status apache2").contains("running"));
         instance.close();
     }
