@@ -2,7 +2,6 @@ package de.toscana.transformator.engine;
 import de.toscana.transformator.model.*;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -29,7 +28,7 @@ public class EngineTest {
     private Engine engine;
 
     @Before
-    public void init() {
+    public void init() throws de.toscana.transformator.model.ParsingException {
         File emptyZIP = null;
         //create an example topology
         try {
@@ -37,8 +36,6 @@ public class EngineTest {
         } catch (ParsingException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (de.toscana.transformator.model.ParsingException e) {
             e.printStackTrace();
         }
         engine = new Engine(topology, emptyZIP);
@@ -62,7 +59,7 @@ public class EngineTest {
         assertEquals("webmachine" , firstBranch.get(0).getName());
         assertEquals("apache" , firstBranch.get(1).getName());
         assertEquals("php" , firstBranch.get(2).getName());
-        assertEquals("php-app" , firstBranch.get(3).getName());
+        assertEquals("phpapp" , firstBranch.get(3).getName());
 
         assertTrue(secondBranch.get(0) instanceof MachineNode);
         assertEquals("dbmachine" , secondBranch.get(0).getName());

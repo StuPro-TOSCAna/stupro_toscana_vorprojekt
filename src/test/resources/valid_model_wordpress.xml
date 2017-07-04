@@ -20,7 +20,7 @@
         </Node>
         <Node>
             <Type>service</Type>
-            <Name>apache-php</Name>
+            <Name>apachephp</Name>
             <ImplementationArtifacts>
                 <Create>install.sh</Create>
                 <Start>start.sh</Start>
@@ -43,9 +43,9 @@
                 <DeploymentArtifact key="wp">wp.zip</DeploymentArtifact>
             </DeploymentArtifacts>
             <Properties>
-                <Property key="defaultUsername">admin</Property>
-                <Property key="defaultPassword">password</Property>
-                <Property key="databaseType">MySQL</Property>
+                <Property key="defaultusername">admin</Property>
+                <Property key="defaultpassword">password</Property>
+                <Property key="databasetype">MySQL</Property>
             </Properties>
         </Node>
         <Node>
@@ -61,20 +61,20 @@
             </DeploymentArtifacts>
             <Properties>
                 <Property key="port">8080</Property>
-                <Property key="rootPassword">password</Property>
+                <Property key="rootpassword">password</Property>
             </Properties>
         </Node>
     </Nodes>
     <Relationships>
         <Relationship>
             <Type>hostedOn</Type>
-            <Source>apache-php</Source>
+            <Source>apachephp</Source>
             <Target>webserver</Target>
         </Relationship>
         <Relationship>
             <Type>hostedOn</Type>
             <Source>wordpress</Source>
-            <Target>apache-php</Target>
+            <Target>apachephp</Target>
         </Relationship>
         <Relationship>
             <Type>hostedOn</Type>
