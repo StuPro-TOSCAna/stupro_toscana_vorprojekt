@@ -25,7 +25,7 @@ In XML a node gets defined as follows:
 * ``Name`` - This defines the node name. A node's name is used to uniquely identify the node in the topology. It is the node's primary identifier. Node names are only allowed to contain the following characters ``abcdefghijklmnopqrstuvwxyz-_1234567890``
 * ``Properties`` -  This block defines the node's properties. It has to contain property elements, each with an attribute Key. The attribute key is required to be a lower-case name without spaces (allowed characters `abcdefghijklmnopqrstuvxyz`).
 
-The ``Type`` and ``Name`` elements are always required. ``Properties`` are mandatory in machine nodes and optional in service nodes.
+The ``Type`` and ``Name`` elements are always required. The ``Properties`` section is mandatory in machine nodes and optional in service nodes.
 
 ### Machines
 
@@ -51,7 +51,7 @@ This specific type of node gets described as follows:
 
 ### Services
 
-A service represents the part of a topology that has to be installed on a machine or on top of other services. The steps to install, start or stop the service are defined in shell scripts (see [Implementation Artifacts](#implementation-artifacts)). Files other than shell scripts get defined in deployment artifacts.
+A service represents the part of a topology that has to be installed on a machine or on top of other services. The steps to install, start or stop the service are defined in its implementation artifacts. If additional files are needed for deployment they can be defined as deployment artifacts.
 
 #### Implementation Artifacts
 
@@ -64,12 +64,13 @@ The following operations are supported:
 
 ##### Execution of Implementation Artifacts
 
-Before any script gets executed, the whole TOSCAlite archive is loaded onto every virtual machine and extracted there. All the extracted files will be located in the home directory of the user that is defined in the machine node.
+Before any script gets executed, the whole TOSCAlite archive is loaded onto every virtual machine and extracted there. All extracted files will be located in the home directory of the user that is defined in the machine node.
 
-The scripts get executed in the directory they are located in. This means that the TOSCAlite deployment system will automatically change the parent working directory to the directory in which the script is located.
+The scripts get executed in the directory they are located in. This means that the TOSCAlite deployment will automatically change the parent working directory to the directory in which the script is located.
 
 #### Deployment Artifacts
-Deployment artifacts are files, such as executables, that get loaded onto the machine with the implementation artifacts when creating the service node. A service can have multiple deployment artifacts. There is no limitation for file types. The ability to process the deployment artifacts has to be implemented in the shell script.
+A deployment artifact represents any file which can be used by implementation artifacts.
+A service can have none or multiple deployment artifacts.
 
 #### Definition in XML
 
@@ -83,7 +84,7 @@ Deployment artifacts are files, such as executables, that get loaded onto the ma
         <Stop>stop.sh</Stop>
     </ImplementationArtifacts>
     <DeploymentArtifacts>
-        <DeploymentArtifact>apache-php/configurations.zip</DeploymentArtifact>
+        <DeploymentArtifact key="configuration">apache-php/configurations.zip</DeploymentArtifact>
     </DeploymentArtifacts>
     <Properties>
         <Property key="port">8080</Property>
@@ -102,14 +103,32 @@ Deployment artifacts are files, such as executables, that get loaded onto the ma
 
 The path defined in either implementation artifacts or deployment artifacts is relative by default.
 
-For service nodes the relative path in the archive is converted to `/<Nodename>/<Path>` by default. For example the path `install.sh` of the node `apache` gets converted to `/apache/install.sh` in the archive.
+For service nodes the relative path in the archive is converted to `/<nodename>/<path>` by default. For example the path `install.sh` of the node `apache` gets converted to `/apache/install.sh` in the archive.
 
 In order to define absolute paths within the archive a `/` has to be added in front.
 
-### Environment Variable Mapping of Properties
+### Usage of Properties and Deployment Artifacts in Implementation Artifacts
+Implementation artifacts can make use of the defined values of properties and deployment artifacts. It is assured that every implementation artifact has access to every property and every deployment artifact via environment variables.
 
-The value of properties gets mapped to environment variables in the following naming scheme: `<Nodename>_<PropertyKey>`.
-The key and the node name get converted into upper case letters. Before the execution of the scripts starts, all environment variables get created. It is possible to access all properties, even the ones from another node, as long as both nodes belong to the same machine.
+##### Example
+
+```XML
+<Node>
+  <Type>service</Type>
+  <Name>database</Name>
+  <Properties>
+    <Property key="user">smith</Property>
+  </Properties>
+  <DeploymentArtifacts>
+    <DeploymentArtifact key="createdb">database-creation.sql</DeploymentArtifact>
+  </DeploymentArtifacts>
+</Node>
+```
+
+- Property ```user``` of node ```database``` gets mapped to the environment variable ```DATABASE_USER``` which holds the value ```smith```
+- Deployment artifact ```createdb``` of the node ```database``` gets mapped to the environment variable ```DATABASE_CREATEDB``` which holds the value ```database-creation.sql```
+
+When writing a bash script as an implementation artifact for any node or relationship, these values can then be accessed with ```$DATABASE_USER``` and ```$DATABASE_CREATEDB```.
 
 ## Relationships
 
