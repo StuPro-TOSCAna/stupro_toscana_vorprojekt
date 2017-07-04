@@ -1,0 +1,5 @@
+#!/bin/bash  
+checkenv 
+[ $? -eq 0 ] || exit 1
+
+systemctl stop apache2

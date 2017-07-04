@@ -1,0 +1,12 @@
+#!/bin/bash  
+# requires: $PHPAPP_APP - the app to be deployed, zipped (depl. artifact)
+
+checkenv "$PHPAPP_APP"
+[ $? -eq 0 ] || exit 1
+
+rm --force /var/www/html/index.html
+apt-get -y install unzip
+unzip -o $PHPAPP_APP -d /var/www/html/
+
+
+

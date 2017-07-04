@@ -1,0 +1,109 @@
+<Model>
+    <Nodes>
+        <Node>
+            <Name>webmachine</Name>
+            <Type>machine</Type>
+            <Properties>
+                <Property key="ip">192.168.178.1</Property>
+                <Property key="username">root</Property>
+                <Property key="password">password1</Property>
+            </Properties>
+        </Node>
+        <Node>
+            <Name>dbmachine</Name>
+            <Type>machine</Type>
+            <Properties>
+                <Property key="ip">192.168.178.2</Property>
+                <Property key="username">root2</Property>
+                <Property key="password">passsword2</Property>
+            </Properties>
+        </Node>
+        <Node>
+            <Name>php</Name>
+            <Type>service</Type>
+            <ImplementationArtifacts>
+                <Create>create</Create>
+            </ImplementationArtifacts>
+        </Node>
+        <Node>
+            <Name>phpapp</Name>
+            <Type>service</Type>
+            <ImplementationArtifacts>
+                <Create>create</Create>
+                <Start>start</Start>
+                <Stop>stop</Stop>
+            </ImplementationArtifacts>
+            <DeploymentArtifacts>
+                <DeploymentArtifact key="app">php-app.tlite</DeploymentArtifact>
+            </DeploymentArtifacts>
+        </Node>
+        <Node>
+            <Name>apache</Name>
+            <Type>service</Type>
+            <ImplementationArtifacts>
+                <Create>create</Create>
+                <Start>start</Start>
+                <Stop>stop</Stop>
+            </ImplementationArtifacts>
+        </Node>
+        <Node>
+            <Name>mysql</Name>
+            <Type>service</Type>
+            <ImplementationArtifacts>
+                <Create>create</Create>
+                <Start>start</Start>
+                <Stop>stop</Stop>
+            </ImplementationArtifacts>
+            <Properties>
+                <Property key="port">Port>3306</Property>
+                <Property key="rootpassword">godpass</Property>
+            </Properties>
+        </Node>
+        <Node>
+            <Name>database</Name>
+            <Type>service</Type>
+            <ImplementationArtifacts>
+                <Create>install</Create>
+            </ImplementationArtifacts>
+            <DeploymentArtifact key="databaseschema">createdb.sql</DeploymentArtifact>
+            <Properties>
+                <Property key="user">simpleuser</Property>
+                <Property key="password">pass</Property>
+                <Property key="databasename">awesomedatabase</Property>
+            </Properties>
+        </Node>
+    </Nodes>
+    <Relationships>
+        <Relationship>
+            <Type>hostedOn</Type>
+            <Source>phpapp</Source>
+            <Target>php</Target>
+        </Relationship>
+        <Relationship>
+            <Type>hostedOn</Type>
+            <Source>php</Source>
+            <Target>apache</Target>
+        </Relationship>
+        <Relationship>
+            <Type>hostedOn</Type>
+            <Source>apache</Source>
+            <Target>webmachine</Target>
+        </Relationship>
+        <Relationship>
+            <Type>hostedOn</Type>
+            <Source>database</Source>
+            <Target>mysql</Target>
+        </Relationship>
+        <Relationship>
+            <Type>hostedOn</Type>
+            <Source>mysql</Source>
+            <Target>dbmachine</Target>
+        </Relationship>
+        <Relationship>
+            <Type>connectsTo</Type>
+            <Source>phpapp</Source>
+            <Target>database</Target>
+            <ImplementationArtifact>dbconnect</ImplementationArtifact>
+        </Relationship>
+    </Relationships>
+</Model>
