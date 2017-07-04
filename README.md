@@ -11,6 +11,7 @@
   * [Prebuild package](#prebuild-package)
   * [Build from source](#build-from-source)
 * [Usage](#usage)
+* [Debugging](#debugging)
 * [Tools](#tools)
   * [Util scripts](#util-scripts)
   * [IntelliJ](#intellij)
@@ -93,6 +94,11 @@ How to use **TOSCA2vSphere**:
 
     It is mandatory that `create` has to be called before `start` and `start` has to be called before `stop`. If not, there will be an error.
 
+## Debugging
+
+For more verbose output of the target machines, it is possible to change the log level from INFO to DEBUG.
+
+Therefore, open file ```src/main/resources/log4j.properties``` and change the line '```log4j.rootLogger=INFO, A1```' to '```log4j.rootLogger=DEBUG, A1```'
 ## Tools
 
 Tools that are used in this project.
