@@ -30,8 +30,6 @@
             <Type>service</Type>
             <ImplementationArtifacts>
                 <Create>create</Create>
-                <Start>start</Start>
-                <Stop>stop</Stop>
             </ImplementationArtifacts>
             <DeploymentArtifacts>
                 <DeploymentArtifact key="app">phpapp.zip</DeploymentArtifact>
@@ -55,7 +53,7 @@
                 <Stop>stop</Stop>
             </ImplementationArtifacts>
             <Properties>
-                <Property key="port">Port>3306</Property>
+                <Property key="port">3306</Property>
                 <Property key="rootpassword">godpass</Property>
             </Properties>
         </Node>
@@ -75,31 +73,27 @@
             </Properties>
         </Node>
         <Node>
-            <Name>environment_setup_web</Name>
+            <Name>environmentsetupweb</Name>
             <Type>service</Type>
             <ImplementationArtifacts>
                 <Create>create</Create>
             </ImplementationArtifacts>
             <DeploymentArtifacts>
-                <DeploymentArtifact>
-                    <DeploymentArtifact key="checkenv">checkenv</DeploymentArtifact>
-                    <DeploymentArtifact key="setvalue">setvalue</DeploymentArtifact>
-                    <DeploymentArtifact key="setstub">setstub</DeploymentArtifact>
-                </DeploymentArtifact>
+                <DeploymentArtifact key="checkenv">checkenv</DeploymentArtifact>
+                <DeploymentArtifact key="setvalue">setvalue</DeploymentArtifact>
+                <DeploymentArtifact key="setstub">setstub</DeploymentArtifact>
             </DeploymentArtifacts>
         </Node>
         <Node>
-            <Name>environment_setup_db</Name>
+            <Name>environmentsetupdb</Name>
             <Type>service</Type>
             <ImplementationArtifacts>
                 <Create>create</Create>
             </ImplementationArtifacts>
             <DeploymentArtifacts>
-                <DeploymentArtifact>
-                    <DeploymentArtifact key="checkenv">checkenv</DeploymentArtifact>
-                    <DeploymentArtifact key="setvalue">setvalue</DeploymentArtifact>
-                    <DeploymentArtifact key="setstub">setstub</DeploymentArtifact>
-                </DeploymentArtifact>
+                <DeploymentArtifact key="checkenv">checkenv</DeploymentArtifact>
+                <DeploymentArtifact key="setvalue">setvalue</DeploymentArtifact>
+                <DeploymentArtifact key="setstub">setstub</DeploymentArtifact>
             </DeploymentArtifacts>
         </Node>
     </Nodes>
@@ -117,11 +111,11 @@
         <Relationship>
             <Type>hostedOn</Type>
             <Source>apache</Source>
-            <Target>environment_setup_web</Target>
+            <Target>environmentsetupweb</Target>
         </Relationship>
         <Relationship>
             <Type>hostedOn</Type>
-            <Source>environment_setup_web</Source>
+            <Source>environmentsetupweb</Source>
             <Target>webmachine</Target>
         </Relationship>
         <Relationship>
@@ -132,11 +126,11 @@
         <Relationship>
             <Type>hostedOn</Type>
             <Source>mysql</Source>
-            <Target>environment_setup_web</Target>
+            <Target>environmentsetupdb</Target>
         </Relationship>
         <Relationship>
             <Type>hostedOn</Type>
-            <Source>environment_setup_web</Source>
+            <Source>environmentsetupdb</Source>
             <Target>dbmachine</Target>
         </Relationship>
         <Relationship>

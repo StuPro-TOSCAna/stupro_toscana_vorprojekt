@@ -4,3 +4,4 @@ create table STUB_DATABASE_DATABASENAME.tasks
       task varchar(255),
       primary key (id)
    );
+

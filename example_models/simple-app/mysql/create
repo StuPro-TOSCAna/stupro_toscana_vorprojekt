@@ -3,15 +3,15 @@
 # requires: $MYSQL_PORT - mysqld listen port
 
 # validation
-toscalite-checkenv "$MYSQL_ROOTPASSWORD" "$MYSQL_PORT"
+checkenv "$MYSQL_ROOTPASSWORD" "$MYSQL_PORT"
 [ $? -eq 0 ] || exit 1
 
 debconf-set-selections <<< "mysql-server mysql-server/root_password password $MYSQL_ROOTPASSWORD"
 debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $MYSQL_ROOTPASSWORD"
 apt -y install mysql-server
 systemctl stop mysql
-toscalite-setvalue /etc/mysql/mysql.conf.d/mysqld.cnf port $MYSQL_PORT
-toscalite-setvalue /etc/mysql/mysql.conf.d/mysqld.cnf bind-address 0.0.0.0
+setvalue /etc/mysql/mysql.conf.d/mysqld.cnf port $MYSQL_PORT
+setvalue /etc/mysql/mysql.conf.d/mysqld.cnf bind-address 0.0.0.0
 
 # open mysql port in firewall
 ufw allow ${MYSQL_PORT}/tcp

@@ -1,5 +1,5 @@
 #!/bin/bash  
-toscalite-checkenv
+checkenv
 [ $? -eq 0 ] || exit 1
 systemctl stop mysql
 
