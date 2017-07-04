@@ -8,7 +8,7 @@ checkenv "$MYSQL_ROOTPASSWORD" "$MYSQL_PORT"
 
 debconf-set-selections <<< "mysql-server mysql-server/root_password password $MYSQL_ROOTPASSWORD"
 debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $MYSQL_ROOTPASSWORD"
-apt -y install mysql-server
+apt-get -y install mysql-server
 systemctl stop mysql
 setvalue /etc/mysql/mysql.conf.d/mysqld.cnf port $MYSQL_PORT
 setvalue /etc/mysql/mysql.conf.d/mysqld.cnf bind-address 0.0.0.0
