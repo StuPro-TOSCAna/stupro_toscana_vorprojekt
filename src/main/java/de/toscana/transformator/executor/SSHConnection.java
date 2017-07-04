@@ -9,6 +9,7 @@ import java.util.Map;
 
 /**
  * A connection to a machine via ssh. Provides several functions to execute on the remote machine.
+ *
  * @author Manuel Kloppenburg
  */
 public class SSHConnection implements Executor {
@@ -165,6 +166,7 @@ public class SSHConnection implements Executor {
 
     /**
      * return string with root password and sudo prefix
+     *
      * @return string with root
      */
     private String getRootEscalation() {
@@ -210,11 +212,13 @@ public class SSHConnection implements Executor {
     /**
      * Unzip is installed and the zipFile gets unziped
      * Overwrites all existing files
+     *
      * @param zipFile
      */
     private String unzipFile(File zipFile) throws JSchException {
         sendCommand(getRootEscalation() + "apt-get install -y unzip");
         String zip = sendCommand("unzip -o " + zipFile.getName());
+        sendCommand("chmod -R +x *");
         return zip;
     }
 
