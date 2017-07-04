@@ -86,10 +86,6 @@ class Main {
                 success = engine.stop();
                 controller.changeStatusInPrompt("stopped");
                 break;
-            case "exit":
-                LOG.info("shutdown");
-                System.exit(0);
-                break;
         }
         if (!success) {
             LOG.error("Unsuccessfully executed command '{}', aborting", s);
