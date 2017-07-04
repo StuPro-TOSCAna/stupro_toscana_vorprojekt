@@ -15,6 +15,8 @@ import static org.junit.Assert.*;
  * Created by Manuel on 15.06.2017.
  * <p>
  * Test for class SSHConnection
+ * IMPORTANT : This test will not be executed (see pom.xml)
+ * because there is a need of credentials and running machines for the test to run
  */
 @RunWith(JUnit4.class)
 public  class SSHConnectionTest {

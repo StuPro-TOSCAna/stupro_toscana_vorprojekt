@@ -60,7 +60,7 @@ public class Environment {
         environmentMap.put(variableKey, value);
     }
 
-    Map<String,String> getEnvironmentMap(){
+    protected Map<String,String> getEnvironmentMap(){
         return environmentMap;
     }
 }

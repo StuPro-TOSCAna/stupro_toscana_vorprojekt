@@ -18,7 +18,7 @@ import static org.junit.Assert.assertTrue;
  */
 @RunWith(JUnit4.class)
 public class MainTest {
-    private final String testResFolder ="src/test/resources/";
+    //private final String testResFolder ="src/test/resources/";
     @Rule
     public final ExpectedException exception = ExpectedException.none();
 

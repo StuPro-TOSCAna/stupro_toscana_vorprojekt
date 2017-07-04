@@ -134,10 +134,10 @@ public class Engine {
                 ArtifactPath startPath = currentNode.getImplementationArtifact(ArtifactType.START);
 
                 if(type==ArtifactType.CREATE){
-                    executeScript(createPath, currentNode.getProperties());
-                    executeScript(startPath, currentNode.getProperties());
+                    executeScript(createPath);
+                    executeScript(startPath);
                 } else {
-                    executeScript(startPath, currentNode.getProperties());
+                    executeScript(startPath);
                 }
             }
             ssh.close();
@@ -161,7 +161,7 @@ public class Engine {
                         MachineNode mNode = (MachineNode) currentBranch.get(0);
                         makeSSHConnection(mNode);
                         ArtifactPath relationPath = ((ConnectsToRelationship) currentRelation).getImplementationArtifact();
-                        executeScript(relationPath, sourceNode.getProperties());
+                        executeScript(relationPath);
                         ssh.close();
                     }
                 }
@@ -188,7 +188,7 @@ public class Engine {
      * @param pathToExe
      * @throws JSchException
      */
-    private void executeScript(ArtifactPath pathToExe, Map<String,String> environment) throws JSchException {
+    private void executeScript(ArtifactPath pathToExe) throws JSchException {
         if(pathToExe!=null){
             ssh.executeScript(pathToExe.getAbsolutePath());
         }

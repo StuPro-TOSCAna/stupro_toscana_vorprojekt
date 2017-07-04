@@ -10,7 +10,6 @@ import sun.security.pkcs.ParsingException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Queue;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
