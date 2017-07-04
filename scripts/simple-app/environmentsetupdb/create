@@ -1,0 +1,14 @@
+#!/bin/bash  
+# requires: $ENVIRONMENTSETUPDB_CHECKENV - checkenv script
+# requires: $ENVIRONMENTSETUPDB_SETVALUE - setvalue script
+# requires: $ENVIRONMENTSETUPDB_SETSTUB - setstub script
+
+./$ENVIRONMENTSETUPDB_CHECKENV "$ENVIRONMENTSETUPDB_CHECKENV" "$ENVIRONMENTSETUPDB_SETVALUE" "$ENVIRONMENTSETUPDB_SETSTUB"
+
+[ $? -eq 0 ] || exit 1
+
+# install util scripts
+mv $ENVIRONMENTSETUPDB_SETSTUB /usr/local/bin
+mv $ENVIRONMENTSETUPDB_SETVALUE /usr/local/bin
+mv $ENVIRONMENTSETUPDB_CHECKENV  /usr/local/bin
+

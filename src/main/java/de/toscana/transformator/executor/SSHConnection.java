@@ -177,7 +177,7 @@ public class SSHConnection implements Executor {
      *
      * @param file file to upload, should be .zip
      */
-    private boolean uploadFile(File file, String targetPath) throws JSchException {
+    protected boolean uploadFile(File file, String targetPath) throws JSchException {
         try {
             Channel channel = sesConnection.openChannel("sftp");
             channel.connect();
