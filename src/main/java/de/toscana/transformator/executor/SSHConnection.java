@@ -236,7 +236,7 @@ public class SSHConnection implements Executor {
         uploadFile(zipFile, targetDirectory);
         String output = unzipFile(zipFile);
         LOG.info("uploaded TOSCALite-archive to target machine", username, connectionIP);
-        System.out.println(output);
+        //System.out.println(output);
         return output;
     }
 
