@@ -219,6 +219,8 @@ public class SSHConnection implements Executor {
         sendCommand(getRootEscalation() + "apt-get install -y unzip");
         String zip = sendCommand("unzip -o " + zipFile.getName());
         sendCommand("chmod -R +x *");
+
+        // dont trust the windows, it does always things you dont like and keep you awake all night
         sendCommand(getRootEscalation() + "apt-get install -y dos2unix");
         sendCommand("grep -URl $'\\r' . | xargs dos2unix");
         return zip;
@@ -254,5 +256,4 @@ public class SSHConnection implements Executor {
         }
         return workingDirectory;
     }
-
 }
