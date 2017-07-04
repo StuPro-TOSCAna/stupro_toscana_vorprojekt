@@ -71,7 +71,7 @@ public class SSHConnection implements Executor {
             // only for testing
             sesConnection.setConfig("StrictHostKeyChecking", "No");
 
-            LOG.info("connecting to target '{}@{}' with password '{}' ...", username, connectionIP, password);
+            LOG.info("connecting to target '{}@{}' ...", username, connectionIP);
             sesConnection.connect(timeout);
             LOG.info("connection established");
             LOG.info("updating target");
@@ -81,7 +81,7 @@ public class SSHConnection implements Executor {
             setUpEnvChain();
             return true;
         } catch (JSchException ex) {
-            LOG.error("Failed to connect to target '{}@{}' with password '{}'. Is host reachable?", username, connectionIP, password, ex);
+            LOG.error("Failed to connect to target '{}@{}'. Is host reachable?", username, connectionIP, ex);
             return false;
         }
     }
