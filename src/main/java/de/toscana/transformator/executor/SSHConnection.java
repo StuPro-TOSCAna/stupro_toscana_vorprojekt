@@ -142,9 +142,9 @@ public class SSHConnection implements Executor {
      * @throws JSchException
      */
     private String sendAndPrintCommand(String command) throws JSchException {
-        printCommand(command);
+        //printCommand(command);
         String output = sendCommand(command);
-        System.out.println(output);
+        //System.out.println(output);
         return output;
     }
 
