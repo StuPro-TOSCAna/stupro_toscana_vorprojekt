@@ -17,13 +17,16 @@ class Main {
 
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
 
+    private static boolean alreadyCreated;
+
     private static Engine engine;
+    private static Controller controller;
 
     /**
-     *
      * @param args the archive file path
      */
     public static void main(String[] args) {
+        alreadyCreated = false;
         printTitle();
         if (args.length == 0) {
             System.err.println("File-argument missing.");
@@ -44,7 +47,6 @@ class Main {
         setUpController();
     }
 
-    private static Controller controller;
     private static void setUpController() {
         controller = new Controller();
 
@@ -68,8 +70,13 @@ class Main {
         boolean success = true;
         switch (s) {
             case "create":
-                success = engine.create();
-                controller.changeStatusInPrompt("created");
+                if (!alreadyCreated) {
+                    alreadyCreated = true;
+                    success = engine.create();
+                    controller.changeStatusInPrompt("created");
+                } else {
+                    LOG.info("Creating the model more than once does not work.");
+                }
                 break;
             case "start":
                 success = engine.start();
@@ -84,7 +91,7 @@ class Main {
                 System.exit(0);
                 break;
         }
-        if (!success){
+        if (!success) {
             LOG.error("Unsuccessfully executed command '{}', aborting", s);
             System.exit(1);
         }
@@ -92,6 +99,7 @@ class Main {
 
     /**
      * parses the model.xml out of the archive file
+     *
      * @param file the archive file
      * @return the model.xml as one line string
      */
@@ -104,7 +112,7 @@ class Main {
             archiveHandler = new ArchiveHandler(archive);
             string = archiveHandler.getModelXmlFromZip();
         } catch (ArchiveHandler.ArchiveException e) {
-            LOG.error("Parsing the archive failed",e);
+            LOG.error("Parsing the archive failed", e);
             return null;
         }
         return string;
