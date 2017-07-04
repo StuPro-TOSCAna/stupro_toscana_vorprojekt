@@ -16,7 +16,7 @@
   * [Util scripts](#util-scripts)
   * [IntelliJ](#intellij)
 
-      
+
 ## Introduction
 Open repository for the preliminary design study for TOSCAna.
 
@@ -41,11 +41,11 @@ TOSCAlite is a very lightweight version of the OASIS TOSCA standard. It can be u
 
 ## Obtaining TOSCA2vSphere
 
-### Prebuild package
+### Prebuilt package
 
-Download a prebuild package.
+Download a prebuilt package [here](https://github.com/nfode/stupro_toscana_vorprojekt/releases/tag/v1.0).
 
-**TODO** *add link to latest release prebuild package*
+
 
 ### Build from source
 Steps to build **TOSCA2vSphere** from sources:
@@ -111,7 +111,7 @@ Tools that are used in this project.
 
 ### Util scripts
 
-In the folder [`util`](util/) you can find util scripts for operating systems with **bash**. 
+In the folder [`util`](util/) you can find util scripts for operating systems with **bash**.
 - `utils/build_with_test` - builds with tests
 - `utils/build_without_test` - builds without tests for test purposes
 - `utils/run_with_example_phpapp` - starts the CLI with the example php app
