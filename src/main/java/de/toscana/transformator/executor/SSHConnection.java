@@ -142,9 +142,9 @@ public class SSHConnection implements Executor {
      * @throws JSchException
      */
     private String sendAndPrintCommand(String command) throws JSchException {
-        //printCommand(command);
+        printCommand(command);
         String output = sendCommand(command);
-        //System.out.println(output);
+        LOG.debug(output);
         return output;
     }
 
@@ -236,12 +236,12 @@ public class SSHConnection implements Executor {
         uploadFile(zipFile, targetDirectory);
         String output = unzipFile(zipFile);
         LOG.info("uploaded TOSCALite-archive to target machine", username, connectionIP);
-        //System.out.println(output);
+        LOG.debug(output);
         return output;
     }
 
     private void printCommand(String command) throws JSchException {
-        System.out.println(getPrompt() + command);
+        LOG.debug(getPrompt() + command);
     }
 
     private String getPrompt() throws JSchException {
